@@ -22,6 +22,13 @@ public class UserController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR"),
     })
     public ResponseEntity<String> hello(@Parameter(description = "이름", required = true, example = "Park") @RequestParam String name) {
+        System.out.println(String.format("name is %s", name));
         return ResponseEntity.ok("hello!!");
+    }
+
+    @GetMapping("/add")
+    public int add(@RequestParam int A, @RequestParam int B){
+
+        return A+B;
     }
 }
