@@ -1,0 +1,7 @@
+server:
+  port: 8080
+
+loggin:
+  level:
+    org.springframework: DEBUG
+
