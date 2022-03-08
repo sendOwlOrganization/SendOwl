@@ -9,10 +9,4 @@ class SendOwlApplicationTests {
     @Test
     void contextLoads() {
     }
-
-    @Test
-    void addTest(){
-
-    }
-
 }
