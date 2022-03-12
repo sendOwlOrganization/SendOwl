@@ -37,6 +37,11 @@ public class UserController {
     ){
 
         Member saveduser = memberService.getMember(id);
-        return new ResponseEntity(saveduser,HttpStatus.OK);
+        final MemberResponse memberResponse = MemberResponse.builder()
+                .memId(saveduser.getMemId())
+                .memName(saveduser.getMemName())
+                .memEmail(saveduser.getMemEmail()).build();
+
+        return new ResponseEntity(memberResponse,HttpStatus.OK);
     }
 }
