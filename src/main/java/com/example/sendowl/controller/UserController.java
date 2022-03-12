@@ -1,9 +1,9 @@
 package com.example.sendowl.controller;
 
 
-import com.example.sendowl.dto.UserRequest;
-import com.example.sendowl.entity.User;
-import com.example.sendowl.service.UserService;
+import com.example.sendowl.dto.MemberRequest;
+import com.example.sendowl.entity.Member;
+import com.example.sendowl.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +15,14 @@ import javax.validation.Valid;
 @RequiredArgsConstructor // final이 붙은 객체를 DI해준다.
 public class UserController {
 
-    final private UserService userService;
+    final private MemberService memberService;
 
     @PostMapping(path = "/user")
     public ResponseEntity signUp(
-            @RequestBody @Valid final UserRequest userRequest
+            @RequestBody @Valid final MemberRequest userRequest
             ){
 
-        User saveduser = userService.addUser(userRequest.getUserId(), userRequest.getPassword(), userRequest.getUsername(), userRequest.getEmail());
+        Member saveduser = memberService.addMember(userRequest.getMemId(), userRequest.getMemPw(), userRequest.getMemName(), userRequest.getMemEmail());
         return new ResponseEntity(saveduser, HttpStatus.OK);
     }
     @GetMapping(path = "/user/{id}")
@@ -30,7 +30,7 @@ public class UserController {
             @PathVariable Long id
     ){
 
-        User saveduser = userService.getUser(id);
+        Member saveduser = memberService.getMember(id);
         return new ResponseEntity(saveduser,HttpStatus.OK);
     }
 }
