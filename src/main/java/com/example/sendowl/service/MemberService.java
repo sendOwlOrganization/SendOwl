@@ -5,6 +5,7 @@ package com.example.sendowl.service;
 import com.example.sendowl.entity.Member;
 import com.example.sendowl.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,14 +13,18 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public Member addMember(final String userId, final String password, final String username, final String email){
+    public Member addMember(final String memId, final String memPw, final String memName, final String memEmail){
         // 중복 검증
         // 유효성 검증
-
         // 저장
-        final Member savedUser = Member.builder().memId(userId).memPw(password).memName(username).memEmail(email).build();
+        final Member savedUser = Member.builder()
+                .memId(memId)
+                .memPw(bCryptPasswordEncoder.encode(memPw)) // 암호화
+                .memName(memName)
+                .memEmail(memEmail).build();
         userRepository.save(savedUser);
         return savedUser;
     }

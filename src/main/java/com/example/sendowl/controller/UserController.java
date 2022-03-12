@@ -2,6 +2,7 @@ package com.example.sendowl.controller;
 
 
 import com.example.sendowl.dto.MemberRequest;
+import com.example.sendowl.dto.MemberResponse;
 import com.example.sendowl.entity.Member;
 import com.example.sendowl.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +18,20 @@ public class UserController {
 
     final private MemberService memberService;
 
-    @PostMapping(path = "/user")
+    @PostMapping(path = "/mem")
     public ResponseEntity signUp(
             @RequestBody @Valid final MemberRequest userRequest
             ){
 
         Member saveduser = memberService.addMember(userRequest.getMemId(), userRequest.getMemPw(), userRequest.getMemName(), userRequest.getMemEmail());
-        return new ResponseEntity(saveduser, HttpStatus.OK);
+        final MemberResponse memberResponse = MemberResponse.builder()
+                .memId(saveduser.getMemId())
+                .memName(saveduser.getMemName())
+                .memEmail(saveduser.getMemEmail()).build();
+
+        return new ResponseEntity(memberResponse, HttpStatus.OK);
     }
-    @GetMapping(path = "/user/{id}")
+    @GetMapping(path = "/mem/{id}")
     public ResponseEntity getUser(
             @PathVariable Long id
     ){
