@@ -5,14 +5,12 @@ import com.example.sendowl.dto.MemberRequest;
 import com.example.sendowl.dto.MemberResponse;
 import com.example.sendowl.entity.Member;
 import com.example.sendowl.service.MemberService;
-import com.example.sendowl.util.JwtProvider;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +18,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor // final이 붙은 객체를 DI해준다.
 @RequestMapping(path = "/api/mem")
-public class UserController {
+public class MemberController {
 
     final private MemberService memberService;
 
