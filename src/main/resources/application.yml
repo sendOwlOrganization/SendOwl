@@ -5,3 +5,7 @@ loggin:
   level:
     org.springframework: DEBUG
 
+
+spring:
+  profiles:
+    include: jwt

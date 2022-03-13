@@ -19,7 +19,7 @@ public class SwaggerController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
     @GetMapping("/hello")
-    public ResponseEntity<String> hello(@Parameter(description = "이름", required = true, example = "Park") @RequestParam String name) {
-        return ResponseEntity.ok("hello " + name);
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("hello ");
     }
 }
