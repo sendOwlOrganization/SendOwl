@@ -23,9 +23,11 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .logout().disable();
-        http
-                .authorizeRequests()
-                .antMatchers("/mem/**").permitAll() // 해당 URI만 허용한다.
-                .anyRequest().authenticated();
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
+//                .anyRequest().authenticated();
     }
+
+
 }
