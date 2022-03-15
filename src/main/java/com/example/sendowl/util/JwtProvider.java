@@ -41,7 +41,7 @@ public class JwtProvider {
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
 
-        return Jwts.builder()
+        return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
@@ -62,6 +62,7 @@ public class JwtProvider {
     public String resolveToken(HttpServletRequest request){
         return request.getHeader("X-AUTH-TOKEN");
     }
+
     // jwt의 유효성 및 만료일자 확인
     public boolean validationToken(String token){
         try{

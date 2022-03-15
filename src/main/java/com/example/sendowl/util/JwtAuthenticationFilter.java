@@ -21,10 +21,10 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = jwtProvider.resolveToken((HttpServletRequest) request);
-        if(token != null && jwtProvider.validationToken(token)){
+        if(token != null && jwtProvider.validationToken(token)){ // 토큰이 존재하는지 && 토큰의 날짜를 검증
             Authentication authentication = jwtProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-        chain.doFilter(request, response);
+        chain.doFilter(request, response); // 필터체인의 다음 체인을 실행하게 한다.
     }
 }

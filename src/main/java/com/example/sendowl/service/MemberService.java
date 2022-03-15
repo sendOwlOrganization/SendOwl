@@ -35,7 +35,7 @@ public class MemberService {
                 .memPw(passwordEncoder.encode(memPw)) // 암호화
                 .memName(memName)
                 .memEmail(memEmail)
-                .roles(Collections.singletonList("ROLE_USER"))//최초가입시 USER로 설정
+                .roles(Collections.singletonList("ROLE_USER"))//최초가입시 USER로 설정 // 사이즈가 하나인 경우에 Collections.sigletonList를 사용한다. 왜냐면 ArraysList는 sigleton보다 커서
                 .build();
         System.out.println(savedUser.toString());
         userRepository.save(savedUser);
