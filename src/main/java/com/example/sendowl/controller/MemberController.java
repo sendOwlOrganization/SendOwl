@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
 @RequiredArgsConstructor // final이 붙은 객체를 DI해준다.
 @RequestMapping(path = "/api/mem")
 public class MemberController {
@@ -40,7 +40,7 @@ public class MemberController {
                 .memId(saveduser.getMemId())
                 .memName(saveduser.getMemName())
                 .memEmail(saveduser.getMemEmail()).build();
-        return new ResponseEntity<MemberResponse>(memberResponse, HttpStatus.CREATED); // 엔티티 그대로 반환하면 안된다.
+        return new ResponseEntity<MemberResponse>(memberResponse, HttpStatus.CREATED); // 엔티티 그대로 반환하면 안된다. DTO로 변호나하여 쏴주면 ㄱㅊ하다
     }
 
     @Operation(summary = "login api", description = "login api")
