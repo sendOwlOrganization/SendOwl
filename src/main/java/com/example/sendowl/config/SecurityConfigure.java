@@ -47,7 +47,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasRole("USER") // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                        JwtAuthenticationFilter.class);// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
+                        UsernamePasswordAuthenticationFilter.class);// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
 //        http
 //                .authorizeRequests()
 //                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용

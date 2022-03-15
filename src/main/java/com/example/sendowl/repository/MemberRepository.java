@@ -11,5 +11,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findById(Long aLong);
 
     Optional<Member> findByMemEmail(String memEmail); // Optional의 값은 T value에 저장되어있어서 참조하더라도 바로 NPE이 뜨지 않는다.
+
+    Optional<Member> findByMemId(String memId);
 }
 

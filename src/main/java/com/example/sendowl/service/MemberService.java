@@ -21,14 +21,20 @@ import java.util.Collections;
 @RequiredArgsConstructor // JPA관련 인스턴스를 사용해야하기 때문에 선언이 필요하다.
 public class MemberService {
 
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
 
     public Member addMember(final String memId, final String memPw, final String memName, final String memEmail){
         // 중복 검증
-        // 유효성 검증
+        if(memberRepository.findByMemEmail(memEmail).isPresent()){
+            throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
+        }
+        if(memberRepository.findByMemId(memId).isPresent()){
+            throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
+        }
+
         // 저장
         final Member savedUser = Member.builder()
                 .memId(memId)
@@ -38,11 +44,11 @@ public class MemberService {
                 .roles(Collections.singletonList("ROLE_USER"))//최초가입시 USER로 설정 // 사이즈가 하나인 경우에 Collections.sigletonList를 사용한다. 왜냐면 ArraysList는 sigleton보다 커서
                 .build();
         System.out.println(savedUser.toString());
-        userRepository.save(savedUser);
+        memberRepository.save(savedUser);
         return savedUser;
     }
     public String loginMember(final String memEmail, final String memPw){
-        Member savedMember = userRepository.findByMemEmail(memEmail).orElseThrow(()->new IllegalArgumentException("가입되지 않은 Email입니다."));
+        Member savedMember = memberRepository.findByMemEmail(memEmail).orElseThrow(()->new IllegalArgumentException("가입되지 않은 Email입니다."));
         System.out.println(savedMember.toString());
         System.out.println(memPw);
         if(!passwordEncoder.matches(memPw, savedMember.getPassword() )){
@@ -53,7 +59,7 @@ public class MemberService {
     }
     public Member getMember(final Long id){
         // 데이터를 들고온다
-        Member user = userRepository.findById(id).get();
+        Member user = memberRepository.findById(id).get();
 
         if(user == null){
             System.out.println("db로 받아온 값이 null");
