@@ -4,6 +4,7 @@ package com.example.sendowl.service;
 
 import com.example.sendowl.entity.Member;
 import com.example.sendowl.excption.MemberNotFoundException;
+import com.example.sendowl.excption.MemberNotValidException;
 import com.example.sendowl.repository.MemberRepository;
 import com.example.sendowl.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,10 @@ public class MemberService {
     public Member addMember(final String memId, final String memPw, final String memName, final String memEmail){
         // 중복 검증
         if(memberRepository.findByMemEmail(memEmail).isPresent()){
-            throw new IllegalArgumentException("이미 가입된 이메일 입니다.");
+            throw new MemberNotValidException("이미 가입된 이메일 입니다.");
         }
         if(memberRepository.findByMemId(memId).isPresent()){
-            throw new IllegalArgumentException("이미 가입된 아이디 입니다.");
+            throw new MemberNotValidException("이미 가입된 아이디 입니다.");
         }
 
         // 저장
