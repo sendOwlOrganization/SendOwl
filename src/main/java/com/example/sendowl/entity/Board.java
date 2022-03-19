@@ -27,15 +27,15 @@ public class Board {
     private String title;
     private String content;
     @JoinColumn
-    private long regId;
-    private String regIp;
-    private String regDate;
-    private String modId;
-    private String modIp;
-    private String modDate;
+    private String regId;
+    private String regIp = "default test";
+    private String regDate = "date()";
+    private String modId  = "default test";
+    private String modIp  = "default test";
+    private String modDate  = "default test";
     @JoinColumn
-    private long cateId;
-    private int hit;
-    private String active;
+    private long cateId = 1;
+    private int hit  = 0;
+    private String active  = "Y";
 
 }

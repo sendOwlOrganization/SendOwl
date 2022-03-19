@@ -1,6 +1,7 @@
 package com.example.sendowl.repository;
 
 
+import com.example.sendowl.dto.BoardRequest;
 import com.example.sendowl.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
