@@ -1,6 +1,7 @@
 package com.example.sendowl.controller;
 
 
+import com.example.sendowl.dto.BoardRequest;
 import com.example.sendowl.dto.MemberRequest;
 import com.example.sendowl.dto.MemberResponse;
 import com.example.sendowl.entity.Board;
@@ -33,7 +34,8 @@ public class BoardController {
             @ApiResponse(code = 404, message = "NOT FOUND !!"),
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping(path = "/posts") // join
+    // 게시글 목록
+    @GetMapping(path = "/list") // join
     public ResponseEntity<List<Board>> board(
             ){
         List<Board> boardList = boardService.getBoardList();
@@ -41,12 +43,24 @@ public class BoardController {
         return new ResponseEntity<List<Board>>(boardList, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "/{board}") // join
-    public ResponseEntity getBoard(
-            @PathVariable String board // 파라미터로 값 바로 받는 @Anno
-    ){
-        //List<Board> boardList = boardService.getBoardList();
+    // 게시글 등록
+    @PostMapping(path = "/board")
+    public void insertBoard(@RequestBody BoardRequest vo){
+        Board board = Board.builder()
+                        .title(vo.getTitle())
+                                .content(vo.getContent())
+                                        .regId(vo.getRegId()).build();
 
-        return new ResponseEntity(board, HttpStatus.CREATED);
+        boardService.insertBoard(board);
     }
+
+    // JUST Test!! Insomnia Test
+    //@GetMapping(path = "/{board}") // join
+    //public ResponseEntity getBoard(
+    //        @PathVariable String board // 파라미터로 값 바로 받는 @Anno
+    //){
+    //    //List<Board> boardList = boardService.getBoardList();
+
+    //    return new ResponseEntity(board, HttpStatus.CREATED);
+    //}
 }
