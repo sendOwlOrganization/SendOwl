@@ -1,6 +1,7 @@
 package com.example.sendowl.service;
 
 import com.example.sendowl.dto.BoardRequest;
+import com.example.sendowl.dto.BoardResponse;
 import com.example.sendowl.entity.Board;
 import com.example.sendowl.entity.Member;
 import com.example.sendowl.excption.MemberNotValidException;
@@ -23,10 +24,15 @@ public class BoardService {
     public List<Board> getBoardList() {
         String active = "Y";
 
-        return boardRepository.findAll();
+        return boardRepository.findByActive(active);
     }
 
     public void insertBoard(Board board) {
         boardRepository.save(board);
+    }
+
+    public Board getBoard(long id) {
+
+        return boardRepository.getById(id);
     }
 }

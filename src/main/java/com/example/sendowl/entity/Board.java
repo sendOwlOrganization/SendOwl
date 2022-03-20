@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,25 +19,28 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @Table(name="tb_board")
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
     private String title;
     private String content;
     @JoinColumn
     private String regId;
-    private String regIp = "default test";
-    private String regDate = "date()";
-    private String modId  = "default test";
-    private String modIp  = "default test";
-    private String modDate  = "default test";
+    private String regIp;
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    private String regDate;
+    private String modId;
+    private String modIp;
+    private String modDate;
     @JoinColumn
-    private long cateId = 1;
-    private int hit  = 0;
-    private String active  = "Y";
+    private long cateId;
+    @ColumnDefault("0")
+    private int hit;
+    @ColumnDefault("'Y'")
+    private String active;
 
 }
