@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
 public class BoardRequest {
+    @NotNull
+    private final long id;
 
     @NotNull
     private final String title;
