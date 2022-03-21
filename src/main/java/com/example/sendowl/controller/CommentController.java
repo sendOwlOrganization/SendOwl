@@ -3,8 +3,11 @@ package com.example.sendowl.controller;
 
 import com.example.sendowl.dto.BoardRequest;
 import com.example.sendowl.dto.BoardResponse;
+import com.example.sendowl.dto.CommentRequest;
 import com.example.sendowl.entity.Board;
+import com.example.sendowl.entity.Comment;
 import com.example.sendowl.service.BoardService;
+import com.example.sendowl.service.CommentService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,55 +20,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api/boards")
-public class BoardController {
+@RequestMapping(path = "/api")
+public class CommentController {
 
-    private final BoardService boardService;
+    private final CommentService commentService;
 
-    // 게시글 목록
-    @Operation(summary = "list api", description = "list api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping(path = "/list") // join
-    public ResponseEntity<List<Board>> list(
-            ){
-        List<Board> boardList = boardService.getBoardList();
-
-        return new ResponseEntity<List<Board>>(boardList, HttpStatus.OK);
-    }
-
-    // 게시글 상세
-    @Operation(summary = "board api", description = "board api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping(path = "/list/{id}") // join
-    public ResponseEntity<BoardResponse> boardDetail(
-            @PathVariable Long id
-    ){
-        System.err.println(id);
-
-        Board boardDetail = boardService.getBoard(id);
-
-        BoardResponse boardResponse = BoardResponse.builder()
-                .title(boardDetail.getTitle())
-                .content(boardDetail.getContent())
-                .id(boardDetail.getId() + "")
-                .build();
-
-        return new ResponseEntity<BoardResponse>(boardResponse, HttpStatus.OK);
-    }
-
-    // 게시글 등록
+    // 댓글 등록
     @Operation(summary = "board insert api", description = "board insert api")
     @ApiResponses({
             @ApiResponse(code = 200, message = "OK !!"),
@@ -74,14 +34,54 @@ public class BoardController {
             @ApiResponse(code = 404, message = "NOT FOUND !!"),
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
-    @PostMapping(path = "/board")
-    public void insertBoard(@RequestBody BoardRequest vo){
-        Board board = Board.builder()
-                        .title(vo.getTitle())
-                                .content(vo.getContent())
-                                        .regId(vo.getRegId()).build();
-
-        boardService.insertBoard(board);
+    @PostMapping(path = "/comment")
+    public ResponseEntity<Comment> insertBoard(@RequestBody CommentRequest vo){
+        commentService.insertComment(vo);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
+//    // 게시글 목록
+//    @Operation(summary = "list api", description = "list api")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "OK !!"),
+//            @ApiResponse(code = 201, message = "CREATED !!"),
+//            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+//            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+//            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+//    })
+//    @GetMapping(path = "/list") // join
+//    public ResponseEntity<List<Board>> list(
+//            ){
+//        List<Board> boardList = boardService.getBoardList();
+//
+//        return new ResponseEntity<List<Board>>(boardList, HttpStatus.OK);
+//    }
+//
+//    // 게시글 상세
+//    @Operation(summary = "board api", description = "board api")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "OK !!"),
+//            @ApiResponse(code = 201, message = "CREATED !!"),
+//            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+//            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+//            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+//    })
+//    @GetMapping(path = "/list/{id}") // join
+//    public ResponseEntity<BoardResponse> boardDetail(
+//            @PathVariable Long id
+//    ){
+//        System.err.println(id);
+//
+//        Board boardDetail = boardService.getBoard(id);
+//
+//        BoardResponse boardResponse = BoardResponse.builder()
+//                .title(boardDetail.getTitle())
+//                .content(boardDetail.getContent())
+//                .id(boardDetail.getId() + "")
+//                .build();
+//
+//        return new ResponseEntity<BoardResponse>(boardResponse, HttpStatus.OK);
+//    }
+
+    
 
 }

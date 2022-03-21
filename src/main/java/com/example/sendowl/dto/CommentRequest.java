@@ -10,17 +10,16 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
-public class BoardRequest {
+public class CommentRequest {
     @NotNull
-    private final long id;
+    private final Long boardId;
 
     @NotNull
-    private final String title;
+    private final Long memberId;
 
     @NotNull
     private final String content;
 
     @NotNull
-    private final String regId;
-
+    private final String regIp;
 }
