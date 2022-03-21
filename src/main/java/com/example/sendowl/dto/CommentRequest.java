@@ -16,6 +16,9 @@ public class CommentRequest {
 
     @NotNull
     private final Long memberId;
+    
+    @NotNull
+    private final Long parentId;
 
     @NotNull
     private final String content;

@@ -35,8 +35,23 @@ public class CommentController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping(path = "/comment")
-    public ResponseEntity<Comment> insertBoard(@RequestBody CommentRequest vo){
+    public ResponseEntity<Comment> insertComment(@RequestBody CommentRequest vo){
         commentService.insertComment(vo);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
+    }
+
+    // 대댓글 등록
+    @Operation(summary = "board insert api", description = "board insert api")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK !!"),
+            @ApiResponse(code = 201, message = "CREATED !!"),
+            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+    })
+    @PostMapping(path = "/comment/nest")
+    public ResponseEntity<Comment> insertNestedComment(@RequestBody CommentRequest vo){
+        commentService.insertNestedComment(vo);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 //    // 게시글 목록
