@@ -1,5 +1,6 @@
 package com.example.sendowl.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,27 +22,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor // final이 붙은 변수 전부 생성자 등록
 @Table(name="tb_member")
 public class Member implements UserDetails {
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", memId='" + memId + '\'' +
-                ", memPw='" + memPw + '\'' +
-                ", memName='" + memName + '\'' +
-                ", memEmail='" + memEmail + '\'' +
-                ", memType='" + memType + '\'' +
-                ", memMemo='" + memMemo + '\'' +
-                ", regIp='" + regIp + '\'' +
-                ", regDate='" + regDate + '\'' +
-                ", modIp='" + modIp + '\'' +
-                ", modDate='" + modDate + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                ", active='" + active + '\'' +
-                ", roles=" + roles +
-                '}';
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // null 넣으면 DB가 알아서 autoincrement해준다.
     private Long id;
@@ -50,6 +30,7 @@ public class Member implements UserDetails {
     private String memId;// 대문자로 되면 알아서 user_id를 찾는다.
 
     @Column(nullable = true)
+    @JsonIgnore
     private String memPw;
     private String memName;
     private String memEmail;
@@ -60,14 +41,16 @@ public class Member implements UserDetails {
     private String regDate;
     private String modIp;
     private String modDate;
-
+    @JsonIgnore
     private String accessToken;
+    @JsonIgnore
     private String refreshToken;
-
+    @JsonIgnore
     private String active;
 
-    @ElementCollection(fetch=FetchType.EAGER)
+    @ElementCollection(fetch=FetchType.LAZY)
     @Builder.Default
+    @JsonIgnore
     private List<String> roles = new ArrayList<>();
 
     @Override
@@ -80,26 +63,31 @@ public class Member implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return memPw;
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return memEmail;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
