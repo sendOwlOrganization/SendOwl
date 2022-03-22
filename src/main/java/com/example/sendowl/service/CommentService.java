@@ -24,9 +24,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
-    @PersistenceUnit
-    EntityManagerFactory emf;
-
 
 //    public List<Board> getBoardList() {
 //        String active = "Y";
