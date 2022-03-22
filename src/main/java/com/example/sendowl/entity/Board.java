@@ -31,7 +31,7 @@ public class Board {
     @JoinColumn
     private String regId;
     private String regIp;
-    @ColumnDefault("CURRENT_TIMESTAMP")
+//    @ColumnDefault("CURRENT_TIMESTAMP")
     private String regDate;
     private String modId;
     private String modIp;
