@@ -10,6 +10,9 @@ import com.example.sendowl.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +78,14 @@ public class CommentService {
                 .ord(lastNestedComent.getOrd()+1)
                 .build();
         commentRepository.save(comment);
+    }
+
+    public List<Comment> selectCommentList(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 보드입니다."));
+        List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
+                ()-> new IllegalArgumentException("존재하지 않는 보드입니다."));
+        return comments;
     }
 
 //    public Board getBoard(long id) {
