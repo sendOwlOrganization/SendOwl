@@ -20,19 +20,28 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
     public List<Board> getBoardList() {
-        String active = "Y";
+       int active = 1;
 
         return boardRepository.findByActive(active);
     }
 
-    public void insertBoard(Board board) {
+    public void insertBoard(BoardRequest vo) {
+
+        Member member = memberRepository.findById(vo.getId()).get();
+
+        Board board = Board.builder()
+                .title(vo.getTitle())
+                .content(vo.getContent())
+                .member(member)
+                .build();
+
         boardRepository.save(board);
     }
 
     public Board getBoard(long id) {
-
         return boardRepository.getById(id);
     }
 }

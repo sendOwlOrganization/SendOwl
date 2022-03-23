@@ -1,6 +1,7 @@
 package com.example.sendowl.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class Comment {
     private String regIp;
 
     private LocalDateTime regDate;
+    @ColumnDefault("1")
     private int active;
 
 }
