@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,14 +59,15 @@ public class Member implements UserDetails {
     private String memMemo;
 
     private String regIp;
-    private String regDate;
+    private LocalDateTime regDate;
     private String modIp;
     private String modDate;
 
     private String accessToken;
     private String refreshToken;
 
-    private String active;
+    @ColumnDefault("1")
+    private int active;
 
     @ElementCollection(fetch=FetchType.EAGER)
     @Builder.Default

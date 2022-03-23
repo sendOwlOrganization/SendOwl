@@ -11,6 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findByActive(String active);
+    List<Board> findByActive(int active);
 }
 

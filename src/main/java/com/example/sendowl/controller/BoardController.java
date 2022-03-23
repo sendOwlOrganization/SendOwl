@@ -4,6 +4,8 @@ package com.example.sendowl.controller;
 import com.example.sendowl.dto.BoardRequest;
 import com.example.sendowl.dto.BoardResponse;
 import com.example.sendowl.entity.Board;
+import com.example.sendowl.entity.Comment;
+import com.example.sendowl.entity.Member;
 import com.example.sendowl.service.BoardService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -75,13 +77,10 @@ public class BoardController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping(path = "/board")
-    public void insertBoard(@RequestBody BoardRequest vo){
-        Board board = Board.builder()
-                        .title(vo.getTitle())
-                                .content(vo.getContent())
-                                        .regId(vo.getRegId()).build();
+    public ResponseEntity<Board> insertBoard(@RequestBody BoardRequest vo){
+        boardService.insertBoard(vo);
 
-        boardService.insertBoard(board);
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
 }
