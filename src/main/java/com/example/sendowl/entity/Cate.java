@@ -22,6 +22,6 @@ public class Cate {
 
     private String cateName;
 
-    private int orderSeq;
+    private Long orderSeq;
 
 }

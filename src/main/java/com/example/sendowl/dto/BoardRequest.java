@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(force = true)
 public class BoardRequest {
     @NotNull
-    private final long id;
+    private final Long id;
 
     @NotNull
     private final String title;
@@ -21,6 +21,5 @@ public class BoardRequest {
     private final String content;
 
     @NotNull
-    private final String regId;
-
+    private final Long regId;
 }

@@ -23,19 +23,15 @@ public class BoardService {
     private final MemberRepository memberRepository;
 
     public List<Board> getBoardList() {
-       int active = 1;
-
-        return boardRepository.findByActive(active);
+       Long active = 1L;
+       return boardRepository.findByActive(active);
     }
 
     public void insertBoard(BoardRequest vo) {
 
-        Member member = memberRepository.findById(vo.getId()).get();
-
         Board board = Board.builder()
                 .title(vo.getTitle())
                 .content(vo.getContent())
-                .member(member)
                 .build();
 
         boardRepository.save(board);

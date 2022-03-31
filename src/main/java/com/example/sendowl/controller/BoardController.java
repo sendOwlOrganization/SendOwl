@@ -54,8 +54,6 @@ public class BoardController {
     public ResponseEntity<BoardResponse> boardDetail(
             @PathVariable Long id
     ){
-        System.err.println(id);
-
         Board boardDetail = boardService.getBoard(id);
 
         BoardResponse boardResponse = BoardResponse.builder()

@@ -34,6 +34,6 @@ public class Comment {
 
     private LocalDateTime regDate;
     @ColumnDefault("1")
-    private int active;
+    private Long active;
 
 }

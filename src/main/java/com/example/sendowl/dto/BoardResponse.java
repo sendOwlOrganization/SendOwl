@@ -13,7 +13,7 @@ public class BoardResponse {
     private final String id;
 
     @NotNull
-    private final String regId;
+    private final Long regId;
 
     @NotNull
     private final String title;

@@ -37,10 +37,10 @@ public class Board {
     private String modIp;
     private String modDate;
     @JoinColumn
-    private long cateId;
+    private Long cateId;
     @ColumnDefault("0")
-    private int hit;
+    private Long hit;
     @ColumnDefault("1")
-    private int active;
+    private Long active;
 
 }

@@ -43,12 +43,13 @@ public class Member implements UserDetails {
     private LocalDateTime regDate;
     private String modIp;
     private String modDate;
+    @ColumnDefault("1")
+    private Long active;
     @JsonIgnore
     private String accessToken;
     @JsonIgnore
     private String refreshToken;
-    @ColumnDefault("1")
-    private int active;
+
 
     @ElementCollection(fetch=FetchType.LAZY)
     @Builder.Default
