@@ -3,6 +3,7 @@ version: '3.2'
 services:
   mysql-db:
     image: mysql
+    container_name: mysql
     restart: always
     env_file: ./.env
     ports:
@@ -15,27 +16,26 @@ services:
       - ./db_data:/var/lib/mysql
 
   zookeeper:
-    image: bitnami/zookeeper:latest
+    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
     env_file: ./.env
-    ports:
-      - $ZOOKEEPER_LOCAL_PORT:$ZOOKEEPER_DOCKER_PORT
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      ZOOKEEPER_CLIENT_PORT: $ZOOKEEPER_LOCAL_PORT
+      ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: bitnami/kafka:2.5.0
+    image: confluentinc/cp-kafka:7.0.1
+    container_name: kafka
     env_file: ./.env
     ports:
-      - $KAFKA_LOCAL_PORT:$KAFKA_DOCKER_PORT
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:$ZOOKEEPER_DOCKER_PORT
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:$KAFKA_DOCKER_PORT
-#      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:$KAFKA_DOCKER_PORT,PLAINTEXT_HOST://localhost:$KAFKA_LOCAL_PORT
-#      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      - KAFKA_LISTENERS=PLAINTEXT://:$KAFKA_DOCKER_PORT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      - $KAFKA_LOCAL_PORT:$KAFKA_LOCAL_PORT
     depends_on:
       - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:$ZOOKEEPER_LOCAL_PORT'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:$KAFKA_LOCAL_PORT,PLAINTEXT_INTERNAL://broker:$KAFKA_DOCKER_PORT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
