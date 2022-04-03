@@ -11,7 +11,9 @@ import com.example.sendowl.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +22,10 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final JwtProvider jwtProvider;
 
+
+    @Transactional(readOnly = true)
     public List<Board> getBoardList() {
         String active = "Y";
 
