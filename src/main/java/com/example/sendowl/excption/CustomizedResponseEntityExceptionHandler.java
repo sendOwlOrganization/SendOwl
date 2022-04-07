@@ -21,4 +21,26 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
         return new ResponseEntity(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(CommentNotFoundException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
+    public final ResponseEntity<Object> handleCommentNotFoundExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse =
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(BoardNotFoundException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
+    public final ResponseEntity<Object> handleBoardNotFoundExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse =
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(MemberNotFoundException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
+    public final ResponseEntity<Object> handleMemberNotFoundExceptions(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse =
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
 }
