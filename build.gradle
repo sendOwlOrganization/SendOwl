@@ -27,7 +27,6 @@ dependencies {
     implementation 'org.springframework.security:spring-security-core:5.6.2'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'io.springfox:springfox-boot-starter:3.0.0'
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     implementation 'mysql:mysql-connector-java:8.0.28'
     implementation 'org.springframework.kafka:spring-kafka:2.8.2'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.6.3'

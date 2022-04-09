@@ -46,6 +46,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/admin/**").permitAll()
                 .antMatchers("/api/boards/**").permitAll()
                 .antMatchers("/api/comment/**").permitAll()
+                .antMatchers("/swagger/**","/v3/**", "/v2/**").permitAll()
                 .anyRequest().hasRole("USER") // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
