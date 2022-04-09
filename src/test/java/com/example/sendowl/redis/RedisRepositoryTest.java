@@ -14,21 +14,23 @@ public class RedisRepositoryTest {
     private RedisBoardRepository redisBoardRepository;
 
     @Test
-    void repoTest(){
-        RedisBoard redisBoard = new RedisBoard(1L);
+    void repoTest() {
+        RedisBoard redisBoard = new RedisBoard(2L);
 
         redisBoardRepository.save(redisBoard);
 
         redisBoardRepository.count();
 
+        //redisBoardRepository.delete(redisBoard);
+
     }
 
     @Test
-    void AddBoardCount(){
+    void AddBoardCount() {
 
         RedisBoard redisBoard = redisBoardRepository.findById(1L).orElseThrow(() -> new RedisBoardNotFoundException("해당 테이블이 존재하지 않습니다."));
-        redisBoard.setCount(redisBoard.getCount()+1);
+        redisBoard.setCount(redisBoard.getCount() + 1);
         redisBoardRepository.save(redisBoard);
-        System.out.println("redisBaordCount : "+redisBoard.getCount());
+        System.out.println("redisBaordCount : " + redisBoard.getCount());
     }
 }
