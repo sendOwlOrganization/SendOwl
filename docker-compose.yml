@@ -39,3 +39,13 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    env_file: ./.env
+    ports:
+      - $REDIS_LOCAL_PORT:$REDIS_DOCKER_PORT
+    volumes:
+      - ./redis:/usr/local/etc/redis
+    command: redis-server /usr/local/etc/redis/redis.conf
