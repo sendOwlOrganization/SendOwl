@@ -20,7 +20,7 @@ public class RedisBoard {
 
     public RedisBoard(Long id) {
         this.id = id;
-        this.count = 1L;
+        this.count = 0L;
         this.createdAt = LocalDateTime.now();
     }
 }
