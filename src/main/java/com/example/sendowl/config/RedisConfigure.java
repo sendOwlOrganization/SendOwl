@@ -1,5 +1,6 @@
 package com.example.sendowl.config;
 
+import com.example.sendowl.entity.RedisBoard;
 import com.example.sendowl.util.RedisMessageSubscriber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
