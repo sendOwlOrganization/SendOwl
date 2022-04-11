@@ -1,5 +1,6 @@
 package com.example.sendowl.entity;
 
+import com.example.sendowl.entity.User.User;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -7,33 +8,36 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor // 기본 생성자 추가
-@AllArgsConstructor // final이 붙은 변수 전부 생성자 등록
-@Builder
+@NoArgsConstructor
 @Getter
-@Setter
-@Table(name="tb_comment")
-public class Comment {
+public class Comment extends BaseEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // null 넣으면 DB가 알아서 autoincrement해준다.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 지연로딩으로 필요할때 불러온다.
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User user;
 
-    private Long parentId;
-    private Long depth;
-    private Long ord;
+    @Column(nullable = false)
     private String content;
 
-    private String regIp;
+    private Long parentId; // 대댓글 self 참조 부분은 미정입니다.
 
-    private LocalDateTime regDate;
-    @ColumnDefault("1")
-    private Long active;
+    private Long depth;
 
+    @Builder
+    public Comment(Board board, User user, String content, Long parentId, Long depth) {
+        this.board = board;
+        this.user = user;
+        this.content = content;
+        this.parentId = parentId;
+        this.depth = depth;
+    }
 }
