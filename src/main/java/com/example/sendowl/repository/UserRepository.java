@@ -1,7 +1,7 @@
 package com.example.sendowl.repository;
 
 
-import com.example.sendowl.entity.User.User;
+import com.example.sendowl.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

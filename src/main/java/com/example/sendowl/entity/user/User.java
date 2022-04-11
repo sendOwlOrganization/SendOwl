@@ -1,21 +1,14 @@
-package com.example.sendowl.entity.User;
+package com.example.sendowl.entity.user;
 
 import com.example.sendowl.entity.BaseEntity;
 import com.example.sendowl.entity.Board;
 import com.example.sendowl.entity.BoardHit;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Getter

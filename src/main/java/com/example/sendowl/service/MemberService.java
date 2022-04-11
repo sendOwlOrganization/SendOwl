@@ -2,7 +2,7 @@ package com.example.sendowl.service;
 
 //서비스 계층에서는 JPA를 통해 원하는 데이터를 가져오는 역할을 한다.
 
-import com.example.sendowl.entity.User.User;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.excption.MemberNotValidException;
 import com.example.sendowl.repository.UserRepository;
 import com.example.sendowl.util.JwtProvider;

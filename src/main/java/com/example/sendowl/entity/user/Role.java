@@ -1,4 +1,4 @@
-package com.example.sendowl.entity.User;
+package com.example.sendowl.entity.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

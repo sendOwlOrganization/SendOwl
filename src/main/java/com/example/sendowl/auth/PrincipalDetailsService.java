@@ -1,6 +1,6 @@
 package com.example.sendowl.auth;
 
-import com.example.sendowl.entity.User.User;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

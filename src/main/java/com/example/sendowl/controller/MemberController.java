@@ -3,7 +3,7 @@ package com.example.sendowl.controller;
 
 import com.example.sendowl.dto.MemberRequest;
 import com.example.sendowl.dto.MemberResponse;
-import com.example.sendowl.entity.User.User;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.service.MemberService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
