@@ -1,5 +1,6 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.auth.jwt.RedisShadowkey;
 import com.example.sendowl.domain.board.dto.BoardRequest;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
@@ -12,7 +13,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 
@@ -25,6 +25,9 @@ public class BoardService {
     private final UserRepository userRepository;
     private final RedisBoardRepository redisBoardRepository;
     private final StringRedisTemplate redisTemplate;
+
+    private final RedisShadowkey redisShadowkey;
+
 
     public List<Board> getBoardList() {
        boolean active = true;
@@ -51,9 +54,8 @@ public class BoardService {
         redisBoardRepository.save(redisBoard);
 
         // Redis shadowKey 존재확인
-        if(redisTemplate.opsForValue().get("shadowkey:board:"+id) == null){
-            redisTemplate.opsForValue().set("shadowkey:board:"+id, "");
-            redisTemplate.opsForValue().getAndExpire("shadowkey:board:"+id, 20, TimeUnit.SECONDS);
+        if(redisShadowkey.findByKey("board:"+Long.toString(id)) == null){
+            redisShadowkey.set("board:"+Long.toString(id), "", 60L);
         }
         return board;
     }

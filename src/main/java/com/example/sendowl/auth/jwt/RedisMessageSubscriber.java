@@ -33,8 +33,8 @@ public class RedisMessageSubscriber implements MessageListener {
 
             // 사용완료한 데이터를 제거한다.
             Long idL = Long.parseLong(id);
-            System.out.println("get:" + redisBoardRepository.findById(1L).get().toString());
-            redisBoardRepository.deleteById(1L);
+            System.out.println("get:" + redisBoardRepository.findById(idL).get().toString());
+            redisBoardRepository.deleteById(idL);
 
             return;
         }

@@ -1,7 +1,7 @@
 package com.example.sendowl.config;
 
-import com.example.sendowl.entity.RedisBoard;
 import com.example.sendowl.auth.jwt.RedisMessageSubscriber;
+import com.example.sendowl.auth.jwt.RedisShadowkey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,6 @@ import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableRedisRepositories
@@ -55,6 +54,11 @@ public class RedisConfigure {
     }
 
     @Bean
+    public RedisShadowkey redisShadowkey(){
+        return new RedisShadowkey();
+    }
+
+    @Bean // Redis 템플릿을 어디서든 사용할 수 있도록 Bean객체를 생성해준다.
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
