@@ -4,8 +4,6 @@ package com.example.sendowl.controller;
 import com.example.sendowl.dto.BoardRequest;
 import com.example.sendowl.dto.BoardResponse;
 import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.Comment;
-import com.example.sendowl.entity.Member;
 import com.example.sendowl.service.BoardService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
