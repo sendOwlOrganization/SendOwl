@@ -33,8 +33,12 @@ public class RedisConfigure {
     }
 
     @Bean
+    public RedisMessageSubscriber redisMessageSubscriber(){
+        return new RedisMessageSubscriber();
+    }
+    @Bean
     public MessageListenerAdapter messageListenerAdapter(){
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+        return new MessageListenerAdapter(redisMessageSubscriber());
     }
 
     @Bean

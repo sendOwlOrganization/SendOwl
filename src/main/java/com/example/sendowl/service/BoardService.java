@@ -61,7 +61,7 @@ public class BoardService {
         // Redis shadowKey 존재확인
         if(redisTemplate.opsForValue().get("shadowkey:board:"+id) == null){
             redisTemplate.opsForValue().set("shadowkey:board:"+id, "");
-            redisTemplate.opsForValue().getAndExpire("shadowkey:board:"+id, 60, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().getAndExpire("shadowkey:board:"+id, 20, TimeUnit.SECONDS);
         }
         return board;
     }
