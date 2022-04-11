@@ -37,6 +37,7 @@ public class RedisRepositoryTest {
 
     @Test
     void DelShadowKeyTest() {
+        redisBoardRepository.deleteById(1L);
     }
 
     @Test

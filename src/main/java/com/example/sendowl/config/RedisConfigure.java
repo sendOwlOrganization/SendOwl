@@ -1,7 +1,7 @@
 package com.example.sendowl.config;
 
 import com.example.sendowl.entity.RedisBoard;
-import com.example.sendowl.util.RedisMessageSubscriber;
+import com.example.sendowl.auth.jwt.RedisMessageSubscriber;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +33,12 @@ public class RedisConfigure {
     }
 
     @Bean
+    public RedisMessageSubscriber redisMessageSubscriber(){
+        return new RedisMessageSubscriber();
+    }
+    @Bean
     public MessageListenerAdapter messageListenerAdapter(){
-        return new MessageListenerAdapter(new RedisMessageSubscriber());
+        return new MessageListenerAdapter(redisMessageSubscriber());
     }
 
     @Bean
