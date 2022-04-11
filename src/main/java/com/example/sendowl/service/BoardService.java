@@ -12,6 +12,7 @@ import com.example.sendowl.repository.BoardRepository;
 import com.example.sendowl.repository.MemberRepository;
 import com.example.sendowl.repository.RedisBoardRepository;
 import com.example.sendowl.util.JwtProvider;
+import com.example.sendowl.util.RedisShadowkey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -31,6 +32,8 @@ public class BoardService {
     private final RedisBoardRepository redisBoardRepository;
     private final MemberRepository memberRepository;
     private final StringRedisTemplate redisTemplate;
+
+    private final RedisShadowkey redisShadowkey;
 
 
     public List<Board> getBoardList() {
@@ -59,9 +62,8 @@ public class BoardService {
         redisBoardRepository.save(redisBoard);
 
         // Redis shadowKey 존재확인
-        if(redisTemplate.opsForValue().get("shadowkey:board:"+id) == null){
-            redisTemplate.opsForValue().set("shadowkey:board:"+id, "");
-            redisTemplate.opsForValue().getAndExpire("shadowkey:board:"+id, 20, TimeUnit.SECONDS);
+        if(redisShadowkey.findByKey("board:"+Long.toString(id)) == null){
+            redisShadowkey.set("board:"+Long.toString(id), "", 60L);
         }
         return board;
     }
