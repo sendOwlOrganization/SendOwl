@@ -6,12 +6,18 @@ import com.example.sendowl.repository.RedisBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class RedisRepositoryTest {
 
     @Autowired
     private RedisBoardRepository redisBoardRepository;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Test
     void repoTest() {
@@ -23,6 +29,21 @@ public class RedisRepositoryTest {
 
         //redisBoardRepository.delete(redisBoard);
 
+    }
+
+    @Test
+    void repoShadowKeyTest() {
+    }
+
+    @Test
+    void DelShadowKeyTest() {
+    }
+
+    @Test
+    void AddShadowkey(){
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set("shadowKey:board:1", "");
+        valueOperations.getAndExpire("shadowKey:board:1", 60, TimeUnit.SECONDS);
     }
 
     @Test
