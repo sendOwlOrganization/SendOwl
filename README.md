@@ -25,4 +25,4 @@ DB : Mysql(8.0.27)<br>
 # 도식화
 <img width="741" alt="스크린샷 2022-03-17 오전 1 22 19" src="https://user-images.githubusercontent.com/52245525/158638109-8007372d-f6eb-4bd5-bee1-05fea88d17f5.png">
 
-![image](https://user-images.githubusercontent.com/44316546/162795773-92e92818-8b5d-49a1-b348-7fb366525b65.png)
+![image](https://user-images.githubusercontent.com/44316546/162918254-365b00f7-50e2-46ef-a40a-8286ddd6adf6.png)
