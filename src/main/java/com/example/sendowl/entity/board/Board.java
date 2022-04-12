@@ -1,5 +1,7 @@
-package com.example.sendowl.entity;
+package com.example.sendowl.entity.board;
 
+import com.example.sendowl.entity.BaseEntity;
+import com.example.sendowl.entity.Category;
 import com.example.sendowl.entity.user.User;
 import lombok.*;
 
@@ -30,8 +32,11 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(columnDefinition = "integer default 0")
+    private Integer hit;
+
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BoardHit> boardHitList = new ArrayList<>();
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
     public Board(User user, String title, String content, Category category) {
@@ -41,13 +46,18 @@ public class Board extends BaseEntity {
         this.category = category;
     }
 
+    public void setHit(Integer hit) {
+        this.hit = hit;
+    }
+
     @Override
     public String toString() {
         return "Board{" +
-                "id=" + id +
-                ", user=" + user +
+                "user=" + user +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", category=" + category +
+                ", hit=" + hit +
                 '}';
     }
 }
