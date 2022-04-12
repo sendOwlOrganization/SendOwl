@@ -1,5 +1,6 @@
 package com.example.sendowl.entity;
 
+import com.example.sendowl.entity.board.Board;
 import lombok.*;
 
 import javax.persistence.*;

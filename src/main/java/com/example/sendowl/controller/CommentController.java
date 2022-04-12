@@ -2,9 +2,7 @@ package com.example.sendowl.controller;
 
 
 import com.example.sendowl.dto.*;
-import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.Comment;
-import com.example.sendowl.service.BoardService;
+import com.example.sendowl.entity.comment.Comment;
 import com.example.sendowl.service.CommentService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

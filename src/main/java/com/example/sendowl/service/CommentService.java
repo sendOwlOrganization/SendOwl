@@ -1,8 +1,8 @@
 package com.example.sendowl.service;
 
 import com.example.sendowl.dto.CommentRequest;
-import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.Comment;
+import com.example.sendowl.entity.board.Board;
+import com.example.sendowl.entity.comment.Comment;
 import com.example.sendowl.entity.user.User;
 import com.example.sendowl.excption.BoardNotFoundException;
 import com.example.sendowl.excption.CommentNotFoundException;

@@ -1,7 +1,7 @@
 package com.example.sendowl.repository;
 
 
-import com.example.sendowl.entity.Board;
+import com.example.sendowl.entity.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
