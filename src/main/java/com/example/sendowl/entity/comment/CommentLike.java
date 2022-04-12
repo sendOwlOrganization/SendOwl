@@ -14,7 +14,7 @@ public class CommentLike {
 
     @Id
     @GeneratedValue
-    @Column(name = "board_hit_id")
+    @Column(name = "comment_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
