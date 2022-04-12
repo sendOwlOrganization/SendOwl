@@ -1,18 +1,12 @@
 package com.example.sendowl.service;
 
 import com.example.sendowl.dto.BoardRequest;
-import com.example.sendowl.dto.BoardResponse;
-import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.Member;
-import com.example.sendowl.excption.MemberNotValidException;
+import com.example.sendowl.entity.board.Board;
 import com.example.sendowl.repository.BoardRepository;
-import com.example.sendowl.repository.MemberRepository;
-import com.example.sendowl.util.JwtProvider;
+import com.example.sendowl.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -20,7 +14,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
     public List<Board> getBoardList() {
        Long active = 1L;

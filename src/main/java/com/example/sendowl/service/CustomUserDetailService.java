@@ -1,6 +1,6 @@
 package com.example.sendowl.service;
 
-import com.example.sendowl.repository.MemberRepository;
+import com.example.sendowl.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String memEmail) throws UsernameNotFoundException {
         System.out.println("loadUserByUsername:"+memEmail);
-        return memberRepository.findByMemEmail(memEmail)
+        return userRepository.findByMemEmail(memEmail)
                 .orElseThrow(()-> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }

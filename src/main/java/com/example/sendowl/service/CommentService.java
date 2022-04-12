@@ -1,31 +1,27 @@
 package com.example.sendowl.service;
 
 import com.example.sendowl.dto.CommentRequest;
-import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.Comment;
-import com.example.sendowl.entity.Member;
+import com.example.sendowl.entity.board.Board;
+import com.example.sendowl.entity.comment.Comment;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.excption.BoardNotFoundException;
 import com.example.sendowl.excption.CommentNotFoundException;
 import com.example.sendowl.excption.MemberNotFoundException;
 import com.example.sendowl.repository.BoardRepository;
 import com.example.sendowl.repository.CommentRepository;
-import com.example.sendowl.repository.MemberRepository;
+import com.example.sendowl.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
 //    public List<Board> getBoardList() {
@@ -39,13 +35,13 @@ public class CommentService {
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException("등록되지 않은 보드입니다.."));
         // 멤버 객체 찾기
-        Member member = memberRepository.findById(vo.getMemberId())
+        User user = userRepository.findById(vo.getMemberId())
                 .orElseThrow(()->new MemberNotFoundException("등록되지 않은 멤버입니다."));
 
-        System.out.println(member.toString());
+        System.out.println(user.toString());
         System.out.println(board.toString());
         Comment comment = new Comment().builder().board(board)
-                .member(member)
+                .user(user)
                 .content(vo.getContent())
                 .regDate(LocalDateTime.now())
                 .build();
@@ -61,7 +57,7 @@ public class CommentService {
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException("등록되지 않은 보드입니다.."));
         // 멤버 객체 찾기
-        Member member = memberRepository.findById(vo.getMemberId())
+        User user = userRepository.findById(vo.getMemberId())
                 .orElseThrow(()->new MemberNotFoundException("등록되지 않은 멤버입니다."));
 
         // 부모 댓글 찾기
@@ -75,7 +71,7 @@ public class CommentService {
                                 .build());
         Comment comment = new Comment().builder()
                 .board(board)
-                .member(member)
+                .user(user)
                 .content(vo.getContent())
                 .regDate(LocalDateTime.now())
                 .parentId(parentComment.getId())

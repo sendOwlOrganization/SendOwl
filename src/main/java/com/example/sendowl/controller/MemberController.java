@@ -3,7 +3,7 @@ package com.example.sendowl.controller;
 
 import com.example.sendowl.dto.MemberRequest;
 import com.example.sendowl.dto.MemberResponse;
-import com.example.sendowl.entity.Member;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.service.MemberService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -35,7 +35,7 @@ public class MemberController {
             @RequestBody @Valid final MemberRequest memberRequest
             ){
 
-        Member saveduser = memberService.addMember(memberRequest.getMemId(), memberRequest.getMemPw(), memberRequest.getMemName(), memberRequest.getMemEmail());
+        User saveduser = memberService.addMember(memberRequest.getMemId(), memberRequest.getMemPw(), memberRequest.getMemName(), memberRequest.getMemEmail());
         final MemberResponse memberResponse = MemberResponse.builder()
                 .memId(saveduser.getMemId())
                 .memName(saveduser.getMemName())
@@ -61,7 +61,7 @@ public class MemberController {
             @PathVariable Long id
     ){
 
-        Member saveduser = memberService.getMember(id);
+        User saveduser = memberService.getMember(id);
         final MemberResponse memberResponse = MemberResponse.builder()
                 .memId(saveduser.getMemId())
                 .memName(saveduser.getMemName())
