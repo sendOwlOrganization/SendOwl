@@ -1,8 +1,9 @@
 package com.example.sendowl.entity.user;
 
 import com.example.sendowl.entity.BaseEntity;
-import com.example.sendowl.entity.Board;
-import com.example.sendowl.entity.BoardHit;
+import com.example.sendowl.entity.board.Board;
+import com.example.sendowl.entity.board.BoardLike;
+import com.example.sendowl.entity.comment.CommentLike;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,8 +40,10 @@ public class User extends BaseEntity {
     private List<Board> boardList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BoardHit> boardHitList = new ArrayList<>();
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikeList = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String name, String nickName, String introduction, String profileImage) {

@@ -1,4 +1,4 @@
-package com.example.sendowl.entity;
+package com.example.sendowl.entity.board;
 
 import com.example.sendowl.entity.user.User;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-public class BoardHit {
+public class BoardLike {
 
     @Id
     @GeneratedValue
@@ -26,22 +26,27 @@ public class BoardHit {
     private Board board;
 
     @Builder
-    public BoardHit(User user, Board board) {
+    public BoardLike(User user, Board board) {
         this.user = user;
         this.board = board;
     }
 
     public void addUser(User user) {
         this.user = user;
-        if (!user.getBoardHitList().contains(this)) {
-            user.getBoardHitList().add(this);
+        if (!user.getBoardLikeList().contains(this)) {
+            user.getBoardLikeList().add(this);
         }
     }
 
     public void addBoard(Board board) {
         this.board = board;
-        if (!board.getBoardHitList().contains(this)) {
-            board.getBoardHitList().add(this);
+        if (!board.getBoardLikeList().contains(this)) {
+            board.getBoardLikeList().add(this);
         }
+    }
+
+    public void remove() {
+        user.getBoardLikeList().remove(this);
+        board.getBoardLikeList().remove(this);
     }
 }
