@@ -1,6 +1,7 @@
 package com.example.sendowl.util;
 
 import com.example.sendowl.entity.user.Role;
+import com.example.sendowl.entity.user.User;
 import com.example.sendowl.service.CustomUserDetailService;
 import com.example.sendowl.service.MemberService;
 import io.jsonwebtoken.Claims;
@@ -11,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +56,8 @@ public class JwtProvider {
 
     // Jwt로 인증정보를 조회
     public Authentication getAuthentication (String token){
-            UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserPk(token));
-            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
     // Jwt에서 회원 구분 Pk 추출
     public String getUserPk(String token){
