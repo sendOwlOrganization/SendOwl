@@ -49,12 +49,11 @@ public class User extends BaseEntity{
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String name, String nickName,Role role, String introduction, String profileImage) {
+    public User(String email, String password, String name, String nickName, String introduction, String profileImage) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.nickName = nickName;
-        this.role = role;
         this.introduction = introduction;
         this.profileImage = profileImage;
     }

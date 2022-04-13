@@ -34,7 +34,6 @@ public class MemberService {
                 .email(memberRequest.getMemEmail())
                 .password(passwordEncoder.encode(memberRequest.getMemPw())) // 암호화
                 .name(memberRequest.getMemName())
-                .role(Role.USER)//최초가입시 USER로 설정
                 .build();
         System.out.println(savedUser.toString());
         userRepository.save(savedUser);
