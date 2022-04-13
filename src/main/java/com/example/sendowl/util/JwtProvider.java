@@ -1,5 +1,6 @@
 package com.example.sendowl.util;
 
+import com.example.sendowl.entity.user.Role;
 import com.example.sendowl.service.CustomUserDetailService;
 import com.example.sendowl.service.MemberService;
 import io.jsonwebtoken.Claims;
@@ -7,7 +8,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor // final , notNull 필드에 생성자 자동생성
 @Component
 public class JwtProvider {
-    private String secretKey = "sendOwl";
+    // @Value("${secretKey}") 일단 임시로
+    private String secretKey = "secretKey";
 
     private Long tokenValidMillisecond = 60* 60 * 1000L; // 토큰 만료 시간
 
@@ -33,7 +35,7 @@ public class JwtProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // 키를 들고와서 Base64로 변환
     }
 
-    public String createToken(String userPk, List<String> roles){
+    public String createToken(String userPk, Role roles){
         //user 구분을 위해 Claim에 User Pk값 넣어줌
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);

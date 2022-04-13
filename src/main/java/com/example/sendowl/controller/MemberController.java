@@ -34,12 +34,11 @@ public class MemberController {
     public ResponseEntity<MemberResponse> signUp(
             @RequestBody @Valid final MemberRequest memberRequest
             ){
-
-        User saveduser = memberService.addMember(memberRequest.getMemId(), memberRequest.getMemPw(), memberRequest.getMemName(), memberRequest.getMemEmail());
+        User saveduser = memberService.addMember(memberRequest);
         final MemberResponse memberResponse = MemberResponse.builder()
-                .memId(saveduser.getMemId())
-                .memName(saveduser.getMemName())
-                .memEmail(saveduser.getMemEmail()).build();
+                .memEmail(saveduser.getEmail())
+                .memName(saveduser.getName())
+                .build();
         return new ResponseEntity<MemberResponse>(memberResponse, HttpStatus.CREATED); // 엔티티 그대로 반환하면 안된다. DTO로 변호나하여 쏴주면 ㄱㅊ하다
     }
 
@@ -63,9 +62,9 @@ public class MemberController {
 
         User saveduser = memberService.getMember(id);
         final MemberResponse memberResponse = MemberResponse.builder()
-                .memId(saveduser.getMemId())
-                .memName(saveduser.getMemName())
-                .memEmail(saveduser.getMemEmail()).build();
+                .memEmail(saveduser.getEmail())
+                .memName(saveduser.getName())
+                .build();
 
         return new ResponseEntity(memberResponse,HttpStatus.OK);
     }
