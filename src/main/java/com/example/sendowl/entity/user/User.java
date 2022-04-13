@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User extends BaseEntity implements UserDetails{
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // null 넣으면 DB가 알아서 autoincrement해준다.
@@ -80,37 +80,5 @@ public class User extends BaseEntity implements UserDetails{
                 ", refreshToken='" + refreshToken + '\'' +
                 ", profileImage='" + profileImage + '\'' +
                 '}';
-    }
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collectors = new ArrayList<>();
-        collectors.add(() -> {
-            return "ROLE_USER";
-        });
-        return collectors;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

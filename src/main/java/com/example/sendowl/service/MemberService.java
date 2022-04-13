@@ -25,7 +25,7 @@ public class MemberService {
 
     public User addMember(final MemberRequest memberRequest){
         // 중복 검증
-        if(userRepository.findByMemEmail(memberRequest.getMemEmail()).isPresent()){
+        if(userRepository.findByEmail(memberRequest.getMemEmail()).isPresent()){
             throw new MemberNotValidException("이미 가입된 이메일 입니다.");
         }
 
@@ -41,7 +41,7 @@ public class MemberService {
         return savedUser;
     }
     public String loginMember(final String memEmail, final String memPw){
-        User savedUser = userRepository.findByMemEmail(memEmail).orElseThrow(()->new IllegalArgumentException("가입되지 않은 Email입니다."));
+        User savedUser = userRepository.findByEmail(memEmail).orElseThrow(()->new IllegalArgumentException("가입되지 않은 Email입니다."));
         System.out.println(savedUser.toString());
         System.out.println(memPw);
         if(!passwordEncoder.matches(memPw, savedUser.getPassword() )){
