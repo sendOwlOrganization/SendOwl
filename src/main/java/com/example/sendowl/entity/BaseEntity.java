@@ -26,5 +26,5 @@ public abstract class BaseEntity {
 
     @Convert(converter = BooleanToTFConverter.class)
     @Column(columnDefinition = "char default 'T'")
-    private Boolean active;
+    private Boolean active = true;
 }
