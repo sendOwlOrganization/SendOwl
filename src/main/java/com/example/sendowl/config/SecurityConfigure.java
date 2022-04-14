@@ -1,10 +1,9 @@
 package com.example.sendowl.config;
 
-import com.example.sendowl.util.JwtAuthenticationFilter;
-import com.example.sendowl.util.JwtProvider;
+import com.example.sendowl.auth.jwt.JwtAuthenticationFilter;
+import com.example.sendowl.auth.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
