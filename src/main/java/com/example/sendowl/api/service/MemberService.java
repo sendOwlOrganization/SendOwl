@@ -4,7 +4,8 @@ package com.example.sendowl.api.service;
 
 import com.example.sendowl.domain.user.dto.MemberRequest;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.MemberNotValidException;
+import com.example.sendowl.domain.user.exception.UserNotValidException;
+import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class MemberService {
     public User addMember(final MemberRequest memberRequest){
         // 중복 검증
         if(userRepository.findByEmail(memberRequest.getMemEmail()).isPresent()){
-            throw new MemberNotValidException("이미 가입된 이메일 입니다.");
+            throw new UserNotValidException(UserErrorCode.NOT_VALID_EMAIL);
         }
 
         // 저장
