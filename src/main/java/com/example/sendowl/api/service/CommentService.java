@@ -1,14 +1,17 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.comment.dto.CommentRequest;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.entity.Comment;
+import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
+import com.example.sendowl.domain.comment.exception.enums.CommentErrorCode;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
-import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
-import com.example.sendowl.domain.user.exception.MemberNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
+import com.example.sendowl.domain.user.exception.UserNotFoundException;
+import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +36,10 @@ public class CommentService {
     public void insertComment(CommentRequest vo) {
         // 보드 객체 찾기
         Board board = boardRepository.findById(vo.getBoardId())
-                .orElseThrow(()->new BoardNotFoundException("등록되지 않은 보드입니다.."));
+                .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
         // 멤버 객체 찾기
         User user = userRepository.findById(vo.getMemberId())
-                .orElseThrow(()->new MemberNotFoundException("등록되지 않은 멤버입니다."));
+                .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
         System.out.println(user.toString());
         System.out.println(board.toString());
@@ -55,14 +58,14 @@ public class CommentService {
     public void insertNestedComment(CommentRequest vo) {
         // 보드 객체 찾기
         Board board = boardRepository.findById(vo.getBoardId())
-                .orElseThrow(()->new BoardNotFoundException("등록되지 않은 보드입니다.."));
+                .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
         // 멤버 객체 찾기
         User user = userRepository.findById(vo.getMemberId())
-                .orElseThrow(()->new MemberNotFoundException("등록되지 않은 멤버입니다."));
+                .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
         // 부모 댓글 찾기
         Comment parentComment = commentRepository.findById(vo.getParentId())
-                .orElseThrow(()->new CommentNotFoundException("등록되지 않은 댓글입니다."));
+                .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
         // 마지막 자식 찾기
         Comment lastNestedComent = commentRepository
                 .findTopByParentIdOrderByOrdDesc(parentComment.getId()).orElse(
@@ -83,9 +86,9 @@ public class CommentService {
 
     public List<Comment> selectCommentList(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new BoardNotFoundException("존재하지 않는 보드입니다."));
+                ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
         List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
-                ()-> new BoardNotFoundException("존재하지 않는 보드입니다."));
+                ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
         return comments;
     }
 

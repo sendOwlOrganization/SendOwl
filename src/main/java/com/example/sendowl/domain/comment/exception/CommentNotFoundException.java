@@ -1,10 +1,16 @@
 package com.example.sendowl.domain.comment.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.example.sendowl.common.exception.BaseException;
+import com.example.sendowl.common.exception.enums.BaseErrorCodeIF;
 
-public class CommentNotFoundException extends RuntimeException{
-    public CommentNotFoundException(String msg) {
-        super(msg);
+public class CommentNotFoundException extends BaseException {
+
+    public CommentNotFoundException(BaseErrorCodeIF errorCode) {
+        super(errorCode);
     }
+
+    public CommentNotFoundException(BaseErrorCodeIF errorCode, Throwable throwable) {
+        super(errorCode, throwable);
+    }
+
 }
