@@ -6,12 +6,12 @@ import javax.persistence.Converter;
 @Converter
 public class BooleanToTFConverter implements AttributeConverter<Boolean, String> {
     @Override public String convertToDatabaseColumn(Boolean active) {
-        return (active != null && active) ? "T" : "F";
+        return (active != null && active) ? "Y" : "N";
     }
 
     @Override
     public Boolean convertToEntityAttribute(String active) {
-        return (active != null && active.equals("T")) ? true : false;
+        return (active != null && active.equals("Y")) ? true : false;
     }
 
 }
