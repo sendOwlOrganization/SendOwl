@@ -27,4 +27,12 @@ public abstract class BaseEntity {
     @Convert(converter = BooleanToTFConverter.class)
     @Column(columnDefinition = "char default 'T'")
     private Boolean active = true;
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
 }
