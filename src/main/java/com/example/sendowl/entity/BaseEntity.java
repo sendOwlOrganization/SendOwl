@@ -1,10 +1,13 @@
 package com.example.sendowl.entity;
 
+import com.example.sendowl.converter.BooleanToTFConverter;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
@@ -21,5 +24,15 @@ public abstract class BaseEntity {
     @LastModifiedDate
     private LocalDateTime modDate;
 
-    private Boolean active;
+    @Convert(converter = BooleanToTFConverter.class)
+    @Column(columnDefinition = "char default 'T'")
+    private Boolean active = true;
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
 }
