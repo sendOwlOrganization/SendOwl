@@ -31,12 +31,12 @@ public class BoardController {
             @ApiResponse(code = 404, message = "NOT FOUND !!"),
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping(path = "/list") // join
-    public ResponseEntity<List<Board>> list(
+    @GetMapping(path = "/")
+    public ResponseEntity<List<Board>> boards(
             ){
-        List<Board> boardList = boardService.getBoardList();
+        List<Board> boards = boardService.getBoardList();
 
-        return new ResponseEntity<List<Board>>(boardList, HttpStatus.OK);
+        return new ResponseEntity<List<Board>>(boards, HttpStatus.OK);
     }
 
     // 게시글 상세
@@ -48,7 +48,7 @@ public class BoardController {
             @ApiResponse(code = 404, message = "NOT FOUND !!"),
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
-    @GetMapping(path = "/list/{id}") // join
+    @GetMapping(path = "/{id}") // join
     public ResponseEntity<BoardResponse> boardDetail(
             @PathVariable Long id
     ){
@@ -58,6 +58,7 @@ public class BoardController {
                 .title(boardDetail.getTitle())
                 .content(boardDetail.getContent())
                 .id(boardDetail.getId() + "")
+                .regId(boardDetail.getUser().getId())
                 .build();
 
         return new ResponseEntity<BoardResponse>(boardResponse, HttpStatus.OK);
@@ -73,8 +74,8 @@ public class BoardController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
     @PostMapping(path = "/board")
-    public ResponseEntity<Board> insertBoard(@RequestBody BoardRequest vo){
-        boardService.insertBoard(vo);
+    public ResponseEntity<Board> insertBoard(@RequestBody BoardRequest rq){
+        boardService.insertBoard(rq);
 
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }

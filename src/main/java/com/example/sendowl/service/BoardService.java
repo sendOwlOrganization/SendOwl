@@ -17,7 +17,7 @@ public class BoardService {
     private final UserRepository userRepository;
 
     public List<Board> getBoardList() {
-       Long active = 1L;
+       boolean active = true;
        return boardRepository.findByActive(active);
     }
 
