@@ -43,6 +43,8 @@ public class RedisMessageSubscriber implements MessageListener {
             board.setHit((int) (board.getHit() + count));
             boardRepository.save(board);
 
+            redisBoardRepository.deleteById(idL);
+
             // 사용완료한 데이터를 제거한다.
             redisBoardRepository.deleteById(idL);
             return;

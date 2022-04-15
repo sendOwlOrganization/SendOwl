@@ -22,7 +22,6 @@ public class BoardService {
     private final RedisBoardRepository redisBoardRepository;
     private final RedisShadowkey redisShadowkey;
 
-
     public List<Board> getBoardList() {
        boolean active = true;
        return boardRepository.findByActive(active);
