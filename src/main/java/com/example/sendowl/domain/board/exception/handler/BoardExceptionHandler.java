@@ -1,7 +1,7 @@
 package com.example.sendowl.domain.board.exception.handler;
 
 
-import com.example.sendowl.common.dto.BaseErrorResponse;
+import com.example.sendowl.common.dto.BaseErrorResponseDto;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +14,10 @@ import org.springframework.web.context.request.WebRequest;
 public class BoardExceptionHandler {
 
     @ExceptionHandler(BoardNotFoundException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
-    public final ResponseEntity<BaseErrorResponse> handleBoardNotFoundExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<BaseErrorResponseDto> handleBoardNotFoundExceptions(Exception ex, WebRequest request) {
         BoardNotFoundException boxedException = new BoardNotFoundException(
                 BoardErrorCode.NOT_FOUND, ex);
-        return new ResponseEntity<>(BaseErrorResponse.createErrorResponse(boxedException),
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
                 boxedException.getErrorStatus());
     }
 }

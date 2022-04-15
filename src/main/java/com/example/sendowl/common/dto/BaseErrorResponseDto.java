@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BaseErrorResponse {
+public class BaseErrorResponseDto {
 
+    boolean success;
     int errorCode;
     String errorMessage;
 
-    public static BaseErrorResponse createErrorResponse(BaseException baseException) {
-        return new BaseErrorResponse(baseException.getErrorCode(), baseException.getErrorMessage());
+    public static BaseErrorResponseDto of(BaseException baseException) {
+        return new BaseErrorResponseDto(false, baseException.getErrorCode(), baseException.getErrorMessage());
     }
 }
