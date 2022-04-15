@@ -1,7 +1,7 @@
 package com.example.sendowl.auth;
 
-import com.example.sendowl.entity.user.Role;
-import com.example.sendowl.entity.user.User;
+import com.example.sendowl.domain.user.entity.Role;
+import com.example.sendowl.domain.user.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
