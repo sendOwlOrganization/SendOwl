@@ -6,6 +6,8 @@ import com.example.sendowl.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 @RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
@@ -16,12 +18,12 @@ public class UserController {
     final private UserService userService;
 
     @PostMapping("/join")
-    public BaseResponseDto<JoinRes> join(@RequestBody JoinReq req) {
+    public BaseResponseDto<JoinRes> join(final @Valid @RequestBody JoinReq req) {
         return new BaseResponseDto<>(userService.save(req));
     }
 
     @PostMapping("/login") // 로그인
-    public BaseResponseDto<LoginRes> login(@RequestBody LoginReq req) {
+    public BaseResponseDto<LoginRes> login(final @Valid @RequestBody LoginReq req) {
         return new BaseResponseDto<>(userService.login(req));
     }
 
