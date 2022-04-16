@@ -1,6 +1,6 @@
 package com.example.sendowl.domain.user.exception.handler;
 
-import com.example.sendowl.common.dto.BaseErrorResponse;
+import com.example.sendowl.common.dto.BaseErrorResponseDto;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserNotValidException;
@@ -14,18 +14,18 @@ import org.springframework.web.context.request.WebRequest;
 public class UserExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
-    public final ResponseEntity<BaseErrorResponse> handleUserNotFoundExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<BaseErrorResponseDto> handleUserNotFoundExceptions(Exception ex, WebRequest request) {
         UserNotFoundException boxedException = new UserNotFoundException(
                 UserErrorCode.NOT_FOUND, ex);
-        return new ResponseEntity<>(BaseErrorResponse.createErrorResponse(boxedException),
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
                 boxedException.getErrorStatus());
     }
 
     @ExceptionHandler(UserNotValidException.class)
-    public final ResponseEntity<BaseErrorResponse> handleUserNotValidExceptions(Exception ex, WebRequest request) {
+    public final ResponseEntity<BaseErrorResponseDto> handleUserNotValidExceptions(Exception ex, WebRequest request) {
         UserNotValidException boxedException = new UserNotValidException(
                 UserErrorCode.NOT_FOUND, ex);
-        return new ResponseEntity<>(BaseErrorResponse.createErrorResponse(boxedException),
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
                 boxedException.getErrorStatus());
     }
 }
