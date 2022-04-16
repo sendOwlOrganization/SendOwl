@@ -16,7 +16,7 @@ public class BaseErrorResponseDto {
 
     final boolean success = false;
     int statusCode;
-    Map<String, String> errorMessage;
+    Map<String, String> response;
 
     public static BaseErrorResponseDto of(BaseException baseException) {
         Map<String, String> map = new HashMap<>();
