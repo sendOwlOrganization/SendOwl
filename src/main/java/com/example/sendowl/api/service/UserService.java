@@ -28,13 +28,6 @@ public class UserService {
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
-        if (Objects.isNull(req.getName())
-                || Objects.isNull(req.getNickName())
-                || Objects.isNull(req.getEmail())
-                || Objects.isNull(req.getPassword())) {
-            throw new UserNotValidException(INVALID_USER_INFO);
-        }
-
         if (userRepository.existsUserByEmail(req.getEmail())) {
             throw new UserNotValidException(INVALID_EMAIL);
         }
@@ -68,9 +61,6 @@ public class UserService {
 
 
     public UserRes getUser(Long id) {
-        if (Objects.isNull(id)) {
-            throw new BaseException(BaseErrorCode.NULL_ERROR, "getUser path variable 'id' is null");
-        }
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
         return new UserRes(user);
