@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@RedisHash(value = "board") // value + hash로 key값이 설정된다. ttl을 10분으로 설정하여 10분 뒤 제거됨
+@RedisHash(value = "board") // value + hash로 key값이 설정된다.
 public class RedisBoard {
     @Id // 임시값으로 저장된다.
     private Long id; // 게시판의 아이디
