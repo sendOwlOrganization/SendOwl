@@ -5,8 +5,6 @@ import com.example.sendowl.domain.board.dto.BoardRequest;
 import com.example.sendowl.domain.board.dto.BoardResponse;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.api.service.BoardService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,13 +22,6 @@ public class BoardController {
 
     // 게시글 목록
     @Operation(summary = "list api", description = "list api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
     @GetMapping(path = "/")
     public ResponseEntity<List<Board>> boards(
             ){
@@ -41,13 +32,6 @@ public class BoardController {
 
     // 게시글 상세
     @Operation(summary = "board api", description = "board api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
     @GetMapping(path = "/{id}") // join
     public ResponseEntity<BoardResponse> boardDetail(
             @PathVariable Long id
@@ -66,13 +50,6 @@ public class BoardController {
 
     // 게시글 등록
     @Operation(summary = "board insert api", description = "board insert api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
     @PostMapping(path = "/board")
     public ResponseEntity<Board> insertBoard(@RequestBody BoardRequest rq){
         boardService.insertBoard(rq);

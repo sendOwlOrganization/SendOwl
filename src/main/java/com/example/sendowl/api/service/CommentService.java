@@ -43,17 +43,17 @@ public class CommentService {
 
         System.out.println(user.toString());
         System.out.println(board.toString());
-        Comment comment = new Comment().builder().board(board)
-                .user(user)
-                .content(vo.getContent())
-                .regDate(LocalDateTime.now())
-                .build();
-        Comment savedComment = commentRepository.save(comment);
-        savedComment.setParentId(savedComment.getId());// 자신의 값을 설정
-        savedComment.setDepth(0L);
-        savedComment.setOrd(0L);
-        System.out.println("댓글 확인" + savedComment.getId().toString());
-        commentRepository.flush();
+//        Comment comment = new Comment().builder().board(board)
+//                .user(user)
+//                .content(vo.getContent())
+//                .regDate(LocalDateTime.now())
+//                .build();
+//        Comment savedComment = commentRepository.save(comment);
+//        savedComment.setParentId(savedComment.getId());// 자신의 값을 설정
+//        savedComment.setDepth(0L);
+//        savedComment.setOrd(0L);
+//        System.out.println("댓글 확인" + savedComment.getId().toString());
+//        commentRepository.flush();
     }
     public void insertNestedComment(CommentRequest vo) {
         // 보드 객체 찾기
@@ -67,21 +67,20 @@ public class CommentService {
         Comment parentComment = commentRepository.findById(vo.getParentId())
                 .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
         // 마지막 자식 찾기
-        Comment lastNestedComent = commentRepository
-                .findTopByParentIdOrderByOrdDesc(parentComment.getId()).orElse(
-                        new Comment().builder()
-                                .ord(0L)
-                                .build());
-        Comment comment = new Comment().builder()
-                .board(board)
-                .user(user)
-                .content(vo.getContent())
-                .regDate(LocalDateTime.now())
-                .parentId(parentComment.getId())
-                .depth(parentComment.getDepth()+1)
-                .ord(lastNestedComent.getOrd()+1)
-                .build();
-        commentRepository.save(comment);
+//        Comment lastNestedComent = commentRepository
+//                .findTopByParentIdOrderByOrdDesc(parentComment.getId()).orElse(
+//                        new Comment().builder()
+//                                .ord(0L)
+//                                .build());
+//        Comment comment = new Comment().builder()
+//                .board(board)
+//                .user(user)
+//                .content(vo.getContent())
+//                .parentId(parentComment.getId())
+//                .depth(parentComment.getDepth()+1)
+//                .ord(lastNestedComent.getOrd()+1)
+//                .build();
+//        commentRepository.save(comment);
     }
 
     public List<Comment> selectCommentList(Long boardId){

@@ -27,6 +27,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+    pattern: __keyevent@0__:*
 
 
   kafka:
