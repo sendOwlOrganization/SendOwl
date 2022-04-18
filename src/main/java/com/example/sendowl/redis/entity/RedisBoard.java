@@ -1,4 +1,4 @@
-package com.example.sendowl.entity;
+package com.example.sendowl.redis.entity;
 
 import lombok.Getter;
 import lombok.Setter;

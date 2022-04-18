@@ -1,4 +1,4 @@
-package com.example.sendowl.auth.jwt;
+package com.example.sendowl.redis;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

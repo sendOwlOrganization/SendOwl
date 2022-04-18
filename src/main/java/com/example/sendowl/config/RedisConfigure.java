@@ -1,7 +1,7 @@
 package com.example.sendowl.config;
 
-import com.example.sendowl.auth.jwt.RedisMessageSubscriber;
-import com.example.sendowl.auth.jwt.RedisShadowkey;
+import com.example.sendowl.redis.RedisMessageSubscriber;
+import com.example.sendowl.redis.RedisShadowkey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
