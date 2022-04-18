@@ -37,3 +37,4 @@ build/
 .env
 db_data
 /src/main/resources/application-stmp.yml
+redis/
