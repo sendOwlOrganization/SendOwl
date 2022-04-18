@@ -1,7 +1,7 @@
 package com.example.sendowl.redis;
 
 import com.example.sendowl.entity.RedisBoard;
-import com.example.sendowl.excption.RedisBoardNotFoundException;
+import com.example.sendowl.redis.excption.RedisBoardNotFoundException;
 import com.example.sendowl.repository.RedisBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 
 @SpringBootTest
 public class RedisRepositoryTest {
@@ -50,7 +52,7 @@ public class RedisRepositoryTest {
     @Test
     void AddBoardCount() {
 
-        RedisBoard redisBoard = redisBoardRepository.findById(1L).orElseThrow(() -> new RedisBoardNotFoundException("해당 테이블이 존재하지 않습니다."));
+        RedisBoard redisBoard = redisBoardRepository.findById(1L).orElseThrow(() -> new RedisBoardNotFoundException(NOT_FOUND));
         redisBoard.setCount(redisBoard.getCount() + 1);
         redisBoardRepository.save(redisBoard);
         System.out.println("redisBaordCount : " + redisBoard.getCount());

@@ -1,6 +1,6 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.auth.jwt.RedisShadowkey;
+import com.example.sendowl.redis.RedisShadowkey;
 import com.example.sendowl.domain.board.dto.BoardRequest;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
