@@ -38,11 +38,14 @@ public class BoardDto {
         private String content;
         @NotBlank
         private String email;
+        @NotBlank
+        private String categoryName;
 
         public BoardReq(Board entity) {
             this.title = entity.getTitle();
             this.content = entity.getContent();
             this.email = entity.getUser().getEmail();
+            this.categoryName = String.valueOf(entity.getCategory().getCategoryName());
         }
     }
 

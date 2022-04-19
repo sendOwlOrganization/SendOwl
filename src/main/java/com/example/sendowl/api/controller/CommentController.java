@@ -14,27 +14,27 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/comments")
 public class CommentController {
 
     private final CommentService commentService;
 
     @Operation(summary = "comment insert api", description = "board insert api")
-    @PostMapping(path = "/comment") // 댓글 등록
+    @PostMapping(path = "") // 댓글 등록
     public ResponseEntity<Comment> insertComment(@RequestBody CommentRequest vo){
         commentService.insertComment(vo);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @Operation(summary = "nested comment insert api", description = "board insert api")
-    @PostMapping(path = "/comment/nest") // 대댓글 등록
+    @PostMapping(path = "/nest") // 대댓글 등록
     public ResponseEntity<Comment> insertNestedComment(@RequestBody CommentRequest vo){
         commentService.insertNestedComment(vo);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
     @Operation(summary = "comment list api", description = "list api")
-    @GetMapping(path = "/comment/list") // 댓글 목록
+    @GetMapping(path = "") // 댓글 목록
     public ResponseEntity<List<Comment>> getCommentList(@RequestParam("board-id") Long boardId){
         List<Comment> comments = commentService.selectCommentList(boardId);
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);

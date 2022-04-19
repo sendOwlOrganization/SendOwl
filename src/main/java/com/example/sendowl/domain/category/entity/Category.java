@@ -18,13 +18,14 @@ public class Category {
     private Long id;
 
     @Column(nullable = false)
-    private String categoryName;
+    @Enumerated(EnumType.STRING)
+    private CategoryName categoryName;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public Category(String categoryName) {
+    public Category(CategoryName categoryName) {
         this.categoryName = categoryName;
     }
 }

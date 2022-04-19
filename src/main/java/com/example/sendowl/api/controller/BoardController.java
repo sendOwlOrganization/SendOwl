@@ -31,7 +31,7 @@ public class BoardController {
     @PostMapping(path = "/board") // 게시글 등록 BaseResponseDto<BoardRes>
     public BaseResponseDto<BoardsRes> board(final @Valid @RequestBody BoardReq rq){
 
-        return new BaseResponseDto<BoardsRes>(boardService.board(rq));
+        return new BaseResponseDto<BoardsRes>(boardService.insertBoard(rq));
     }
 
     @Operation(summary = "board api", description = "board api")

@@ -1,6 +1,9 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.domain.board.dto.BoardDto;
+import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
+import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
@@ -13,6 +16,8 @@ import com.example.sendowl.redis.entity.RedisBoard;
 import com.example.sendowl.repository.RedisBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 import java.util.ArrayList;
@@ -24,10 +29,12 @@ import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
     private final RedisBoardRepository redisBoardRepository;
     private final RedisShadowkey redisShadowkey;
 
@@ -44,15 +51,18 @@ public class BoardService {
         return boardRes;
     }
 
-    public BoardsRes board(BoardReq req) {
+    @Transactional
+    public BoardsRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
+
+        Category category = categoryRepository.findByCategoryName(req.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(NOT_FOUND));
 
         Board board = Board.builder()
                 .title(req.getTitle())
                 .content(req.getContent())
-                .user(user)
-                .build();
+                .category(category)
+                .user(user).build();
 
         boardRepository.save(board);
 
