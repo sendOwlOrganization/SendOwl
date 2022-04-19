@@ -55,8 +55,8 @@ public class UserService {
             throw new UserNotValidException(INVALID_PASSWORD);
         }
 
-        String accessToken = jwtProvider.createToken(user.getEmail(), user.getRole());
-        String refreshToken = "";
+        String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
+        String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
 
         return new HashMap<>(Map.of(
                 ACCESS_TOKEN, accessToken,

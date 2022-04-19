@@ -23,7 +23,8 @@ public class JwtProvider {
     // @Value("${secretKey}") 일단 임시로
     private String secretKey = "secretKey";
 
-    private Long tokenValidMillisecond = 60* 60 * 1000L; // 토큰 만료 시간
+    private final Long accessTokenValidMillisecond = 60 * 60 * 1000L; // access 토큰 만료 시간
+    private final Long refreshTokenValidMillisecond = 24 * 60 * 60 * 60 * 1000L; // refresh 토큰 만료 시간
 
     private final PrincipalDetailsService principalDetailsService;
 
@@ -31,11 +32,11 @@ public class JwtProvider {
     protected void init(){
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // 키를 들고와서 Base64로 변환
     }
-
-    public String createToken(String userPk, Role roles){
+    public String createAccessToken(String userPk, Role roles){
         //user 구분을 위해 Claim에 User Pk값 넣어줌
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
+        claims.put("type", "access");
 
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
@@ -43,7 +44,23 @@ public class JwtProvider {
         return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+    public String createRefreshToken(String userPk, Role roles){
+        //user 구분을 위해 Claim에 User Pk값 넣어줌
+        Claims claims = Jwts.claims().setSubject(userPk);
+        claims.put("roles", roles);
+        claims.put("type", "refresh");
+
+        // 생성날짜, 만료 날짜를 위한 Date
+        Date now = new Date();
+
+        return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
