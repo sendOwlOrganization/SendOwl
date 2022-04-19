@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -19,6 +20,7 @@ public class BoardDto {
         private String email;
         private String title;
         private String content;
+        private LocalDateTime regDate;
         private Integer hit;
 
         public BoardsRes(Board entity) {
@@ -26,6 +28,7 @@ public class BoardDto {
             this.email = entity.getUser().getEmail();
             this.title = entity.getTitle();
             this.content = entity.getContent();
+            this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
     }
