@@ -1,7 +1,11 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.board.dto.BoardDto;
+import com.example.sendowl.domain.user.dto.UserDto;
+import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.UserNotFoundException;
+import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.redis.RedisShadowkey;
-import com.example.sendowl.domain.board.dto.BoardRequest;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
@@ -9,37 +13,56 @@ import com.example.sendowl.redis.entity.RedisBoard;
 import com.example.sendowl.repository.RedisBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
+import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
     private final RedisBoardRepository redisBoardRepository;
     private final RedisShadowkey redisShadowkey;
 
-    public List<Board> getBoardList() {
+    public List<BoardsRes> getBoardList() {
        boolean active = true;
-       return boardRepository.findByActive(active);
+        //List<Board> boards = boardRepository.findByActive(active);
+        List<Board> boards = boardRepository.findAll();
+        List<BoardsRes> boardRes = new ArrayList<>();
+        for(Board i : boards){
+            BoardsRes temp = new BoardsRes(i);
+            boardRes.add(temp);
+        }
+
+        return boardRes;
     }
 
-    public void insertBoard(BoardRequest vo) {
+    public BoardsRes board(BoardReq req) {
+        User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
+                () -> new UserNotFoundException(NOT_FOUND));
 
         Board board = Board.builder()
-                .title(vo.getTitle())
-                .content(vo.getContent())
+                .title(req.getTitle())
+                .content(req.getContent())
+                .user(user)
                 .build();
 
         boardRepository.save(board);
+
+        return new BoardsRes(board);
     }
 
-    public Board getBoard(long id) {
+    public DetailRes boardDetail(Long id) {
 
-        Board board = boardRepository.findById(id).orElseThrow(()-> new BoardNotFoundException(NOT_FOUND));
+        Board board = boardRepository.findById(id).orElseThrow(
+                () -> new BoardNotFoundException(NOT_FOUND));
 
         // Redis update 쿼리
         RedisBoard redisBoard = redisBoardRepository.findById(id).orElse(new RedisBoard(id));
@@ -50,6 +73,7 @@ public class BoardService {
         if(redisShadowkey.findByKey("board:"+Long.toString(id)) == null){
             redisShadowkey.set("board:"+Long.toString(id), "", 60L);
         }
-        return board;
+
+        return new DetailRes(board);
     }
 }

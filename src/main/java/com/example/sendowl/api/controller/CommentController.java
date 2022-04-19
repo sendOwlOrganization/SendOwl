@@ -19,55 +19,25 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 등록
     @Operation(summary = "comment insert api", description = "board insert api")
-    @PostMapping(path = "/comment")
+    @PostMapping(path = "/comment") // 댓글 등록
     public ResponseEntity<Comment> insertComment(@RequestBody CommentRequest vo){
         commentService.insertComment(vo);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
-    // 대댓글 등록
     @Operation(summary = "nested comment insert api", description = "board insert api")
-    @PostMapping(path = "/comment/nest")
+    @PostMapping(path = "/comment/nest") // 대댓글 등록
     public ResponseEntity<Comment> insertNestedComment(@RequestBody CommentRequest vo){
         commentService.insertNestedComment(vo);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
-    // 댓글 목록
+
     @Operation(summary = "comment list api", description = "list api")
-    @GetMapping(path = "/comment/list")
+    @GetMapping(path = "/comment/list") // 댓글 목록
     public ResponseEntity<List<Comment>> getCommentList(@RequestParam("board-id") Long boardId){
         List<Comment> comments = commentService.selectCommentList(boardId);
         return new ResponseEntity<List<Comment>>(comments, HttpStatus.OK);
     }
-/*
-    // 게시글 상세
-    @Operation(summary = "board api", description = "board api")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "OK !!"),
-            @ApiResponse(code = 201, message = "CREATED !!"),
-            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
-            @ApiResponse(code = 404, message = "NOT FOUND !!"),
-            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
-    })
-    @GetMapping(path = "/list/{id}") // join
-    public ResponseEntity<BoardResponse> boardDetail(
-            @PathVariable Long id
-    ){
-        System.err.println(id);
-
-        Board boardDetail = boardService.getBoard(id);
-
-        BoardResponse boardResponse = BoardResponse.builder()
-                .title(boardDetail.getTitle())
-                .content(boardDetail.getContent())
-                .id(boardDetail.getId() + "")
-                .build();
-
-        return new ResponseEntity<BoardResponse>(boardResponse, HttpStatus.OK);
-    }
-*/
-
 
 }

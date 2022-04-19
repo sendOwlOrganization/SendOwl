@@ -8,6 +8,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -39,11 +40,11 @@ public class Board extends BaseEntity {
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
-    public Board(User user, String title, String content, Category category) {
+    public Board(User user, String title, String content) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.category = category;
+//        this.category = category;
     }
 
     public void setHit(Integer hit) {
