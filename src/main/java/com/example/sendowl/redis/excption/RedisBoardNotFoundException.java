@@ -1,4 +1,4 @@
-package com.example.sendowl.excption;
+package com.example.sendowl.redis.excption;
 
 import com.example.sendowl.common.exception.BaseException;
 import com.example.sendowl.common.exception.enums.BaseErrorCodeIF;
