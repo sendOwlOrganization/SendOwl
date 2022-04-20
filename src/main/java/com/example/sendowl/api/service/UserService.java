@@ -1,17 +1,17 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.common.exception.BaseException;
-import com.example.sendowl.common.exception.enums.BaseErrorCode;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.UserNotFoundException;
-import com.example.sendowl.domain.user.exception.UserNotValidException;
+import com.example.sendowl.domain.user.exception.*;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
+import com.example.sendowl.kafka.producer.KafkaProducer;
+import com.example.sendowl.redis.entity.RedisUserToken;
+import com.example.sendowl.redis.service.RedisUserTokenService;
+import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Objects;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.*;
@@ -25,13 +25,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final KafkaProducer kafkaProducer;
+    private final RedisUserTokenService redisUserTokenService;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
-        if (userRepository.existsUserByEmail(req.getEmail())) {
-            throw new UserNotValidException(INVALID_EMAIL);
-        }
-
         User user = User.builder()
                 .name(req.getName())
                 .nickName(req.getNickName())
@@ -64,5 +62,31 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
         return new UserRes(user);
+    }
+
+    public EmailCheckRes emailCheck(EmailCheckReq req) {
+        if (userRepository.existsUserByEmail(req.getEmail())) {
+            throw new UserAlreadyExistException(EXISTING_EMAIL);
+        }
+
+        String token = new TokenGenerator().generateSixRandomNumber();
+        new Thread(() -> {
+            kafkaProducer.sendEmailVerification(req.getEmail(), token); // 인증 코드 전송
+            redisUserTokenService.deleteByEmail(req.getEmail());
+            redisUserTokenService.save(RedisUserToken.builder()
+                    .email(req.getEmail())
+                    .token(token)
+                    .build());
+        }).start();
+
+
+        return new EmailCheckRes().success();
+    }
+
+    public EmailVerifyRes emailVerify(EmailVerifyReq req) {
+        RedisUserToken redisToken = redisUserTokenService.findTokenByEmail(req.getEmail())
+                .orElseThrow(() -> new UserVerifyTokenExpiredException(EXPIRED_VERIFICATION_TOKEN));
+
+        return new EmailVerifyRes(redisToken.getToken().equals(req.getToken()));
     }
 }
