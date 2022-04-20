@@ -1,18 +1,20 @@
 package com.example.sendowl.auth.jwt;
 
+import com.example.sendowl.auth.exception.JwtInvalidException;
+import com.example.sendowl.auth.exception.JwtNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static com.example.sendowl.auth.exception.enums.JwtErrorCode.INVALID;
+import static com.example.sendowl.auth.exception.enums.JwtErrorCode.NOT_FOUND;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,10 +25,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
             String token = jwtProvider.resolveToken((HttpServletRequest) request);
-            if(token != null && jwtProvider.validationToken(token)) { // 토큰이 존재하는지 && 토큰의 날짜를 검증
-                Authentication authentication = jwtProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("doFilter:"+token);
+            if(token == null ){
+                throw new JwtNotFoundException(NOT_FOUND);
             }
+            if(!jwtProvider.validationToken(token)) { // 토큰이 존재하는지 && 토큰의 날짜를 검증
+                throw new JwtInvalidException(INVALID);
+            }
+            Authentication authentication = jwtProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(request, response); // 필터체인의 다음 체인을 실행하게 한다.
     }
 }
