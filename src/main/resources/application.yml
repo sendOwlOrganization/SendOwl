@@ -12,7 +12,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   profiles:
-    include: jwt
+    include: jwt, smtp
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -36,11 +36,15 @@ spring:
   kafka:
     consumer:
       bootstrap-servers: localhost:19092
-      group-id: group-id-oing
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
     producer:
       bootstrap-servers: localhost:19092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
