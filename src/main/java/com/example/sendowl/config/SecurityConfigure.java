@@ -18,23 +18,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_WHITELIST = {
-            // -- Swagger UI v2
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            // -- Swagger UI v3 (OpenAPI)
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
+    private static final String[] AUTH_LIST = {
             // other public endpoints of your API may be appended to this array
-            "/api/users/**",
             "/api/admin/**",
             "/api/boards/**",
-            "/api/comment/**",
+            "/api/comment/**"
+    };
+    private static final String[] AUTH_WHITELIST = {
+            "/api/users/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/**",
+            "/v2/**",
+            "/swagger/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/configuration/ui",
+            "/configuration/security",
+
     };
 
     private final JwtProvider jwtProvider;
@@ -62,9 +64,14 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()// 사용권한 체크
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(AUTH_LIST).permitAll()
                 .anyRequest().hasRole(Role.USER.getKey()) // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class);// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
+//                .anyRequest().authenticated();
     }
 }
