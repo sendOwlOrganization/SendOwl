@@ -23,7 +23,7 @@ public class JwtProvider {
     // @Value("${secretKey}") 일단 임시로
     private String secretKey = "secretKey";
 
-    private final Long accessTokenValidMillisecond = 60 * 60 * 1000L; // access 토큰 만료 시간
+    private final Long accessTokenValidMillisecond = 10 * 60 * 1000L; // access 토큰 만료 시간
     private final Long refreshTokenValidMillisecond = 24 * 60 * 60 * 60 * 1000L; // refresh 토큰 만료 시간
 
     private final PrincipalDetailsService principalDetailsService;
