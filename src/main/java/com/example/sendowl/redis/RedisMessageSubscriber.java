@@ -4,8 +4,10 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.entity.RedisBoard;
+import com.example.sendowl.redis.enums.RedisEnum;
 import com.example.sendowl.redis.excption.RedisBoardNotFoundException;
-import com.example.sendowl.repository.RedisBoardRepository;
+import com.example.sendowl.redis.repository.RedisBoardRepository;
+import com.example.sendowl.redis.service.RedisUserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -15,43 +17,57 @@ import java.nio.charset.StandardCharsets;
 import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 
 // MessageListener를 이용하여 redis에서 pub되는 메세지는 받는다.
+
 public class RedisMessageSubscriber implements MessageListener {
 
+    private final String EXPIRED_EVENT = "expired";
     @Autowired
     private RedisBoardRepository redisBoardRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private RedisUserTokenService userTokenService;
 
     @Override
     public void onMessage(Message message, byte[] bytes) { // Callback for processing received objects through Redis.
-
-        String body = new String(message.getBody(), StandardCharsets.UTF_8);
         String channel = new String(message.getChannel(), StandardCharsets.UTF_8);
+        String body = new String(message.getBody(), StandardCharsets.UTF_8);
+        String event = channel.split(":")[1];
 
-        if(channel.split(":")[1].matches("expired")){
-            System.out.println("Redis expired event!!");
-            String[] bodys = body.split(":");
-            String key = bodys[0];
-            String tag = bodys[1];
-            String id = bodys[2];
+        if (event.equals(EXPIRED_EVENT)) {
+            String[] bodyData = body.split(":");
+            String key = bodyData[0];
+            String id = bodyData[1];
 
-            // 만료된 경우 DB에 조회수를 증가시키는 코드 추가하기
-            Long idL = Long.parseLong(id);
-            RedisBoard redisboard =  redisBoardRepository.findById((idL)).orElseThrow(()->new RedisBoardNotFoundException(NOT_FOUND));
-            Long count = redisboard.getCount();
-            Board board = boardRepository.findById(idL).orElseThrow(()-> new BoardNotFoundException(NOT_FOUND));
-            board.setHit((int) (board.getHit() + count));
-            boardRepository.save(board);
-
-            redisBoardRepository.deleteById(idL);
-
-            // 사용완료한 데이터를 제거한다.
-            redisBoardRepository.deleteById(idL);
-            return;
+            switch (key) {
+                case RedisEnum.BOARD:
+                    handleRedisBoardExpired(id);
+                    break;
+                case RedisEnum.USER_TOKEN:
+                    handleRedisUserTokenExpired(id);
+                    break;
+            }
         }
-        else{
-            return;
-        }
-   }
+    }
+
+    private void handleRedisBoardExpired(String id) {
+        System.out.println("RedisBoard expired event!!");
+        // 만료된 경우 DB에 조회수를 증가시키는 코드 추가하기
+        Long idL = Long.parseLong(id);
+        RedisBoard redisboard = redisBoardRepository.findById((idL)).orElseThrow(() -> new RedisBoardNotFoundException(NOT_FOUND));
+        Long count = redisboard.getCount();
+        Board board = boardRepository.findById(idL).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
+        board.setHit((int) (board.getHit() + count));
+        boardRepository.save(board);
+
+        redisBoardRepository.deleteById(idL);
+
+        // 사용완료한 데이터를 제거한다.
+        redisBoardRepository.deleteById(idL);
+    }
+
+    private void handleRedisUserTokenExpired(String id) {
+        userTokenService.deleteById(Long.valueOf(id));
+    }
 }
 
