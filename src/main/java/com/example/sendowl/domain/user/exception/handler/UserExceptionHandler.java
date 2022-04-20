@@ -1,9 +1,9 @@
 package com.example.sendowl.domain.user.exception.handler;
 
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
+import com.example.sendowl.domain.user.dto.UserDto;
+import com.example.sendowl.domain.user.exception.*;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
-import com.example.sendowl.domain.user.exception.UserNotFoundException;
-import com.example.sendowl.domain.user.exception.UserNotValidException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +26,22 @@ public class UserExceptionHandler {
         UserNotValidException boxedException = new UserNotValidException(
                 UserErrorCode.NOT_FOUND, ex);
         return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
+                boxedException.getErrorStatus());
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public final ResponseEntity<BaseErrorResponseDto> handleUserAlreadyExistException(Exception ex, WebRequest request) {
+        UserAlreadyExistException boxedException = new UserAlreadyExistException(
+                UserErrorCode.EXISTING_EMAIL, ex);
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
+                boxedException.getErrorStatus());
+    }
+    @ExceptionHandler(UserVerifyTokenExpiredException.class)
+    public final ResponseEntity<BaseErrorResponseDto> handleUserVerifyTokenExpiredException(Exception ex, WebRequest request) {
+        UserDto.LoginReq req = (UserDto.LoginReq) request;
+        UserVerifyTokenExpiredException boxedException = new UserVerifyTokenExpiredException(
+                UserErrorCode.EXPIRED_VERIFICATION_TOKEN, ex);
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException, req.getEmail()),
                 boxedException.getErrorStatus());
     }
 }
