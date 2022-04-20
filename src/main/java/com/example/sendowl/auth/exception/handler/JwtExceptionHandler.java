@@ -1,6 +1,7 @@
 package com.example.sendowl.auth.exception.handler;
 
 
+import com.example.sendowl.auth.exception.JwtInvalidException;
 import com.example.sendowl.auth.exception.JwtNotFoundException;
 import com.example.sendowl.auth.exception.enums.JwtErrorCode;
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
@@ -17,6 +18,14 @@ public class JwtExceptionHandler {
     public final ResponseEntity<BaseErrorResponseDto> handleJwtNotFoundExceptions(Exception ex, WebRequest request) {
         JwtNotFoundException boxedException = new JwtNotFoundException(
                 JwtErrorCode.NOT_FOUND, ex);
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
+                boxedException.getErrorStatus());
+    }
+
+    @ExceptionHandler(JwtInvalidException.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
+    public final ResponseEntity<BaseErrorResponseDto> handleJwtInvalidExceptions(Exception ex, WebRequest request) {
+        JwtNotFoundException boxedException = new JwtNotFoundException(
+                JwtErrorCode.INVALID, ex);
         return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
                 boxedException.getErrorStatus());
     }

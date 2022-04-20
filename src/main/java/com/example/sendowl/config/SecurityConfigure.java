@@ -56,7 +56,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .httpBasic().disable()
+                .cors().disable()
+                .httpBasic().disable() // 사용자 인증방법으로는 HTTP Basic Authentication을 사용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// JWT를 사용하므로 세션은 막는다.
                 .and()
                 .authorizeRequests()// 사용권한 체크
