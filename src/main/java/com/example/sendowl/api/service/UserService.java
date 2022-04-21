@@ -6,7 +6,7 @@ import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
 import com.example.sendowl.redis.entity.RedisEmailToken;
-import com.example.sendowl.redis.service.RedisUserTokenService;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final KafkaProducer kafkaProducer;
-    private final RedisUserTokenService redisUserTokenService;
+    private final RedisEmailTokenService redisEmailTokenService;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
@@ -78,8 +78,8 @@ public class UserService {
         String token = new TokenGenerator().generateSixRandomNumber();
         new Thread(() -> {
             kafkaProducer.sendEmailVerification(req.getEmail(), token); // 인증 코드 전송
-            redisUserTokenService.deleteByEmail(req.getEmail());
-            redisUserTokenService.save(RedisEmailToken.builder()
+            redisEmailTokenService.deleteByEmail(req.getEmail());
+            redisEmailTokenService.save(RedisEmailToken.builder()
                     .email(req.getEmail())
                     .token(token)
                     .build());
@@ -90,7 +90,7 @@ public class UserService {
     }
 
     public EmailVerifyRes emailVerify(EmailVerifyReq req) {
-        RedisEmailToken redisToken = redisUserTokenService.findTokenByEmail(req.getEmail())
+        RedisEmailToken redisToken = redisEmailTokenService.findTokenByEmail(req.getEmail())
                 .orElseThrow(() -> new UserVerifyTokenExpiredException(EXPIRED_VERIFICATION_TOKEN));
 
         return new EmailVerifyRes(redisToken.getToken().equals(req.getToken()));

@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface RedisUserTokenRepository extends CrudRepository<RedisEmailToken, Long> {
+public interface RedisEmailTokenRepository extends CrudRepository<RedisEmailToken, Long> {
     Optional<RedisEmailToken> findByEmail(String email);
 }

@@ -1,7 +1,7 @@
 package com.example.sendowl.redis.service;
 
 import com.example.sendowl.redis.entity.RedisEmailToken;
-import com.example.sendowl.redis.repository.RedisUserTokenRepository;
+import com.example.sendowl.redis.repository.RedisEmailTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class RedisUserTokenService {
+public class RedisEmailTokenService {
 
-    private final RedisUserTokenRepository userTokenRepository;
+    private final RedisEmailTokenRepository userTokenRepository;
 
     public RedisEmailToken save(RedisEmailToken userToken) {
         return userTokenRepository.save(userToken);

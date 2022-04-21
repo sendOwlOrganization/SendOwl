@@ -7,7 +7,7 @@ import com.example.sendowl.redis.entity.RedisBoard;
 import com.example.sendowl.redis.enums.RedisEnum;
 import com.example.sendowl.redis.exception.RedisBoardNotFoundException;
 import com.example.sendowl.redis.repository.RedisBoardRepository;
-import com.example.sendowl.redis.service.RedisUserTokenService;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -26,7 +26,7 @@ public class RedisMessageSubscriber implements MessageListener {
     @Autowired
     private BoardRepository boardRepository;
     @Autowired
-    private RedisUserTokenService userTokenService;
+    private RedisEmailTokenService userTokenService;
 
     @Override
     public void onMessage(Message message, byte[] bytes) { // Callback for processing received objects through Redis.

@@ -1,7 +1,7 @@
 package com.example.sendowl.redis.service;
 
 import com.example.sendowl.redis.entity.RedisEmailToken;
-import com.example.sendowl.redis.repository.RedisUserTokenRepository;
+import com.example.sendowl.redis.repository.RedisEmailTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class RedisEmailTokenServiceTest {
 
     @Autowired
-    private RedisUserTokenService userTokenService;
+    private RedisEmailTokenService userTokenService;
 
     @Autowired
-    private RedisUserTokenRepository userTokenRepository;
+    private RedisEmailTokenRepository userTokenRepository;
 
     @BeforeEach
     public void deleteAll() {
