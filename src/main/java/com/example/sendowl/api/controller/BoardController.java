@@ -28,7 +28,7 @@ public class BoardController {
     }
 
     @Operation(summary = "board insert api", description = "board insert api")
-    @PostMapping(path = "/board") // 게시글 등록 BaseResponseDto<BoardRes>
+    @PostMapping(path = "/board") // 게시글 등록
     public BaseResponseDto<BoardsRes> board(final @Valid @RequestBody BoardReq rq){
 
         return new BaseResponseDto<BoardsRes>(boardService.insertBoard(rq));

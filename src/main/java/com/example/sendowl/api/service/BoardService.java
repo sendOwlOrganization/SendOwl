@@ -51,12 +51,14 @@ public class BoardService {
         return boardRes;
     }
 
+    // 오류
     @Transactional
     public BoardsRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
 
-        Category category = categoryRepository.findByCategoryName(req.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(NOT_FOUND));
+        Category category = categoryRepository.findByCategoryName(req.getCategoryName()).orElseThrow(
+                () -> new CategoryNotFoundException(NOT_FOUND));
 
         Board board = Board.builder()
                 .title(req.getTitle())

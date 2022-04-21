@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(indexes = @Index(name="idx_comment", columnList = "board_id")) // 이미 foreign key라 index가 있지만 이름 변경
 public class Comment extends BaseEntity {
 
     @Id
@@ -30,19 +31,24 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
-    private Long parentId; // 대댓글 self 참조 부분은 미정입니다.
-
     private Long depth;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Comment> children = new ArrayList<>();
 
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
     @Builder
-    public Comment(Board board, User user, String content, Long parentId, Long depth) {
+    public Comment(Board board, User user, String content, Comment parent, Long depth) {
         this.board = board;
         this.user = user;
         this.content = content;
-        this.parentId = parentId;
+        this.parent = parent;
         this.depth = depth;
     }
 }
