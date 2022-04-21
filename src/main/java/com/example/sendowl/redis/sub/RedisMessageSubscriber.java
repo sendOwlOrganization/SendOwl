@@ -51,7 +51,6 @@ public class RedisMessageSubscriber implements MessageListener {
     }
 
     private void handleRedisBoardExpired(String id) {
-        System.out.println("RedisBoard expired event!!");
         // 만료된 경우 DB에 조회수를 증가시키는 코드 추가하기
         Long idL = Long.parseLong(id);
         RedisBoard redisboard = redisBoardRepository.findById((idL)).orElseThrow(() -> new RedisBoardNotFoundException(NOT_FOUND));
@@ -59,8 +58,6 @@ public class RedisMessageSubscriber implements MessageListener {
         Board board = boardRepository.findById(idL).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
         board.setHit((int) (board.getHit() + count));
         boardRepository.save(board);
-
-        redisBoardRepository.deleteById(idL);
 
         // 사용완료한 데이터를 제거한다.
         redisBoardRepository.deleteById(idL);
