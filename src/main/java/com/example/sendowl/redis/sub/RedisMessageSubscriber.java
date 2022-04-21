@@ -1,11 +1,11 @@
-package com.example.sendowl.redis;
+package com.example.sendowl.redis.sub;
 
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.entity.RedisBoard;
 import com.example.sendowl.redis.enums.RedisEnum;
-import com.example.sendowl.redis.excption.RedisBoardNotFoundException;
+import com.example.sendowl.redis.exception.RedisBoardNotFoundException;
 import com.example.sendowl.redis.repository.RedisBoardRepository;
 import com.example.sendowl.redis.service.RedisUserTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
