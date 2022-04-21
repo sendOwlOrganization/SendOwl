@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.GeneratedValue;
 
 @Getter
-@RedisHash(value = RedisEnum.USER_TOKEN, timeToLive = 180) // timeToLive 으로 expire 설정
+@RedisHash(value = RedisEnum.EMAIL_TOKEN, timeToLive = 180) // timeToLive 으로 expire 설정
 public class RedisEmailToken {
 
     @Id

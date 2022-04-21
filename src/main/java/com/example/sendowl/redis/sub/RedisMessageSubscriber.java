@@ -43,7 +43,7 @@ public class RedisMessageSubscriber implements MessageListener {
                 case RedisEnum.BOARD:
                     handleRedisBoardExpired(id);
                     break;
-                case RedisEnum.USER_TOKEN:
+                case RedisEnum.EMAIL_TOKEN:
                     handleRedisUserTokenExpired(id);
                     break;
             }
