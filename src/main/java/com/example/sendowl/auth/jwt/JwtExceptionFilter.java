@@ -5,6 +5,7 @@ import com.example.sendowl.auth.exception.JwtNotFoundException;
 import com.example.sendowl.auth.exception.enums.JwtErrorCode;
 import com.example.sendowl.auth.exception.handler.JwtExceptionHandler;
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
+import com.example.sendowl.common.exception.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
@@ -23,23 +24,17 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        }catch(JwtNotFoundException ex){
-            JwtNotFoundException boxedException = new JwtNotFoundException(
-                    JwtErrorCode.NOT_FOUND, ex);
-            setErrorResponse(new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),boxedException.getErrorStatus()), response);
-        }catch (JwtInvalidException ex){
-            JwtInvalidException boxedException = new JwtInvalidException(
-                    JwtErrorCode.INVALID, ex);
-            setErrorResponse(new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),boxedException.getErrorStatus()), response);
+        }catch(BaseException ex) {
+            setErrorResponse(response, ex);
         }
     }
 
-    public void setErrorResponse(ResponseEntity<BaseErrorResponseDto> responseEntity, HttpServletResponse response){
-        response.setStatus(responseEntity.getStatusCodeValue());
+    public void setErrorResponse(HttpServletResponse response, BaseException ex){
+        response.setStatus(ex.getErrorCode());
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         try{
-            String json = convertObjectToJson(responseEntity.getBody());
+            String json = convertObjectToJson(BaseErrorResponseDto.of(ex));
             response.getWriter().write(json);
         }catch (IOException e){
             e.printStackTrace();
