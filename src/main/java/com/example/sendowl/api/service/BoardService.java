@@ -6,7 +6,7 @@ import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.redis.RedisShadowkey;
+import com.example.sendowl.redis.service.RedisShadowKeyService;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
@@ -32,7 +32,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RedisBoardRepository redisBoardRepository;
-    private final RedisShadowkey redisShadowkey;
+    private final RedisShadowKeyService redisShadowKeyService;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
@@ -76,8 +76,8 @@ public class BoardService {
         redisBoardRepository.save(redisBoard);
 
         // Redis shadowKey 존재확인
-        if(redisShadowkey.findByKey("board:"+Long.toString(id)) == null){
-            redisShadowkey.set("board:"+Long.toString(id), "", 60L);
+        if(redisShadowKeyService.findByKey("board:"+Long.toString(id)) == null){
+            redisShadowKeyService.set("board:"+Long.toString(id), "", 60L);
         }
 
         return new DetailRes(board);

@@ -1,4 +1,4 @@
-package com.example.sendowl.redis;
+package com.example.sendowl.redis.service;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor
-public class RedisShadowkey {
+public class RedisShadowKeyService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     private String prefix = "shadow:";
