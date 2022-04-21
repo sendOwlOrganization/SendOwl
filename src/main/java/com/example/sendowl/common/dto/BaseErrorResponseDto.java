@@ -1,10 +1,7 @@
 package com.example.sendowl.common.dto;
 
 import com.example.sendowl.common.exception.BaseException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +18,12 @@ public class BaseErrorResponseDto {
     public static BaseErrorResponseDto of(BaseException baseException) {
         Map<String, String> map = new HashMap<>();
         map.put("message", baseException.getErrorMessage());
+        return new BaseErrorResponseDto(baseException.getErrorCode(), map);
+    }
+
+    public static BaseErrorResponseDto of(BaseException baseException, String message) {
+        Map<String, String> map = new HashMap<>();
+        map.put("message", baseException.getErrorMessage() + "[" + message + "]");
         return new BaseErrorResponseDto(baseException.getErrorCode(), map);
     }
 

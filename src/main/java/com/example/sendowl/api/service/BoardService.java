@@ -1,19 +1,17 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
-import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.redis.RedisShadowkey;
+import com.example.sendowl.redis.service.RedisShadowKeyService;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.entity.RedisBoard;
-import com.example.sendowl.repository.RedisBoardRepository;
+import com.example.sendowl.redis.repository.RedisBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +20,7 @@ import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
 
 @Service
@@ -36,7 +32,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RedisBoardRepository redisBoardRepository;
-    private final RedisShadowkey redisShadowkey;
+    private final RedisShadowKeyService redisShadowKeyService;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
@@ -82,8 +78,8 @@ public class BoardService {
         redisBoardRepository.save(redisBoard);
 
         // Redis shadowKey 존재확인
-        if(redisShadowkey.findByKey("board:"+Long.toString(id)) == null){
-            redisShadowkey.set("board:"+Long.toString(id), "", 60L);
+        if(redisShadowKeyService.findByKey("board:"+Long.toString(id)) == null){
+            redisShadowKeyService.set("board:"+Long.toString(id), "", 60L);
         }
 
         return new DetailRes(board);

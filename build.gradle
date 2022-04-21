@@ -30,6 +30,10 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka:2.8.4'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.6.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.6'
+
+    // mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 group = 'com.example'
@@ -43,6 +47,10 @@ publishing {
             from(components.java)
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile) {
