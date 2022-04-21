@@ -12,7 +12,9 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
 import java.io.IOException;
+import java.util.Optional;
 
 import static com.example.sendowl.auth.exception.enums.JwtErrorCode.INVALID;
 import static com.example.sendowl.auth.exception.enums.JwtErrorCode.NOT_FOUND;
@@ -37,15 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean checkAntPattern(String pattern, String inputStr) {
         return matches(pattern, inputStr);
     }
-    public static boolean matches(String pattern, String inputStr) {
+    private boolean matches(String pattern, String inputStr) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         return antPathMatcher.match(pattern, inputStr);
     }
+
     // request 로 들어오는 Jwt의 유효성을 검증 - JwtProvider.validationToken을 필터로서 FilterChain에 추가
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
             String token = jwtProvider.resolveToken((HttpServletRequest) request);
-            System.out.println("doFilter:"+token);
             if(token == null ){
                 throw new JwtNotFoundException(NOT_FOUND);
             }
