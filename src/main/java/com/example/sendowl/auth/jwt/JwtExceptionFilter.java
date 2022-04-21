@@ -1,15 +1,9 @@
 package com.example.sendowl.auth.jwt;
 
-import com.example.sendowl.auth.exception.JwtInvalidException;
-import com.example.sendowl.auth.exception.JwtNotFoundException;
-import com.example.sendowl.auth.exception.enums.JwtErrorCode;
-import com.example.sendowl.auth.exception.handler.JwtExceptionHandler;
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
 import com.example.sendowl.common.exception.BaseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
