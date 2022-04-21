@@ -1,6 +1,7 @@
 package com.example.sendowl.config;
 
 import com.example.sendowl.auth.jwt.JwtAuthenticationFilter;
+import com.example.sendowl.auth.jwt.JwtExceptionFilter;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.domain.user.entity.Role;
 import lombok.RequiredArgsConstructor;
@@ -68,7 +69,9 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasRole(Role.USER.getKey()) // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                        UsernamePasswordAuthenticationFilter.class);// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
+                        UsernamePasswordAuthenticationFilter.class)// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+
 //        http
 //                .authorizeRequests()
 //                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
