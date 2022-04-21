@@ -1,6 +1,6 @@
 package com.example.sendowl.redis.service;
 
-import com.example.sendowl.redis.entity.RedisUserToken;
+import com.example.sendowl.redis.entity.RedisEmailToken;
 import com.example.sendowl.redis.repository.RedisUserTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class RedisUserTokenServiceTest {
+class RedisEmailTokenServiceTest {
 
     @Autowired
     private RedisUserTokenService userTokenService;
@@ -31,7 +31,7 @@ class RedisUserTokenServiceTest {
         final String email = "EMAIL";
         final String token = "TOKEN";
         // given
-        RedisUserToken build = RedisUserToken.builder()
+        RedisEmailToken build = RedisEmailToken.builder()
                 .token(token)
                 .email(email)
                 .build();
@@ -39,11 +39,11 @@ class RedisUserTokenServiceTest {
         userTokenService.save(build);
 
         // then
-        Optional<RedisUserToken> optional = userTokenService.findTokenByEmail(email);
-        RedisUserToken redisUserToken = optional.get();
-        System.out.println(redisUserToken);
-        assertEquals(redisUserToken.getEmail(), email);
-        assertEquals(redisUserToken.getToken(), token);
+        Optional<RedisEmailToken> optional = userTokenService.findTokenByEmail(email);
+        RedisEmailToken redisEmailToken = optional.get();
+        System.out.println(redisEmailToken);
+        assertEquals(redisEmailToken.getEmail(), email);
+        assertEquals(redisEmailToken.getToken(), token);
     }
 
     @Test
@@ -52,15 +52,15 @@ class RedisUserTokenServiceTest {
         final String email = "EMAIL";
         final String token = "TOKEN";
         // given
-        RedisUserToken build = RedisUserToken.builder()
+        RedisEmailToken build = RedisEmailToken.builder()
                 .token(token)
                 .email(email)
                 .build();
         // when
-        RedisUserToken userToken = userTokenService.save(build);
+        RedisEmailToken userToken = userTokenService.save(build);
         System.out.println("when--------------------");
-        for (RedisUserToken redisUserToken : userTokenRepository.findAll()) {
-            System.out.println(redisUserToken);
+        for (RedisEmailToken redisEmailToken : userTokenRepository.findAll()) {
+            System.out.println(redisEmailToken);
         }
 
         // when
@@ -68,8 +68,8 @@ class RedisUserTokenServiceTest {
 
         // then
         System.out.println("then--------------------");
-        for (RedisUserToken redisUserToken : userTokenRepository.findAll()) {
-            System.out.println(redisUserToken);
+        for (RedisEmailToken redisEmailToken : userTokenRepository.findAll()) {
+            System.out.println(redisEmailToken);
         }
     }
 }

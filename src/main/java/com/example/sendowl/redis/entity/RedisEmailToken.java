@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 
 @Getter
 @RedisHash(value = RedisEnum.USER_TOKEN, timeToLive = 180) // timeToLive 으로 expire 설정
-public class RedisUserToken {
+public class RedisEmailToken {
 
     @Id
     @GeneratedValue
@@ -22,7 +22,7 @@ public class RedisUserToken {
     private String token;
 
     @Builder
-    public RedisUserToken(String email, String token) {
+    public RedisEmailToken(String email, String token) {
         this.email = email;
         this.token = token;
     }
