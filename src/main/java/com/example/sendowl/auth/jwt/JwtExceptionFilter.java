@@ -12,7 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.example.sendowl.config.SecurityConfigure.AUTH_WHITELIST;
+
 public class JwtExceptionFilter extends OncePerRequestFilter {
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        for(String pattern: AUTH_WHITELIST){ // 다양한 whitelist 패턴에 대해 루프를 돌며 패턴 확인한다.
+            if(path.matches(pattern)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
