@@ -79,13 +79,6 @@ public class UserDto {
     }
 
     @Data
-    @AllArgsConstructor
-    public static class LoginRes {
-        private String accessToken;
-        private String refreshToken;
-    }
-
-    @Data
     public static class EmailCheckReq {
         @Email
         private String email;

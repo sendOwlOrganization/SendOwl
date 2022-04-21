@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
@@ -38,8 +39,10 @@ public class UserController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
-    public BaseResponseDto<LoginRes> login(final @Valid @RequestBody LoginReq req) {
-        return new BaseResponseDto<>(userService.login(req));
+    public BaseResponseDto<Boolean> login(final @Valid @RequestBody LoginReq req,
+                                          HttpServletResponse servletResponse) {
+        userService.login(req).forEach(servletResponse::addHeader);
+        return new BaseResponseDto<>(true);
     }
 
     @GetMapping("/{id}")

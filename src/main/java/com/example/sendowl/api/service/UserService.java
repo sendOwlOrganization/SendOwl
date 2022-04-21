@@ -13,6 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.sendowl.auth.jwt.JwtEnum.*;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.*;
 
@@ -34,7 +38,7 @@ public class UserService {
                 .name(req.getName())
                 .nickName(req.getNickName())
                 .email(req.getEmail())
-                .password(req.getPassword())
+                .password(passwordEncoder.encode(req.getPassword()))
                 .introduction(req.getIntroduction())
                 .profileImage(req.getProfileImage())
                 .build();
@@ -43,7 +47,7 @@ public class UserService {
         return new JoinRes(entity);
     }
 
-    public LoginRes login(LoginReq req) {
+    public Map<String, String> login(LoginReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
 
@@ -54,7 +58,9 @@ public class UserService {
         String accessToken = jwtProvider.createToken(user.getEmail(), user.getRole());
         String refreshToken = "";
 
-        return new LoginRes(accessToken, refreshToken);
+        return new HashMap<>(Map.of(
+                ACCESS_TOKEN, accessToken,
+                REFRESH_TOKEN, refreshToken));
     }
 
 
