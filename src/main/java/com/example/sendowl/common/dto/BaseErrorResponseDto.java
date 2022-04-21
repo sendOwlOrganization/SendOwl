@@ -1,10 +1,7 @@
 package com.example.sendowl.common.dto;
 
 import com.example.sendowl.common.exception.BaseException;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashMap;
 import java.util.Map;
