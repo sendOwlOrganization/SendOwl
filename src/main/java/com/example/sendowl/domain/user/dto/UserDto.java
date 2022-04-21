@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.user.dto;
 
 import com.example.sendowl.domain.user.entity.User;
+import jdk.jfr.DataAmount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -78,9 +79,29 @@ public class UserDto {
     }
 
     @Data
+    public static class EmailCheckReq {
+        @Email
+        private String email;
+    }
+
+    @Data
+    public static class EmailCheckRes {
+        private String message;
+
+        public EmailCheckRes success(){
+            this.message = "인증 코드 발송 완료";
+            return this;
+        }
+    }
+
+    @Data
     @AllArgsConstructor
-    public static class LoginRes {
-        private String accessToken;
-        private String refreshToken;
+    public static class EmailVerifyRes {
+        private Boolean isVerified;
+    }
+    @Data
+    public static class EmailVerifyReq {
+        private String email;
+        private String token;
     }
 }

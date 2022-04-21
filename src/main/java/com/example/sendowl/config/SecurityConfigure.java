@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +17,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfigure extends WebSecurityConfigurerAdapter {
+
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v2
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            // other public endpoints of your API may be appended to this array
+            "/api/users/**",
+            "/api/admin/**",
+            "/api/boards/**",
+            "/api/comment/**",
+    };
 
     private final JwtProvider jwtProvider;
 
@@ -42,24 +60,10 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// JWT를 사용하므로 세션은 막는다.
                 .and()
                 .authorizeRequests()// 사용권한 체크
-                .antMatchers("/api/users/**").permitAll()
-                .antMatchers("/api/admin/**").permitAll()
-                .antMatchers("/api/boards/**").permitAll()
-                .antMatchers("/api/comment/**").permitAll()
-                .antMatchers("/swagger/**","/v3/**", "/v2/**").permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().hasRole(Role.USER.getKey()) // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class);// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
-//                .anyRequest().authenticated();
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        // swagger관련 url에 대해서는 예외 처리
-        web.ignoring().antMatchers("/swagger-ui/**","/v3/api-docs","/swagger-resources/**","/swagger-ui.html","/webjars/**", "/swagger/**");
     }
 }
