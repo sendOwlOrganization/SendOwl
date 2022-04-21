@@ -24,6 +24,12 @@ public class BaseErrorResponseDto {
         return new BaseErrorResponseDto(baseException.getErrorCode(), map);
     }
 
+    public static BaseErrorResponseDto of(BaseException baseException, String message) {
+        Map<String, String> map = new HashMap<>();
+        map.put("message", baseException.getErrorMessage() + "[" + message + "]");
+        return new BaseErrorResponseDto(baseException.getErrorCode(), map);
+    }
+
     public static BaseErrorResponseDto ofMap(BaseException baseException, Map<String, String> response) {
         return new BaseErrorResponseDto(baseException.getErrorCode(), response);
     }
