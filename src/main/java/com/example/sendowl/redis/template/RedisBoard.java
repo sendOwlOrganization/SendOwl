@@ -10,18 +10,20 @@ public class RedisBoard {
 
     private RedisTemplate redisTemplate;
     private ValueOperations<String,String> valueOperations;
-    private String prefixKey = RedisEnum.BOARD;
-    private Long hit;
+    private RedisShadow redisShadow;
+    private String prefixKey = RedisEnum.BOARD+":"; // "board:"
+    private Long hit = 1L;
+    private Long ttl = 60L;
 
-    public RedisBoard(RedisTemplate redisTemplate) {
+    public RedisBoard(RedisTemplate redisTemplate, RedisShadow redisShadow) {
         this.redisTemplate = redisTemplate;
         this.valueOperations = redisTemplate.opsForValue();
-        this.hit = 1L;
+        this.redisShadow  = redisShadow;
     }
 
     // key의 카운트를 반환
     public Long setIfAbsent(Long id){
-        String key = prefixKey + ":"+Long.toString(id);
+        String key = prefixKey +Long.toString(id);
         if(!valueOperations.setIfAbsent(key, Long.toString(hit))){
             this.hit = valueOperations.increment(key);
         }
@@ -30,7 +32,12 @@ public class RedisBoard {
 
     // 해당 key를 삭제
     public boolean delete(Long id){
-        String key = prefixKey + ":"+Long.toString(id);
+        String key = prefixKey + Long.toString(id);
         return redisTemplate.delete(key);
+    }
+
+    public void setShadowKeyTtl(Long id){
+        String key = prefixKey + Long.toString(id);
+        redisShadow.set(key, ttl);
     }
 }
