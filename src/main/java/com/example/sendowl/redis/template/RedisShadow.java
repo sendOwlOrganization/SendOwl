@@ -1,5 +1,6 @@
 package com.example.sendowl.redis.template;
 
+import com.example.sendowl.redis.enums.RedisEnum;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,8 @@ public class RedisShadow {
 
     private RedisTemplate redisTemplate;
     private ValueOperations<String, String> valueOperations;
-    private String prefixKey = "shadow:";
+    private String prefixKey = RedisEnum.SHADOW+":";// "shadow:"
+    private String value = "";
 
     public RedisShadow(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -22,7 +24,7 @@ public class RedisShadow {
         return valueOperations.get(prefixKey+key);
     }
     public void set(String key, Long ttl){
-        valueOperations.set(prefixKey+key,"", ttl, TimeUnit.SECONDS);
+        valueOperations.set(prefixKey+key,value, ttl, TimeUnit.SECONDS);
     }
     public void delete(String key){
         valueOperations.getAndDelete(prefixKey+key);
