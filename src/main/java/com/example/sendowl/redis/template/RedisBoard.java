@@ -23,21 +23,20 @@ public class RedisBoard {
 
     // key의 카운트를 반환
     public Long setIfAbsent(Long id){
-        String key = prefixKey +Long.toString(id);
-        if(!valueOperations.setIfAbsent(key, Long.toString(hit))){
-            this.hit = valueOperations.increment(key);
+        if(!valueOperations.setIfAbsent(prefixKey + Long.toString(id), Long.toString(hit))){
+            hit = valueOperations.increment(prefixKey +Long.toString(id));
+        }else{
+            setShadowKeyTtl(id);
         }
         return hit;
     }
 
     // 해당 key를 삭제
     public boolean delete(Long id){
-        String key = prefixKey + Long.toString(id);
-        return redisTemplate.delete(key);
+        return redisTemplate.delete(prefixKey + Long.toString(id));
     }
 
     public void setShadowKeyTtl(Long id){
-        String key = prefixKey + Long.toString(id);
-        redisShadow.set(key, ttl);
+        redisShadow.set(prefixKey + Long.toString(id), ttl);
     }
 }

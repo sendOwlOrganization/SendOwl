@@ -21,16 +21,8 @@ public class RedisShadow {
     public String findByKey(String key){
         return valueOperations.get(prefixKey+key);
     }
-    public void set(String key, String value, Long exTime){
-        valueOperations.set(prefixKey+key,value);
-        valueOperations.getAndExpire(prefixKey+key, exTime, TimeUnit.SECONDS);
-    }
-    public void set(String key, Long exTime){
-        valueOperations.set(prefixKey+key,"");
-        valueOperations.getAndExpire(prefixKey+key, exTime, TimeUnit.SECONDS);
-    }
-    public void setTtl(String key, Long ttl){
-        valueOperations.getAndExpire(prefixKey+key,ttl, TimeUnit.SECONDS);
+    public void set(String key, Long ttl){
+        valueOperations.set(prefixKey+key,"", ttl, TimeUnit.SECONDS);
     }
     public void delete(String key){
         valueOperations.getAndDelete(prefixKey+key);
