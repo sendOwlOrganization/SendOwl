@@ -3,11 +3,11 @@ package com.example.sendowl.redis.sub;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.entity.RedisBoard;
 import com.example.sendowl.redis.enums.RedisEnum;
 import com.example.sendowl.redis.exception.RedisBoardNotFoundException;
 import com.example.sendowl.redis.repository.RedisBoardRepository;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
+import com.example.sendowl.redis.template.RedisBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -21,7 +21,7 @@ import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 public class RedisMessageSubscriber implements MessageListener {
 
     @Autowired
-    private RedisBoardRepository redisBoardRepository;
+    private RedisBoard redisBoard;
     @Autowired
     private BoardRepository boardRepository;
     @Autowired
@@ -42,7 +42,7 @@ public class RedisMessageSubscriber implements MessageListener {
 
             switch (key) {
                 case RedisEnum.BOARD:
-                    handleRedisBoardExpired(id);
+                    handleRedisBoardExpired(Long.parseLong(id));
                     break;
                 case RedisEnum.EMAIL_TOKEN:
                     handleRedisUserTokenExpired(id);
@@ -51,17 +51,14 @@ public class RedisMessageSubscriber implements MessageListener {
         }
     }
 
-    private void handleRedisBoardExpired(String id) {
-        // 만료된 경우 DB에 조회수를 증가시키는 코드 추가하기
-        Long idL = Long.parseLong(id);
-        RedisBoard redisboard = redisBoardRepository.findById((idL)).orElseThrow(() -> new RedisBoardNotFoundException(NOT_FOUND));
-        Long count = redisboard.getCount();
-        Board board = boardRepository.findById(idL).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
-        board.setHit((int) (board.getHit() + count));
+    private void handleRedisBoardExpired(Long id) {
+        Long hit = redisBoard.getHit(id);
+
+        Board board = boardRepository.findById(id).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
+        board.setHit((int) (board.getHit() + hit));
         boardRepository.save(board);
 
-        // 사용완료한 데이터를 제거한다.
-        redisBoardRepository.deleteById(idL);
+        redisBoard.delete(id);
     }
 
     private void handleRedisUserTokenExpired(String id) {
