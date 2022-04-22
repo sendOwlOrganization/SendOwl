@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class RedisBoard {
 
     private RedisTemplate redisTemplate;
-    private ValueOperations<String,String> valueOperations;
+    private ValueOperations<String,Long> valueOperations;
     private RedisShadow redisShadow;
     private String prefixKey = RedisEnum.BOARD+":"; // "board:"
     private Long hit = 1L;
@@ -20,10 +20,13 @@ public class RedisBoard {
         this.valueOperations = redisTemplate.opsForValue();
         this.redisShadow  = redisShadow;
     }
+    public Long getHit(Long id){
+        return valueOperations.get(prefixKey+Long.toString(id));
+    }
 
     // key의 카운트를 반환
     public Long setIfAbsent(Long id){
-        if(!valueOperations.setIfAbsent(prefixKey + Long.toString(id), Long.toString(hit))){
+        if(!valueOperations.setIfAbsent(prefixKey + Long.toString(id), hit)){
             hit = valueOperations.increment(prefixKey +Long.toString(id));
         }else{
             setShadowKeyTtl(id);
