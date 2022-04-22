@@ -20,13 +20,14 @@ import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 
 public class RedisMessageSubscriber implements MessageListener {
 
-    private final String EXPIRED_EVENT = "expired";
     @Autowired
     private RedisBoardRepository redisBoardRepository;
     @Autowired
     private BoardRepository boardRepository;
     @Autowired
     private RedisEmailTokenService userTokenService;
+
+    private final String EXPIRED_EVENT = RedisEnum.EXPIRE;
 
     @Override
     public void onMessage(Message message, byte[] bytes) { // Callback for processing received objects through Redis.
