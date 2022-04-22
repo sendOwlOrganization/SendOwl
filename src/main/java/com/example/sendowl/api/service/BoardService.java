@@ -10,7 +10,7 @@ import com.example.sendowl.redis.service.RedisShadowKeyService;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.entity.RedisBoard;
+import com.example.sendowl.redis.template.RedisBoard;
 import com.example.sendowl.redis.repository.RedisBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RedisBoardRepository redisBoardRepository;
+    private final RedisBoard redisBoard;
     private final RedisShadowKeyService redisShadowKeyService;
 
     public List<BoardsRes> getBoardList() {
@@ -71,14 +72,7 @@ public class BoardService {
                 () -> new BoardNotFoundException(NOT_FOUND));
 
         // Redis update 쿼리
-        RedisBoard redisBoard = redisBoardRepository.findById(id).orElse(new RedisBoard(id));
-        redisBoard.setCount(redisBoard.getCount() + 1);
-        redisBoardRepository.save(redisBoard);
-
-        // Redis shadowKey 존재확인
-        if(redisShadowKeyService.findByKey("board:"+Long.toString(id)) == null){
-            redisShadowKeyService.set("board:"+Long.toString(id), "", 60L);
-        }
+        redisBoard.setIfAbsent(id);
 
         return new DetailRes(board);
     }

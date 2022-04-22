@@ -11,6 +11,8 @@ public class RedisBoardTest {
 
     @Autowired
     private RedisBoard redisBoard;
+    @Autowired
+    private RedisShadow redisShadow;
 
     @Test
     public void RedisBoardAdd(){
@@ -19,6 +21,11 @@ public class RedisBoardTest {
     @Test
     public void RedisDelete(){
         redisBoard.delete(1L);
+    }
+    @Test
+    public void Redis(){
+        redisBoard.setIfAbsent(2L);
+        redisShadow.set("test", 60L);
     }
 
 }
