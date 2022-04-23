@@ -30,9 +30,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-
-    @Autowired
-    private RedisBoard redisBoard;
+    private final RedisBoard redisBoard;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
