@@ -1,10 +1,18 @@
 package com.example.sendowl.config;
 
+import com.example.sendowl.domain.board.repository.BoardRepository;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.redis.sub.RedisMessageSubscriber;
-import com.example.sendowl.redis.service.RedisShadowKeyService;
+import com.example.sendowl.redis.template.RedisBoard;
+import com.example.sendowl.redis.template.RedisShadow;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.Message;
+import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,6 +24,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @EnableRedisRepositories
+@RequiredArgsConstructor
 public class RedisConfigure {
 
     @Value("${spring.redis.host}")
@@ -33,11 +42,25 @@ public class RedisConfigure {
     }
 
     @Bean
-    public RedisMessageSubscriber redisMessageSubscriber(){
-        return new RedisMessageSubscriber();
+    public RedisBoard redisBoard(){
+        return new RedisBoard(redisTemplate(redisConnectionFactory()), redisShadow());
     }
+
     @Bean
-    public MessageListenerAdapter messageListenerAdapter(){
+    public RedisShadow redisShadow(){
+        return new RedisShadow(redisTemplate(redisConnectionFactory()));
+    }
+
+    private final BoardRepository boardRepository;
+    private final RedisEmailTokenService redisEmailTokenService;
+
+    @Bean
+    public RedisMessageSubscriber redisMessageSubscriber(){
+        return new RedisMessageSubscriber(redisBoard(), boardRepository);
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListener() {
         return new MessageListenerAdapter(redisMessageSubscriber());
     }
 
@@ -45,7 +68,7 @@ public class RedisConfigure {
     public RedisMessageListenerContainer redisContainer() { // Container providing asynchronous behaviour for Redis message listeners
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory());
-        container.addMessageListener(messageListenerAdapter(), topic());
+        container.addMessageListener(messageListener(), topic());
         return container;
     }
 
@@ -54,10 +77,6 @@ public class RedisConfigure {
         return new PatternTopic(pattern);
     }
 
-    @Bean
-    public RedisShadowKeyService redisShadowkey(){
-        return new RedisShadowKeyService();
-    }
 
     @Bean // Redis 템플릿을 어디서든 사용할 수 있도록 Bean객체를 생성해준다.
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
