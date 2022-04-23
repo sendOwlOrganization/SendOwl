@@ -66,7 +66,6 @@ public class BoardDto {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.content = entity.getContent();
-            this.email = entity.getUser().getEmail();
             this.hit = entity.getHit();
         }
     }
