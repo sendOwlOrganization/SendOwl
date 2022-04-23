@@ -6,13 +6,12 @@ import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.redis.service.RedisShadowKeyService;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.entity.RedisBoard;
-import com.example.sendowl.redis.repository.RedisBoardRepository;
+import com.example.sendowl.redis.template.RedisBoard;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +30,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final RedisBoardRepository redisBoardRepository;
-    private final RedisShadowKeyService redisShadowKeyService;
+    private final RedisBoard redisBoard;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
@@ -72,15 +70,8 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(NOT_FOUND));
 
-        // Redis update 쿼리
-        RedisBoard redisBoard = redisBoardRepository.findById(id).orElse(new RedisBoard(id));
-        redisBoard.setCount(redisBoard.getCount() + 1);
-        redisBoardRepository.save(redisBoard);
-
-        // Redis shadowKey 존재확인
-        if(redisShadowKeyService.findByKey("board:"+Long.toString(id)) == null){
-            redisShadowKeyService.set("board:"+Long.toString(id), "", 60L);
-        }
+        // Redis insert if Absent with shadowkey
+        redisBoard.setIfAbsent(id);
 
         return new DetailRes(board);
     }
