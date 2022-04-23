@@ -22,7 +22,6 @@ public class RedisShadow {
         return valueOperations.get(prefixKey+key);
     }
     public void set(String key, Long ttl){
-        System.out.println("r5");
         valueOperations.set(prefixKey+key,value, ttl, TimeUnit.SECONDS);
     }
     public void delete(String key){
