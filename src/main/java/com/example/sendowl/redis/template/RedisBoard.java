@@ -1,15 +1,19 @@
 package com.example.sendowl.redis.template;
 
 import com.example.sendowl.redis.enums.RedisEnum;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
 public class RedisBoard {
 
     private RedisTemplate redisTemplate;
-    private ValueOperations<String,Long> valueOperations;
+    //private ValueOperations<String, Long> valueOperations;
+    private ValueOperations<String, String> valueOperations;
+
     private RedisShadow redisShadow;
     private String prefixKey = RedisEnum.BOARD+":"; // "board:"
     private Long hit = 1L;
@@ -18,19 +22,26 @@ public class RedisBoard {
     public RedisBoard(RedisTemplate redisTemplate, RedisShadow redisShadow) {
         this.redisTemplate = redisTemplate;
         this.valueOperations = redisTemplate.opsForValue();
-        this.redisShadow  = redisShadow;
+        this.redisShadow = redisShadow;
     }
+
     public Long getHit(Long id){
-        return valueOperations.get(prefixKey+Long.toString(id));
+        return Long.parseLong(valueOperations.get(prefixKey+Long.toString(id)));
     }
 
     // key의 카운트를 반환
     public Long setIfAbsent(Long id){
-        if(!valueOperations.setIfAbsent(prefixKey + Long.toString(id), hit)){
+        System.out.println("r1");
+        String key = prefixKey + String.valueOf(id);
+        if(!valueOperations.setIfAbsent(key, hit.toString())){
+            System.out.println("r2");
             hit = valueOperations.increment(prefixKey +Long.toString(id));
         }else{
+            System.out.println("r3");
             setShadowKeyTtl(id);
         }
+        System.out.println("r4");
+
         return hit;
     }
 
@@ -40,6 +51,6 @@ public class RedisBoard {
     }
 
     public void setShadowKeyTtl(Long id){
-        redisShadow.set(prefixKey + Long.toString(id), ttl);
+        redisShadow.set(prefixKey + String.valueOf(id), ttl);
     }
 }
