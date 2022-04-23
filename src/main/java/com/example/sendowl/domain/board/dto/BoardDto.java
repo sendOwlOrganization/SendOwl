@@ -65,6 +65,7 @@ public class BoardDto {
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
+            this.email = entity.getUser().getEmail();
             this.content = entity.getContent();
             this.hit = entity.getHit();
         }
