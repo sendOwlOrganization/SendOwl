@@ -1,13 +1,14 @@
 package com.example.sendowl.redis.template;
 
 import com.example.sendowl.redis.enums.RedisEnum;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-@Service
 public class RedisShadow {
 
     private RedisTemplate redisTemplate;
@@ -19,11 +20,12 @@ public class RedisShadow {
         this.redisTemplate = redisTemplate;
         this.valueOperations = redisTemplate.opsForValue();
     }
-    
+
     public String findByKey(String key){
         return valueOperations.get(prefixKey+key);
     }
     public void set(String key, Long ttl){
+        System.out.println("r5");
         valueOperations.set(prefixKey+key,value, ttl, TimeUnit.SECONDS);
     }
     public void delete(String key){
