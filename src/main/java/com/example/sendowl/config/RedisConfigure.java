@@ -19,7 +19,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-@EnableRedisRepositories
 @RequiredArgsConstructor
 public class RedisConfigure {
 
@@ -48,7 +47,7 @@ public class RedisConfigure {
     }
 
     private final BoardRepository boardRepository;
-    private final RedisEmailTokenService redisEmailTokenService;
+    //private final RedisEmailTokenService redisEmailTokenService;
 
     @Bean
     public RedisMessageSubscriber redisMessageSubscriber(){

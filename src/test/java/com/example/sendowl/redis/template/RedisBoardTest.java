@@ -14,7 +14,7 @@ public class RedisBoardTest {
 
     @Test
     public void RedisBoardAdd(){
-        Long hit = redisBoard.setIfAbsent(1L);
+        redisBoard.setIfAbsent(1L);
     }
     @Test
     public void RedisDelete(){

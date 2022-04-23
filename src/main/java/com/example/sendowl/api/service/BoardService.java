@@ -75,7 +75,6 @@ public class BoardService {
         // Redis insert if Absent with shadowkey
         redisBoard.setIfAbsent(id);
 
-        DetailRes detailRes = new DetailRes(board);
-        return detailRes;
+        return new DetailRes(board);
     }
 }

@@ -19,21 +19,21 @@ public class RedisMessageSubscriber implements MessageListener {
     private final RedisBoard redisBoard;
     private final BoardRepository boardRepository;
     //private final RedisEmailTokenService userTokenService;
-    private final String EXPIRED_EVENT = RedisEnum.EXPIRE;
 
     @Override
     public void onMessage(Message message, byte[] bytes) { // Callback for processing received objects through Redis.
         String channel = new String(message.getChannel(), StandardCharsets.UTF_8);
         String body = new String(message.getBody(), StandardCharsets.UTF_8);
         String event = channel.split(":")[1];
-        System.out.println(channel);
-        System.out.println(body);
-        System.out.println(event);
 
-        if (event.equals(EXPIRED_EVENT)) {
+        if (event.equals(RedisEnum.EXPIRE)) {
+            System.out.println(channel);
+            System.out.println(body);
+            System.out.println(event);
+
             String[] bodyData = body.split(":");
-            String key = bodyData[0];
-            String id = bodyData[1];
+            String key = bodyData[1];
+            String id = bodyData[2];
 
             switch (key) {
                 case RedisEnum.BOARD:
