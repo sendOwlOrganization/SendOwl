@@ -6,13 +6,12 @@ import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.redis.service.RedisShadowKeyService;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.template.RedisBoard;
-import com.example.sendowl.redis.repository.RedisBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +30,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final RedisBoardRepository redisBoardRepository;
-    private final RedisBoard redisBoard;
-    private final RedisShadowKeyService redisShadowKeyService;
+
+    @Autowired
+    private RedisBoard redisBoard;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
@@ -74,6 +73,7 @@ public class BoardService {
         // Redis insert if Absent with shadowkey
         redisBoard.setIfAbsent(id);
 
-        return new DetailRes(board);
+        DetailRes detailRes = new DetailRes(board);
+        return detailRes;
     }
 }
