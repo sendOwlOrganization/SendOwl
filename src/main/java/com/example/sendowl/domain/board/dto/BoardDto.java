@@ -17,7 +17,7 @@ public class BoardDto {
     @Data
     public static class BoardsRes {
         private Long id;
-        private String email;
+        private User user;
         private String title;
         private String content;
         private LocalDateTime regDate;
@@ -25,7 +25,7 @@ public class BoardDto {
 
         public BoardsRes(Board entity) {
             this.id = entity.getId();
-            this.email = entity.getUser().getEmail();
+            this.user = entity.getUser();
             this.title = entity.getTitle();
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();

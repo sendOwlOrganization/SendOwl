@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(indexes = @Index(name="idx_user", columnList = "email"))
 public class User extends BaseEntity{
 
     @Id

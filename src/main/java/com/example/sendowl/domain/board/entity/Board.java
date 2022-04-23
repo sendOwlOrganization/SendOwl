@@ -13,6 +13,7 @@ import java.util.Optional;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(indexes = @Index(name="idx_board", columnList = "title"))
 public class Board extends BaseEntity {
 
     @Id
