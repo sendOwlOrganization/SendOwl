@@ -8,25 +8,25 @@ import com.example.sendowl.redis.exception.RedisBoardNotFoundException;
 import com.example.sendowl.redis.repository.RedisBoardRepository;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.redis.template.RedisBoard;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 
 import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 
 // MessageListener를 이용하여 redis에서 pub되는 메세지는 받는다.
-
+@RequiredArgsConstructor
 public class RedisMessageSubscriber implements MessageListener {
-
-    @Autowired
-    private RedisBoard redisBoard;
-    @Autowired
-    private BoardRepository boardRepository;
-    @Autowired
-    private RedisEmailTokenService userTokenService;
-
+    private final RedisBoard redisBoard;
+    private final BoardRepository boardRepository;
+    //private final RedisEmailTokenService userTokenService;
     private final String EXPIRED_EVENT = RedisEnum.EXPIRE;
 
     @Override
@@ -34,6 +34,9 @@ public class RedisMessageSubscriber implements MessageListener {
         String channel = new String(message.getChannel(), StandardCharsets.UTF_8);
         String body = new String(message.getBody(), StandardCharsets.UTF_8);
         String event = channel.split(":")[1];
+        System.out.println(channel);
+        System.out.println(body);
+        System.out.println(event);
 
         if (event.equals(EXPIRED_EVENT)) {
             String[] bodyData = body.split(":");
@@ -62,7 +65,7 @@ public class RedisMessageSubscriber implements MessageListener {
     }
 
     private void handleRedisUserTokenExpired(String id) {
-        userTokenService.deleteById(Long.valueOf(id));
+//        userTokenService.deleteById(Long.valueOf(id));
     }
 }
 
