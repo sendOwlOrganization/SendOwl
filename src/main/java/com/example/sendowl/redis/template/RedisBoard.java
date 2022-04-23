@@ -4,6 +4,8 @@ import com.example.sendowl.redis.enums.RedisEnum;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.util.Optional;
+
 public class RedisBoard {
 
     private RedisTemplate redisTemplate;
@@ -19,8 +21,8 @@ public class RedisBoard {
         this.redisShadow = redisShadow;
     }
 
-    public Long getHit(Long id){
-        return Long.parseLong(valueOperations.get(prefixKey+Long.toString(id)));
+    public Optional<String> getHit(Long id){
+        return Optional.ofNullable(valueOperations.get(prefixKey + Long.toString(id)));
     }
 
     // key의 카운트를 반환

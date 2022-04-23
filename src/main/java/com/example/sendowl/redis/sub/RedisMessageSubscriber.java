@@ -47,7 +47,7 @@ public class RedisMessageSubscriber implements MessageListener {
     }
 
     private void handleRedisBoardExpired(Long id) {
-        Long hit = redisBoard.getHit(id);
+        Long hit = Long.parseLong(redisBoard.getHit(id).orElseThrow(()->new NullPointerException()));
 
         Board board = boardRepository.findById(id).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
         board.setHit((int) (board.getHit() + hit));

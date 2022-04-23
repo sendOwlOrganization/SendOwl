@@ -24,5 +24,9 @@ public class RedisBoardTest {
     public void Redis(){
         redisBoard.setIfAbsent(2L);
     }
+    @Test
+    public void RedisGetHit(){
+        redisBoard.getHit(1L);
+    }
 
 }
