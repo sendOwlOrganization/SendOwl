@@ -4,18 +4,10 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.enums.RedisEnum;
-import com.example.sendowl.redis.exception.RedisBoardNotFoundException;
-import com.example.sendowl.redis.repository.RedisBoardRepository;
-import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.redis.template.RedisBoard;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 

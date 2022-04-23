@@ -1,17 +1,12 @@
 package com.example.sendowl.redis.template;
 
 import com.example.sendowl.redis.enums.RedisEnum;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
 
 public class RedisBoard {
 
     private RedisTemplate redisTemplate;
-    //private ValueOperations<String, Long> valueOperations;
     private ValueOperations<String, String> valueOperations;
 
     private RedisShadow redisShadow;
