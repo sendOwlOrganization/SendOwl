@@ -15,9 +15,10 @@ import java.util.Optional;
 public class BoardDto {
 
     @Data
+    @AllArgsConstructor
     public static class BoardsRes {
         private Long id;
-        private User user;
+        private String user;
         private String title;
         private String content;
         private LocalDateTime regDate;
@@ -25,7 +26,7 @@ public class BoardDto {
 
         public BoardsRes(Board entity) {
             this.id = entity.getId();
-            this.user = entity.getUser();
+            this.user = entity.getUser().getEmail();
             this.title = entity.getTitle();
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
@@ -34,6 +35,7 @@ public class BoardDto {
     }
 
     @Data
+    @AllArgsConstructor
     public static class BoardReq {
         @NotBlank
         private String title;
@@ -48,7 +50,7 @@ public class BoardDto {
             this.title = entity.getTitle();
             this.content = entity.getContent();
             this.email = entity.getUser().getEmail();
-            this.categoryName = String.valueOf(entity.getCategory().getCategoryName());
+            this.categoryName = entity.getCategory().getCategoryName().name();
         }
     }
 
