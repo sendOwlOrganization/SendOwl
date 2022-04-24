@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -23,15 +23,20 @@ public class SendOwlApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 카테고리 인서트하는 로직 적용 => 나중에 삭제
+        List<Category> listCategory = categoryRepository.findAll();
+        Map<String,Boolean> tbCategoryName = new HashMap<String,Boolean>();
+
+        listCategory.stream().forEach(category -> tbCategoryName.put(category.getCategoryName().getKey(), true));
+
+        List<Category> emptyCategory = new ArrayList<>();
         for(CategoryName categoryName : CategoryName.values()){
-            Optional<Category> optCategory = categoryRepository.findByCategoryName(categoryName);
-            if(optCategory.isEmpty()){
-                categoryRepository.save(
-                        new Category().builder()
-                                .categoryName(categoryName)
-                                .build()
-                );
+            if(!tbCategoryName.containsKey(categoryName.getKey())){
+                emptyCategory.add(new Category().builder().categoryName(categoryName).build());
             }
+        }
+
+        if(emptyCategory.size() != 0){
+            categoryRepository.saveAll(emptyCategory);
         }
     }
 }
