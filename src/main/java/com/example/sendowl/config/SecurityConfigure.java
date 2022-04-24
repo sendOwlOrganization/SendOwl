@@ -27,7 +27,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     public static final String[] AUTH_WHITELIST = {
             "/api/users/**",
             "/api/boards/**",
-            "/api/comment/**"
+            "/api/comment/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/**",
             "/v2/**",
