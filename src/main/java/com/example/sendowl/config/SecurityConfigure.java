@@ -22,12 +22,12 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     private static final String[] AUTH_LIST = {
             // other public endpoints of your API may be appended to this array
             "/api/admin/**",
-            "/api/boards/**",
-            "/api/comment/**"
     };
     // SecurityConfigure에서 한번에 관리하는게 좋을거 같아서 AUTH_WHITELIST를 분리하여 정의해놓았습니다.
     public static final String[] AUTH_WHITELIST = {
             "/api/users/**",
+            "/api/boards/**",
+            "/api/comment/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/**",
             "/v2/**",

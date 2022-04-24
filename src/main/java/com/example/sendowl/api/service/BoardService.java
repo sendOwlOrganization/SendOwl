@@ -1,17 +1,21 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.category.entity.CategoryName;
+import com.example.sendowl.domain.category.enums.CategoryErrorCode;
+import com.example.sendowl.domain.category.exception.CategoryNameNotFoundException;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserNotFoundException;
+import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.template.RedisBoard;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +23,6 @@ import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -45,30 +47,38 @@ public class BoardService {
         return boardRes;
     }
 
-    // 오류
     @Transactional
     public BoardsRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
-                () -> new UserNotFoundException(NOT_FOUND));
+                () -> new UserNotFoundException(UserErrorCode.NOT_FOUND));
+        
+        CategoryName categoryName = null;
+        try {
+            categoryName = CategoryName.valueOf(req.getCategoryName());
+        } catch (RuntimeException ex) {
+            throw new CategoryNameNotFoundException(CategoryErrorCode.NOT_FOUND);
+        }
 
-        Category category = categoryRepository.findByCategoryName(req.getCategoryName()).orElseThrow(
-                () -> new CategoryNotFoundException(NOT_FOUND));
+        // Enum기준으로 DB에 올라가기 때문에 나중엔 DB통한 검증이 사라져도 될거 같습니다.
+        Category category = categoryRepository.findByCategoryName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
         Board board = Board.builder()
+                .user(user)
                 .title(req.getTitle())
                 .content(req.getContent())
                 .category(category)
-                .user(user).build();
+                .build();
 
-        boardRepository.save(board);
+        Board savedBoard = boardRepository.save(board);
 
-        return new BoardsRes(board);
+        return new BoardsRes(savedBoard);
     }
 
     public DetailRes boardDetail(Long id) {
 
         Board board = boardRepository.findById(id).orElseThrow(
-                () -> new BoardNotFoundException(NOT_FOUND));
+                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         // Redis insert if Absent with shadowkey
         redisBoard.setIfAbsent(id);

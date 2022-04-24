@@ -1,20 +1,6 @@
 version: '3.2'
 
 services:
-  mysql-db:
-    image: mysql
-    container_name: mysql
-    restart: always
-    env_file: ./.env
-    ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
-    environment:
-      - MYSQL_DATABASE=$MYSQLDB_DATABASE
-      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-      - TZ=Asia/Seoul
-    volumes:
-      - ./db_data:/var/lib/mysql
-
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper
