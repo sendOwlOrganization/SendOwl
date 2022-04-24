@@ -55,7 +55,7 @@ public class BoardService {
         CategoryName categoryName = null;
         try {
             categoryName = CategoryName.valueOf(req.getCategoryName());
-        } catch (IllegalArgumentException ex) {
+        } catch (RuntimeException ex) {
             throw new CategoryNameNotFoundException(CategoryErrorCode.NOT_FOUND);
         }
 
