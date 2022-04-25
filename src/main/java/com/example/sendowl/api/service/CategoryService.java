@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.sendowl.domain.category.dto.CategoryDto.*;
 
@@ -23,13 +24,6 @@ public class CategoryService {
 
     public List<CategoriesRes> getCategoryList() {
         List<Category> categories = categoryRepository.findAll();
-        List<CategoriesRes> categoriesRes = new ArrayList<>();
-
-        for(Category category : categories){
-            CategoriesRes temp = new CategoriesRes(category);
-            categoriesRes.add(temp);
-        }
-
-        return categoriesRes;
+        return categories.stream().map(CategoriesRes::new).collect(Collectors.toList());
     }
 }
