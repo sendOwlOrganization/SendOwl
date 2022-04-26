@@ -18,7 +18,6 @@ import static com.example.sendowl.domain.board.exception.enums.BoardErrorCode.*;
 public class RedisMessageSubscriber implements MessageListener {
     private final RedisBoard redisBoard;
     private final BoardRepository boardRepository;
-    //private final RedisEmailTokenService userTokenService;
 
     @Override
     public void onMessage(Message message, byte[] bytes) { // Callback for processing received objects through Redis.
@@ -32,32 +31,26 @@ public class RedisMessageSubscriber implements MessageListener {
             System.out.println(event);
 
             String[] bodyData = body.split(":");
+            String prefix = bodyData[0];
             String key = bodyData[1];
-            String id = bodyData[2];
 
             switch (key) {
                 case RedisEnum.BOARD:
+                    String id = bodyData[2];
                     handleRedisBoardExpired(Long.parseLong(id));
-                    break;
-                case RedisEnum.EMAIL_TOKEN:
-                    handleRedisUserTokenExpired(id);
                     break;
             }
         }
     }
 
     private void handleRedisBoardExpired(Long id) {
-        Long hit = Long.parseLong(redisBoard.getHit(id).orElseThrow(()->new NullPointerException()));
+        Long hit = Long.parseLong(redisBoard.getHit(id).orElseThrow(NullPointerException::new));
 
         Board board = boardRepository.findById(id).orElseThrow(() -> new BoardNotFoundException(NOT_FOUND));
         board.setHit((int) (board.getHit() + hit));
         boardRepository.save(board);
 
         redisBoard.delete(id);
-    }
-
-    private void handleRedisUserTokenExpired(String id) {
-//        userTokenService.deleteById(Long.valueOf(id));
     }
 }
 
