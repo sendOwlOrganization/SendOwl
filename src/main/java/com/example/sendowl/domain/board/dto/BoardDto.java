@@ -53,20 +53,18 @@ public class BoardDto {
         }
     }
 
-    @Data
-    @AllArgsConstructor
-    @Builder
+    @Getter
     public static class DetailRes {
         private Long id;
         private String title;
         private String content;
-        private String email;
+        private UserDto.UserRes user;
         private Integer hit;
 
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
-            this.email = entity.getUser().getEmail();
+            this.user = new UserDto.UserRes(entity.getUser());
             this.content = entity.getContent();
             this.hit = entity.getHit();
         }
