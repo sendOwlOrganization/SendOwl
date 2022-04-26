@@ -27,7 +27,7 @@ public class RedisEmailTokenService {
     }
 
     public void save(String email, String token) {
-        valueOps.set(getKey(email), token, 5L, TimeUnit.SECONDS);
+        valueOps.set(getKey(email), token, 180L, TimeUnit.SECONDS);
     }
 
     public void update(String email, String token) {
