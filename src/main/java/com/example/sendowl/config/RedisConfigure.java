@@ -1,9 +1,9 @@
 package com.example.sendowl.config;
 
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.redis.sub.RedisMessageSubscriber;
 import com.example.sendowl.redis.template.RedisBoard;
+import com.example.sendowl.redis.template.RedisEmailTokenService;
 import com.example.sendowl.redis.template.RedisShadow;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +15,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-// @EnableRedisRepositories
 @RequiredArgsConstructor
 public class RedisConfigure {
 
@@ -38,6 +36,11 @@ public class RedisConfigure {
     }
 
     @Bean
+    public RedisEmailTokenService redisEmailToken() {
+        return new RedisEmailTokenService(redisTemplate(redisConnectionFactory()));
+    }
+
+    @Bean
     public RedisBoard redisBoard(){
         return new RedisBoard(redisTemplate(redisConnectionFactory()), redisShadow());
     }
@@ -48,7 +51,6 @@ public class RedisConfigure {
     }
 
     private final BoardRepository boardRepository;
-    //private final RedisEmailTokenService redisEmailTokenService;
 
     @Bean
     public RedisMessageSubscriber redisMessageSubscriber(){
