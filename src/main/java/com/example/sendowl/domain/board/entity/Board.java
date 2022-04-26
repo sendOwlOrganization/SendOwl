@@ -41,11 +41,12 @@ public class Board extends BaseEntity {
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
-    public Board(User user, String title, String content, Category category) {
+    public Board(User user, String title, String content, Category category, Integer hit) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.category = category;
+        this.hit = hit;
     }
 
     public void setHit(Integer hit) {
