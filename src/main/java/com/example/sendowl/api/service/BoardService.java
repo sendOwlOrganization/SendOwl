@@ -51,16 +51,8 @@ public class BoardService {
     public BoardsRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.NOT_FOUND));
-        
-        CategoryName categoryName = null;
-        try {
-            categoryName = CategoryName.valueOf(req.getCategoryName());
-        } catch (RuntimeException ex) {
-            throw new CategoryNameNotFoundException(CategoryErrorCode.NOT_FOUND);
-        }
 
-        // Enum기준으로 DB에 올라가기 때문에 나중엔 DB통한 검증이 사라져도 될거 같습니다.
-        Category category = categoryRepository.findByCategoryName(categoryName)
+        Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
         Board board = Board.builder()
@@ -68,10 +60,10 @@ public class BoardService {
                 .title(req.getTitle())
                 .content(req.getContent())
                 .category(category)
+                .hit(0)
                 .build();
 
         Board savedBoard = boardRepository.save(board);
-
         return new BoardsRes(savedBoard);
     }
 
