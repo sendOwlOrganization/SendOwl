@@ -1,15 +1,11 @@
 package com.example.sendowl.domain.board.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.dto.UserDto;
-import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
-import java.util.Optional;
-
 
 public class BoardDto {
 
