@@ -30,9 +30,6 @@ public class RedisEmailTokenService {
         valueOps.set(getKey(email), token, 180L, TimeUnit.SECONDS);
     }
 
-    public void update(String email, String token) {
-    }
-
     public Optional<String> getToken(String email) {
         return Optional.ofNullable(valueOps.get(getKey(email)));
     }
