@@ -1,7 +1,7 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.*;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;

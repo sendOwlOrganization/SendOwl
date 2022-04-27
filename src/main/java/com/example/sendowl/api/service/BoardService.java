@@ -8,7 +8,7 @@ import com.example.sendowl.domain.category.exception.CategoryNameNotFoundExcepti
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.UserNotFoundException;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.board.entity.Board;

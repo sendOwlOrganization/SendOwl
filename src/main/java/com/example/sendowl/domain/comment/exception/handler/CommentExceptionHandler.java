@@ -1,8 +1,7 @@
 package com.example.sendowl.domain.comment.exception.handler;
 
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
-import com.example.sendowl.domain.user.exception.UserNotFoundException;
-import com.example.sendowl.domain.user.exception.UserNotValidException;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
