@@ -5,7 +5,6 @@ import com.example.sendowl.domain.user.exception.*;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
-import com.example.sendowl.redis.entity.RedisEmailToken;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
@@ -78,11 +77,7 @@ public class UserService {
         String token = new TokenGenerator().generateSixRandomNumber();
         new Thread(() -> {
             kafkaProducer.sendEmailVerification(req.getEmail(), token); // 인증 코드 전송
-            redisEmailTokenService.deleteByEmail(req.getEmail());
-            redisEmailTokenService.save(RedisEmailToken.builder()
-                    .email(req.getEmail())
-                    .token(token)
-                    .build());
+            redisEmailTokenService.save(req.getEmail(), token);
         }).start();
 
 
@@ -90,9 +85,9 @@ public class UserService {
     }
 
     public EmailVerifyRes emailVerify(EmailVerifyReq req) {
-        RedisEmailToken redisToken = redisEmailTokenService.findTokenByEmail(req.getEmail())
+        String token = redisEmailTokenService.getToken(req.getEmail())
                 .orElseThrow(() -> new UserVerifyTokenExpiredException(EXPIRED_VERIFICATION_TOKEN));
 
-        return new EmailVerifyRes(redisToken.getToken().equals(req.getToken()));
+        return new EmailVerifyRes(token.equals(req.getToken()));
     }
 }

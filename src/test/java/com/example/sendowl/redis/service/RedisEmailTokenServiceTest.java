@@ -1,13 +1,13 @@
 package com.example.sendowl.redis.service;
 
-import com.example.sendowl.redis.entity.RedisEmailToken;
-import com.example.sendowl.redis.repository.RedisEmailTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,61 +15,68 @@ import static org.junit.jupiter.api.Assertions.*;
 class RedisEmailTokenServiceTest {
 
     @Autowired
-    private RedisEmailTokenService userTokenService;
-
-    @Autowired
-    private RedisEmailTokenRepository userTokenRepository;
+    private RedisEmailTokenService redisEmailTokenService;
 
     @BeforeEach
     public void deleteAll() {
-        userTokenRepository.deleteAll();
+        redisEmailTokenService.deleteAll();
     }
 
     @Test
-    public void testFindTokenByEmail() throws Exception {
-
-        final String email = "EMAIL";
-        final String token = "TOKEN";
+    public void testAddEntity() throws Exception {
         // given
-        RedisEmailToken build = RedisEmailToken.builder()
-                .token(token)
-                .email(email)
-                .build();
+        final String email = "email@naver.com";
+        final String token = "12345";
+
         // when
-        userTokenService.save(build);
+        redisEmailTokenService.save(email, token);
 
         // then
-        Optional<RedisEmailToken> optional = userTokenService.findTokenByEmail(email);
-        RedisEmailToken redisEmailToken = optional.get();
+        Optional<String> optional = redisEmailTokenService.getToken(email);
+        String redisEmailToken = optional.get();
+        assertEquals(redisEmailToken, token);
+
+        System.out.println("----------------------- sout");
         System.out.println(redisEmailToken);
-        assertEquals(redisEmailToken.getEmail(), email);
-        assertEquals(redisEmailToken.getToken(), token);
+
     }
 
     @Test
-    public void deleteTest() throws Exception {
+    public void testGetAll() throws Exception {
         // given
-        final String email = "EMAIL";
-        final String token = "TOKEN";
-        // given
-        RedisEmailToken build = RedisEmailToken.builder()
-                .token(token)
-                .email(email)
-                .build();
-        // when
-        RedisEmailToken userToken = userTokenService.save(build);
-        System.out.println("when--------------------");
-        for (RedisEmailToken redisEmailToken : userTokenRepository.findAll()) {
-            System.out.println(redisEmailToken);
+        final String email = "email@naver.com";
+        final String token = "12345";
+
+        for (int i = 0; i < 3; i++) {
+            redisEmailTokenService.save(email + i, token + i);
         }
 
-        // when
-        userTokenService.deleteByEmail(email);
+        Set<String> allKeys = redisEmailTokenService.getAllKeys();
+        System.out.println(allKeys);
 
         // then
-        System.out.println("then--------------------");
-        for (RedisEmailToken redisEmailToken : userTokenRepository.findAll()) {
-            System.out.println(redisEmailToken);
-        }
+        Map<String, String> all = redisEmailTokenService.getAll();
+        System.out.println("testGetAll");
+        System.out.println(all);
     }
+
+    @Test
+    public void testUpdate() throws Exception {
+        final String email = "email@naver.com";
+        final String token = "1111";
+
+        // when
+        redisEmailTokenService.save(email, token);
+
+        Optional<String> optional = redisEmailTokenService.getToken(email);
+        String redisEmailToken = optional.get();
+        System.out.println("redisEmailToken=" + redisEmailToken);
+
+        this.redisEmailTokenService.save(email, token + "2");
+
+        Optional<String> optional2 = this.redisEmailTokenService.getToken(email);
+        String redisEmailToken2 = optional2.get();
+        System.out.println("redisEmailToken2=" + redisEmailToken2);
+    }
+
 }

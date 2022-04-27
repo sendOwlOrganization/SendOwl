@@ -25,7 +25,7 @@ public class KafkaConsumer {
     public void sendEmailValidation(EmailVerifyDto dto) {
         new Thread(() -> {
             try {
-                log.warn("kafka 이메일 전송 :" + dto.getEmail() + " " + dto.getToken());
+                log.error("kafka 이메일 전송 :" + dto.getEmail() + " " + dto.getToken());
                 mailService.sendEmailVerification(MailDto.builder()
                         .address(dto.getEmail())
                         .title("[SendOwl] 이메일 인증 토큰")

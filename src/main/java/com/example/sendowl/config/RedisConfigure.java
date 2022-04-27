@@ -1,10 +1,10 @@
 package com.example.sendowl.config;
 
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.redis.sub.RedisMessageSubscriber;
-import com.example.sendowl.redis.template.RedisBoard;
-import com.example.sendowl.redis.template.RedisShadow;
+import com.example.sendowl.redis.service.RedisBoardService;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
+import com.example.sendowl.redis.service.RedisShadowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,11 +15,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
-// @EnableRedisRepositories
 @RequiredArgsConstructor
 public class RedisConfigure {
 
@@ -38,21 +36,25 @@ public class RedisConfigure {
     }
 
     @Bean
-    public RedisBoard redisBoard(){
-        return new RedisBoard(redisTemplate(redisConnectionFactory()), redisShadow());
+    public RedisEmailTokenService redisEmailToken() {
+        return new RedisEmailTokenService(redisTemplate(redisConnectionFactory()));
     }
 
     @Bean
-    public RedisShadow redisShadow(){
-        return new RedisShadow(redisTemplate(redisConnectionFactory()));
+    public RedisBoardService redisBoard(){
+        return new RedisBoardService(redisTemplate(redisConnectionFactory()), redisShadow());
+    }
+
+    @Bean
+    public RedisShadowService redisShadow(){
+        return new RedisShadowService(redisTemplate(redisConnectionFactory()));
     }
 
     private final BoardRepository boardRepository;
-    //private final RedisEmailTokenService redisEmailTokenService;
 
     @Bean
     public RedisMessageSubscriber redisMessageSubscriber(){
-        return new RedisMessageSubscriber(redisBoard(), boardRepository);
+        return new RedisMessageSubscriber();
     }
 
     @Bean
