@@ -2,7 +2,7 @@ package com.example.sendowl.domain.user.exception.handler;
 
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
 import com.example.sendowl.domain.user.dto.UserDto;
-import com.example.sendowl.domain.user.exception.*;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,7 +1,7 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.*;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
@@ -33,16 +33,8 @@ public class UserService {
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
-        User user = User.builder()
-                .name(req.getName())
-                .nickName(req.getNickName())
-                .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .introduction(req.getIntroduction())
-                .profileImage(req.getProfileImage())
-                .build();
-
-        User entity = userRepository.save(user);
+        String encodedPassword = passwordEncoder.encode(req.getPassword());
+        User entity = userRepository.save(req.toEntity(encodedPassword));
         return new JoinRes(entity);
     }
 

@@ -10,7 +10,7 @@ import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
-import com.example.sendowl.domain.user.exception.UserNotFoundException;
+import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
