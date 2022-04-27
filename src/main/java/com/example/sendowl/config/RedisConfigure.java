@@ -2,9 +2,9 @@ package com.example.sendowl.config;
 
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.sub.RedisMessageSubscriber;
-import com.example.sendowl.redis.template.RedisBoard;
-import com.example.sendowl.redis.template.RedisEmailTokenService;
-import com.example.sendowl.redis.template.RedisShadow;
+import com.example.sendowl.redis.service.RedisBoardService;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
+import com.example.sendowl.redis.service.RedisShadowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,13 +41,13 @@ public class RedisConfigure {
     }
 
     @Bean
-    public RedisBoard redisBoard(){
-        return new RedisBoard(redisTemplate(redisConnectionFactory()), redisShadow());
+    public RedisBoardService redisBoard(){
+        return new RedisBoardService(redisTemplate(redisConnectionFactory()), redisShadow());
     }
 
     @Bean
-    public RedisShadow redisShadow(){
-        return new RedisShadow(redisTemplate(redisConnectionFactory()));
+    public RedisShadowService redisShadow(){
+        return new RedisShadowService(redisTemplate(redisConnectionFactory()));
     }
 
     private final BoardRepository boardRepository;

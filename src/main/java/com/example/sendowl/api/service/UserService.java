@@ -5,7 +5,7 @@ import com.example.sendowl.domain.user.exception.*;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
-import com.example.sendowl.redis.template.RedisEmailTokenService;
+import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -14,7 +14,7 @@ import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.template.RedisBoard;
+import com.example.sendowl.redis.service.RedisBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final RedisBoard redisBoard;
+    private final RedisBoardService redisBoardService;
 
     public List<BoardsRes> getBoardList() {
        boolean active = true;
@@ -81,7 +81,7 @@ public class BoardService {
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         // Redis insert if Absent with shadowkey
-        redisBoard.setIfAbsent(id);
+        redisBoardService.setIfAbsent(id);
 
         return new DetailRes(board);
     }

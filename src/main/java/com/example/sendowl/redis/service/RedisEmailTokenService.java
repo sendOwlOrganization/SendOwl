@@ -1,4 +1,4 @@
-package com.example.sendowl.redis.template;
+package com.example.sendowl.redis.service;
 
 import com.example.sendowl.redis.enums.RedisEnum;
 import org.springframework.data.redis.core.RedisTemplate;

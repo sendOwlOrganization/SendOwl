@@ -1,32 +1,31 @@
 package com.example.sendowl.redis.template;
 
+import com.example.sendowl.redis.service.RedisBoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 
 @SpringBootTest
-public class RedisBoardTest {
+public class RedisBoardServiceTest {
 
     @Autowired
-    private RedisBoard redisBoard;
+    private RedisBoardService redisBoardService;
 
     @Test
     public void RedisBoardAdd(){
-        redisBoard.setIfAbsent(1L);
+        redisBoardService.setIfAbsent(1L);
     }
     @Test
     public void RedisDelete(){
-        redisBoard.delete(1L);
+        redisBoardService.delete(1L);
     }
     @Test
     public void Redis(){
-        redisBoard.setIfAbsent(2L);
+        redisBoardService.setIfAbsent(2L);
     }
     @Test
     public void RedisGetHit(){
-        redisBoard.getHit(1L);
+        redisBoardService.getHit(1L);
     }
 
 }
