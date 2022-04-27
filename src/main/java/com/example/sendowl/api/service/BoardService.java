@@ -35,11 +35,11 @@ public class BoardService {
     private final RedisBoardService redisBoardService;
 
     public List<BoardsRes> getBoardList() {
-       boolean active = true;
+        boolean active = true;
         //List<Board> boards = boardRepository.findByActive(active);
         List<Board> boards = boardRepository.findAll();
         List<BoardsRes> boardRes = new ArrayList<>();
-        for(Board i : boards){
+        for (Board i : boards) {
             BoardsRes temp = new BoardsRes(i);
             boardRes.add(temp);
         }
@@ -55,15 +55,7 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        Board board = Board.builder()
-                .user(user)
-                .title(req.getTitle())
-                .content(req.getContent())
-                .category(category)
-                .hit(0)
-                .build();
-
-        Board savedBoard = boardRepository.save(board);
+        Board savedBoard = boardRepository.save(req.toEntity(user, category));
         return new BoardsRes(savedBoard);
     }
 
