@@ -1,18 +1,19 @@
 package com.example.sendowl.domain.board.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.user.dto.UserDto;
 import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+
+import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 public class BoardDto {
 
     @Getter
     public static class BoardsRes {
         private Long id;
-        private UserDto.UserRes user;
+        private UserRes user;
         private String title;
         private String content;
         private LocalDateTime regDate;
@@ -20,7 +21,7 @@ public class BoardDto {
 
         public BoardsRes(Board entity) {
             this.id = entity.getId();
-            this.user = new UserDto.UserRes(entity.getUser());
+            this.user = new UserRes(entity.getUser());
             this.title = entity.getTitle();
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
@@ -54,13 +55,13 @@ public class BoardDto {
         private Long id;
         private String title;
         private String content;
-        private UserDto.UserRes user;
+        private UserRes user;
         private Integer hit;
 
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
-            this.user = new UserDto.UserRes(entity.getUser());
+            this.user = new UserRes(entity.getUser());
             this.content = entity.getContent();
             this.hit = entity.getHit();
         }

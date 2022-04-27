@@ -33,16 +33,8 @@ public class UserService {
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
-        User user = User.builder()
-                .name(req.getName())
-                .nickName(req.getNickName())
-                .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .introduction(req.getIntroduction())
-                .profileImage(req.getProfileImage())
-                .build();
-
-        User entity = userRepository.save(user);
+        String encodedPassword = passwordEncoder.encode(req.getPassword());
+        User entity = userRepository.save(req.toEntity(encodedPassword));
         return new JoinRes(entity);
     }
 

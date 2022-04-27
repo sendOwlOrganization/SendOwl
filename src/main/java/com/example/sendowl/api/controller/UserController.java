@@ -44,9 +44,9 @@ public class UserController {
         userService.login(req).forEach(servletResponse::addHeader);
         return new BaseResponseDto<>(true);
     }
-
+    @Operation(summary = "id로 유저 검색")
     @GetMapping("/{id}")
-    public BaseResponseDto<UserRes> getUser(@PathVariable("id") Long id) {
+    public BaseResponseDto<UserRes> getUserById(@PathVariable("id") Long id) {
         return new BaseResponseDto<>(userService.getUser(id));
     }
 }
