@@ -54,7 +54,7 @@ public class RedisConfigure {
 
     @Bean
     public RedisMessageSubscriber redisMessageSubscriber(){
-        return new RedisMessageSubscriber(redisBoard(), boardRepository);
+        return new RedisMessageSubscriber();
     }
 
     @Bean
