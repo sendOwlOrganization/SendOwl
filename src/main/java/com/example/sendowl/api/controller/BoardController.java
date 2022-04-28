@@ -22,7 +22,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @Operation(summary = "list api", description = "list api")
+    @Operation(summary = "list api", description = "http://localhost:8080/api/boards?page=0&size=10&sort=id,DESC")
     @GetMapping(path = "") // 게시글 목록
     public BaseResponseDto<BoardsRes> boards(Pageable pageable){
         return new BaseResponseDto<BoardsRes>(boardService.getBoardList(pageable));
