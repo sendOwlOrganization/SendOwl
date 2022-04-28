@@ -4,9 +4,10 @@ package com.example.sendowl.api.controller;
 import com.example.sendowl.common.dto.BaseResponseDto;
 import com.example.sendowl.api.service.BoardService;
 import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.user.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,20 +24,19 @@ public class BoardController {
 
     @Operation(summary = "list api", description = "list api")
     @GetMapping(path = "") // 게시글 목록
-    public BaseResponseDto<List<BoardsRes>> boards(){
-        return new BaseResponseDto<List<BoardsRes>>(boardService.getBoardList());
+    public BaseResponseDto<BoardsRes> boards(Pageable pageable){
+        return new BaseResponseDto<BoardsRes>(boardService.getBoardList(pageable));
     }
 
     @Operation(summary = "board insert api", description = "board insert api")
     @PostMapping(path = "/board") // 게시글 등록
-    public BaseResponseDto<BoardsRes> board(final @Valid @RequestBody BoardReq rq){
-
-        return new BaseResponseDto<BoardsRes>(boardService.insertBoard(rq));
+    public BaseResponseDto<DetailRes> board(final @Valid @RequestBody BoardReq rq){
+        return new BaseResponseDto<DetailRes>(boardService.insertBoard(rq));
     }
 
     @Operation(summary = "board api", description = "board api")
     @GetMapping(path = "/{id}") // 게시글 상세
-    public BaseResponseDto<DetailRes> boardDetail(@PathVariable Long id ){
+    public BaseResponseDto<DetailRes> boardDetail(@PathVariable Long id){
         return new BaseResponseDto<DetailRes>(boardService.boardDetail(id));
     }
 
