@@ -4,9 +4,15 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.*;
+import javax.xml.soap.Detail;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
@@ -14,20 +20,16 @@ public class BoardDto {
 
     @Getter
     public static class BoardsRes {
-        private Long id;
-        private UserRes user;
-        private String title;
-        private String content;
-        private LocalDateTime regDate;
-        private Integer hit;
+        private List<DetailRes> boards;
+        private Long totalElement;
+        private Integer totalPages;
+        private Pageable pageable;
 
-        public BoardsRes(Board entity) {
-            this.id = entity.getId();
-            this.user = new UserRes(entity.getUser());
-            this.title = entity.getTitle();
-            this.content = entity.getContent();
-            this.regDate = entity.getRegDate();
-            this.hit = entity.getHit();
+        public BoardsRes(Page<Board> pages) {
+            this.boards = pages.get().map(DetailRes::new).collect(Collectors.toList());
+            this.totalElement = pages.getTotalElements();
+            this.totalPages = pages.getTotalPages();
+            this.pageable = pages.getPageable();
         }
     }
 
@@ -61,6 +63,7 @@ public class BoardDto {
         private String title;
         private String content;
         private UserRes user;
+        private LocalDateTime regDate;
         private Integer hit;
 
         public DetailRes(Board entity) {
@@ -68,6 +71,7 @@ public class BoardDto {
             this.title = entity.getTitle();
             this.user = new UserRes(entity.getUser());
             this.content = entity.getContent();
+            this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
     }
