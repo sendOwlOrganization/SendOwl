@@ -37,9 +37,17 @@ public class BoardService {
     private final RedisBoardService redisBoardService;
 
     public BoardsRes getBoardList(Pageable pageable) {
-        boolean active = true;
-        //List<Board> boards = boardRepository.findByActive(active);
         Page<Board> pages = boardRepository.findAll(pageable);
+        BoardsRes boardsRes = new BoardsRes(pages);
+        return boardsRes;
+    }
+
+    public BoardsRes getBoardListByTitle(Pageable pageable,String type, String text) {
+        Page<Board> pages;
+        if(type.equals("content")) {
+            pages = boardRepository.findByContentContaining(pageable, text);}
+        else{
+            pages = boardRepository.findByTitleContaining(pageable, text);}
         BoardsRes boardsRes = new BoardsRes(pages);
         return boardsRes;
     }
