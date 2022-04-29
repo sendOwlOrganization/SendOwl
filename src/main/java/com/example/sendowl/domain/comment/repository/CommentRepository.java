@@ -13,7 +13,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "SELECT c FROM Comment c JOIN FETCH c.board JOIN FETCH c.user WHERE c.board=:board")
     Optional<List<Comment>> findAllByBoard(Board board);
 
-    @Query(value = "SELECT Count(c) FROM Comment c WHERE c.parent.id=:commentId")
+    // WHERE c.active = true
+    @Query(value = "SELECT Count(c) FROM Comment c WHERE c.parent.id=:commentId AND c.active = 'Y'")
     Long findChildrenById(Long commentId);
 }
 
