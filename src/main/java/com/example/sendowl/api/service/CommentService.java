@@ -1,7 +1,9 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.common.dto.BaseResponseDto;
+import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
-import com.example.sendowl.domain.comment.dto.CommentRequest;
+import com.example.sendowl.domain.comment.dto.CommentDto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
@@ -15,84 +17,103 @@ import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import static com.example.sendowl.domain.comment.dto.CommentDto.*;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
-//    public List<Board> getBoardList() {
-//        String active = "Y";
-//
-//        return boardRepository.findByActive(active);
-//    }
+    @Transactional
+    public CommentRes insertComment(CommentReq vo) {
 
-    public void insertComment(CommentRequest vo) {
-        // 보드 객체 찾기
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
-        // 멤버 객체 찾기
-        User user = userRepository.findById(vo.getMemberId())
+
+        User user = userRepository.findByEmail(vo.getEmail())
                 .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
-        System.out.println(user.toString());
-        System.out.println(board.toString());
-//        Comment comment = new Comment().builder().board(board)
-//                .user(user)
-//                .content(vo.getContent())
-//                .regDate(LocalDateTime.now())
-//                .build();
-//        Comment savedComment = commentRepository.save(comment);
-//        savedComment.setParentId(savedComment.getId());// 자신의 값을 설정
-//        savedComment.setDepth(0L);
-//        savedComment.setOrd(0L);
-//        System.out.println("댓글 확인" + savedComment.getId().toString());
-//        commentRepository.flush();
+        Comment comment = Comment.builder()
+                    .board(board)
+                    .user(user)
+                    .content(vo.getContent())
+                    .depth(0L)
+                    .build();
+
+        Comment savedComment = commentRepository.save(comment);
+        return new CommentRes(savedComment);
     }
-    public void insertNestedComment(CommentRequest vo) {
-        // 보드 객체 찾기
+
+    @Transactional
+    public CommentRes insertNestedComment(CommentReq vo) {
+
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
-        // 멤버 객체 찾기
-        User user = userRepository.findById(vo.getMemberId())
+
+        User user = userRepository.findByEmail(vo.getEmail())
                 .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
         // 부모 댓글 찾기
         Comment parentComment = commentRepository.findById(vo.getParentId())
-                .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
-        // 마지막 자식 찾기
-//        Comment lastNestedComent = commentRepository
-//                .findTopByParentIdOrderByOrdDesc(parentComment.getId()).orElse(
-//                        new Comment().builder()
-//                                .ord(0L)
-//                                .build());
-//        Comment comment = new Comment().builder()
-//                .board(board)
-//                .user(user)
-//                .content(vo.getContent())
-//                .parentId(parentComment.getId())
-//                .depth(parentComment.getDepth()+1)
-//                .ord(lastNestedComent.getOrd()+1)
-//                .build();
-//        commentRepository.save(comment);
+                .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND_PARENT));
+
+        Comment comment = Comment.builder()
+                .board(board)
+                .user(user)
+                .content(vo.getContent())
+                .parent(parentComment)
+                .depth(1L)
+                .build();
+
+        Comment savedComment = commentRepository.save(comment);
+        return new CommentRes(savedComment);
     }
 
-    public List<Comment> selectCommentList(Long boardId){
+    public List<CommentRes> selectCommentList(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
         List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
-                ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
-        return comments;
+                ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
+
+        List<CommentRes> commentList = new ArrayList<>();
+        for(Comment crs : comments) {
+            CommentRes temp = new CommentRes(crs);
+            commentList.add(temp);
+        }
+
+        return commentList;
     }
 
-//    public Board getBoard(long id) {
-//
-//        return boardRepository.getById(id);
-//    }
+    @Transactional
+    public Optional<Comment> deleteComment(Long commentId) {
+
+        Optional<Comment> delComment = Optional.ofNullable(this.commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND)));
+
+        delComment.ifPresent(c -> {
+            c.deactivate();
+
+            this.commentRepository.save(c);
+
+            if(c.getParent() == null){
+                Long childrenCnt = commentRepository.findChildrenById(commentId);
+                if(childrenCnt != 0) {
+                    // orphanRemoval 옵션으로 고아 객체들 삭제
+                    commentRepository.deleteById(commentId);
+                }
+            }
+        });
+
+        return delComment;
+    }
 }
