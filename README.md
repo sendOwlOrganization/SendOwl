@@ -22,6 +22,10 @@ DB : Mysql(8.0.27)<br>
 
 <br>
 
+# 노션을 활용한 프로젝트 관리
+<img width="700" alt="image" src="https://user-images.githubusercontent.com/52245525/166128015-398cbe6f-c5ce-490f-808c-2a1f956e8be4.png">
+
+
 # 도식화
 <img width="741" alt="스크린샷 2022-03-17 오전 1 22 19" src="https://user-images.githubusercontent.com/52245525/158638109-8007372d-f6eb-4bd5-bee1-05fea88d17f5.png">
 
