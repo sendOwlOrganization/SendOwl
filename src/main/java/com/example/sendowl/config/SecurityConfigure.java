@@ -14,6 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/boards/**",
             "/api/categories/**",
             "/api/comment/**",
+            "/api/search/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/**",
             "/v2/**",
@@ -61,7 +65,8 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().disable()
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
                 .httpBasic().disable() // 사용자 인증방법으로는 HTTP Basic Authentication을 사용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// JWT를 사용하므로 세션은 막는다.
                 .and()
@@ -79,5 +84,18 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
 //                .authorizeRequests()
 //                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
 //                .anyRequest().authenticated();
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:3000"); // 허용할 URL
+        configuration.addAllowedHeader("*"); // 허용할 Header
+        configuration.addAllowedMethod("*"); // 허용할 Http Method
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

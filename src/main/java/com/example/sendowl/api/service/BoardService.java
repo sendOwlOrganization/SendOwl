@@ -16,6 +16,8 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.service.RedisBoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,21 +36,24 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final RedisBoardService redisBoardService;
 
-    public List<BoardsRes> getBoardList() {
-        boolean active = true;
-        //List<Board> boards = boardRepository.findByActive(active);
-        List<Board> boards = boardRepository.findAll();
-        List<BoardsRes> boardRes = new ArrayList<>();
-        for (Board i : boards) {
-            BoardsRes temp = new BoardsRes(i);
-            boardRes.add(temp);
-        }
+    public BoardsRes getBoardList(Pageable pageable) {
+        Page<Board> pages = boardRepository.findAll(pageable);
+        BoardsRes boardsRes = new BoardsRes(pages);
+        return boardsRes;
+    }
 
-        return boardRes;
+    public BoardsRes getBoardListByTitle(Pageable pageable,String type, String text) {
+        Page<Board> pages;
+        if(type.equals("content")) {
+            pages = boardRepository.findByContentContaining(pageable, text);}
+        else{
+            pages = boardRepository.findByTitleContaining(pageable, text);}
+        BoardsRes boardsRes = new BoardsRes(pages);
+        return boardsRes;
     }
 
     @Transactional
-    public BoardsRes insertBoard(BoardReq req) {
+    public DetailRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
@@ -56,7 +61,7 @@ public class BoardService {
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
         Board savedBoard = boardRepository.save(req.toEntity(user, category));
-        return new BoardsRes(savedBoard);
+        return new DetailRes(savedBoard);
     }
 
     public DetailRes boardDetail(Long id) {
