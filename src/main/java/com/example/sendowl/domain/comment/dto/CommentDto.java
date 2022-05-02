@@ -20,16 +20,17 @@ public class CommentDto {
     @Data
     public static class CommentRes {
         private Long id;
-        private BoardDto.BoardsRes board;
+        private Long boardId;
         private UserDto.UserRes user;
         private Comment parent;
         private String content;
         private LocalDateTime regDate;
         private Long depth;
+        private Long childCnt;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
-            this.board = new BoardDto.BoardsRes((Page<Board>) entity.getBoard());
+            this.boardId = entity.getBoard().getId();
             this.user = new UserDto.UserRes(entity.getUser());
             this.parent = entity.getParent();
             this.content = entity.getContent();
@@ -45,10 +46,24 @@ public class CommentDto {
         @NotNull
         private Long boardId;
 
+        private Long commentId;
+
         @NotNull
         private String email;
 
         private Long parentId;
+
+        @NotNull
+        private String content;
+
+    }
+
+    @Data
+    @Getter
+    @Builder
+    public static class updCommentReq {
+        @NotNull
+        private Long commentId;
 
         @NotNull
         private String content;

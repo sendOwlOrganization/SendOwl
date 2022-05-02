@@ -21,7 +21,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "comment insert api", description = "comment insert api")
-    @PostMapping(path = "") // 댓글 등록
+    @PostMapping(path = "/comment") // 댓글 등록
     public ResponseEntity<?> insertComment(@RequestBody CommentReq vo){
         Optional<Comment> comment = this.commentService.insertComment(vo);
 
@@ -39,7 +39,19 @@ public class CommentController {
     }
 
     @Operation(summary = "comment delete api", description = "delete api")
-    @PutMapping(path = "") // 댓글 삭제
+    @PutMapping(path = "/comment/content") // 댓글 내용 수정
+    public ResponseEntity<?> updateComment(updCommentReq crq){
+        Optional<Comment> comment = this.commentService.updateComment(crq);
+
+        if(comment.isPresent()){
+            return ResponseEntity.ok(comment);
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @Operation(summary = "comment delete api", description = "delete api")
+    @PutMapping(path = "/comment") // 댓글 삭제
     public ResponseEntity<?> deleteComment(@RequestParam("comment-id") Long commentId){
         Optional<Comment> comment = this.commentService.deleteComment(commentId);
         
@@ -49,5 +61,6 @@ public class CommentController {
 
         return ResponseEntity.badRequest().build();
     }
+
 
 }

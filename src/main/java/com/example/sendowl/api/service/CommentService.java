@@ -78,12 +78,33 @@ public class CommentService {
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
         List<CommentRes> commentList = new ArrayList<>();
+
         for(Comment crs : comments) {
+            Long childCnt = commentRepository.countByParentIdAndActive(crs.getId(), true);
+
             CommentRes temp = new CommentRes(crs);
+            // child active Y 갯수 = 0 && 본인 active도 false이면 프론트에서 구분
+            temp.setChildCnt(childCnt);
             commentList.add(temp);
         }
 
         return commentList;
+    }
+
+    @Transactional
+    public Optional<Comment> updateComment(updCommentReq crq) {
+
+        Optional<Comment> updComment = Optional.ofNullable(this.commentRepository.findById(crq.getCommentId()).orElseThrow(
+                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND)));
+
+        updComment.ifPresent(c -> {
+            c.updateContent(crq.getContent());
+
+            this.commentRepository.save(c);
+
+        });
+
+        return updComment;
     }
 
     @Transactional
@@ -97,13 +118,6 @@ public class CommentService {
 
             this.commentRepository.save(c);
 
-            if(c.getParent() == null){
-                Long childrenCnt = commentRepository.findChildrenById(commentId);
-                if(childrenCnt != 0) {
-                    // orphanRemoval 옵션으로 고아 객체들 삭제
-                    commentRepository.deleteById(commentId);
-                }
-            }
         });
 
         return delComment;

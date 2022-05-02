@@ -51,4 +51,8 @@ public class Comment extends BaseEntity {
         this.parent = parent;
         this.depth = depth;
     }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
