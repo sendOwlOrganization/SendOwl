@@ -20,18 +20,15 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @Operation(summary = "comment insert api", description = "board insert api")
+    @Operation(summary = "comment insert api", description = "comment insert api")
     @PostMapping(path = "") // 댓글 등록
-    public BaseResponseDto<CommentRes> insertComment(@RequestBody CommentReq vo){
+    public ResponseEntity<?> insertComment(@RequestBody CommentReq vo){
+        Optional<Comment> comment = this.commentService.insertComment(vo);
 
-        return new BaseResponseDto<CommentRes>(commentService.insertComment(vo));
-    }
-
-    @Operation(summary = "nested comment insert api", description = "board insert api")
-    @PostMapping(path = "/nest") // 대댓글 등록
-    public BaseResponseDto<CommentRes> insertNestedComment(@RequestBody CommentReq vo){
-
-        return new BaseResponseDto<CommentRes>(commentService.insertNestedComment(vo));
+        if(comment.isPresent()){
+            return ResponseEntity.ok(comment);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @Operation(summary = "comment list api", description = "list api")

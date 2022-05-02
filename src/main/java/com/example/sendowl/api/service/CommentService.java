@@ -35,7 +35,7 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public CommentRes insertComment(CommentReq vo) {
+    public Optional<Comment> insertComment(CommentReq vo) {
 
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
@@ -43,40 +43,32 @@ public class CommentService {
         User user = userRepository.findByEmail(vo.getEmail())
                 .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
 
-        Comment comment = Comment.builder()
+        Comment comment;
+
+        if(vo.getParentId() != null){
+            Comment parentComment = commentRepository.findById(vo.getParentId())
+                    .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND_PARENT));
+
+            comment = Comment.builder()
+                    .board(board)
+                    .user(user)
+                    .content(vo.getContent())
+                    .parent(parentComment)
+                    .depth(1L)
+                    .build();
+        } else {
+            comment = Comment.builder()
                     .board(board)
                     .user(user)
                     .content(vo.getContent())
                     .depth(0L)
                     .build();
+        }
 
-        Comment savedComment = commentRepository.save(comment);
-        return new CommentRes(savedComment);
-    }
 
-    @Transactional
-    public CommentRes insertNestedComment(CommentReq vo) {
+        Optional<Comment> savedComment = Optional.ofNullable(this.commentRepository.save(comment));
 
-        Board board = boardRepository.findById(vo.getBoardId())
-                .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
-
-        User user = userRepository.findByEmail(vo.getEmail())
-                .orElseThrow(()->new UserNotFoundException(UserErrorCode.NOT_FOUND));
-
-        // 부모 댓글 찾기
-        Comment parentComment = commentRepository.findById(vo.getParentId())
-                .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND_PARENT));
-
-        Comment comment = Comment.builder()
-                .board(board)
-                .user(user)
-                .content(vo.getContent())
-                .parent(parentComment)
-                .depth(1L)
-                .build();
-
-        Comment savedComment = commentRepository.save(comment);
-        return new CommentRes(savedComment);
+        return savedComment;
     }
 
     public List<CommentRes> selectCommentList(Long boardId){

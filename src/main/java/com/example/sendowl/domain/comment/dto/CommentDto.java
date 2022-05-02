@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.comment.dto;
 
 import com.example.sendowl.domain.board.dto.BoardDto;
+import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.repository.UserRepository;
@@ -8,6 +9,7 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +29,7 @@ public class CommentDto {
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
-            this.board = new BoardDto.BoardsRes(entity.getBoard());
+            this.board = new BoardDto.BoardsRes((Page<Board>) entity.getBoard());
             this.user = new UserDto.UserRes(entity.getUser());
             this.parent = entity.getParent();
             this.content = entity.getContent();
