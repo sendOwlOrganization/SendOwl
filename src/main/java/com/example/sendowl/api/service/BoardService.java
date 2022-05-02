@@ -1,10 +1,9 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
+import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.entity.CategoryName;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
-import com.example.sendowl.domain.category.exception.CategoryNameNotFoundException;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
@@ -18,13 +17,11 @@ import com.example.sendowl.redis.service.RedisBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,14 +39,18 @@ public class BoardService {
         return boardsRes;
     }
 
-    public BoardsRes getBoardListByTitle(Pageable pageable,String type, String text) {
-        Page<Board> pages;
-        if(type.equals("content")) {
-            pages = boardRepository.findByContentContaining(pageable, text);}
-        else{
-            pages = boardRepository.findByTitleContaining(pageable, text);}
-        BoardsRes boardsRes = new BoardsRes(pages);
-        return boardsRes;
+    public BoardsRes getBoardBySearch(Pageable pageable, String where, String queryText){
+        Specification<Board> spec = (root, query, builder) -> null;
+        if(where.contains("title")){
+            spec = spec.and(BoardSpecification.likeTitle(queryText));
+        }
+        if(where.contains("content")){
+            spec = spec.and(BoardSpecification.likeContent(queryText));
+        }
+        if(where.contains("nickName")){
+            spec = spec.and(BoardSpecification.likeUserNickName(queryText));
+        }
+        return new BoardsRes(boardRepository.findAll(spec, pageable));
     }
 
     @Transactional
