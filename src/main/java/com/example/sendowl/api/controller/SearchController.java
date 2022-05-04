@@ -23,7 +23,8 @@ public class SearchController {
     @GetMapping(path = "") // 게시글 목록
     public BaseResponseDto<BoardsRes> boards(Pageable pageable,
                                              @RequestParam(name = "query", defaultValue = "") String query,
-                                             @RequestParam(name = "type", defaultValue = "title") String type){
-        return new BaseResponseDto<BoardsRes>(boardService.getBoardListByTitle(pageable, type, query));
+                                             @RequestParam(name = "where", defaultValue = "title") String where
+    ){
+        return new BaseResponseDto<BoardsRes>(boardService.getBoardBySearch(pageable, where, query));
     }
 }
