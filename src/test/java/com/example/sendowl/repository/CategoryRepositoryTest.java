@@ -16,7 +16,7 @@ public class CategoryRepositoryTest {
 
     @Test
     public void 카테고리조회가문자열인경우(){
-        categoryRepository.findByCategoryName(CategoryName.FREE);
+        categoryRepository.findByCategoryName("FREE");
     }
 
 }
