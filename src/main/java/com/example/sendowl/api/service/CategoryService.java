@@ -5,6 +5,7 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.dto.CategoryDto;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
+import com.example.sendowl.domain.category.exception.CategoryNameAlreadyExistsException;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,9 @@ public class CategoryService {
 
     @Transactional
     public CategoriesRes insertCategory(CategoryInsertReq rq) {
+        if(categoryRepository.existsByCategoryName(rq.getCategoryName()).isPresent()){
+            throw new CategoryNameAlreadyExistsException(ALREADY_EXISTS);
+        }
         Category category = categoryRepository.save(rq.toEntity());
         return new CategoriesRes(category);
     }
