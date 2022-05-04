@@ -1,6 +1,5 @@
 package com.example.sendowl.repository;
 
-import com.example.sendowl.domain.category.entity.CategoryName;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
