@@ -6,8 +6,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
@@ -20,14 +18,16 @@ public class Category {
     private Long id;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CategoryName categoryName;
+    private String categoryName;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public Category(CategoryName categoryName) {
+    public Category(String categoryName) {
+        this.categoryName = categoryName;
+    }
+    public void setCategoryName(String categoryName){
         this.categoryName = categoryName;
     }
 }

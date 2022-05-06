@@ -1,6 +1,5 @@
 package com.example.sendowl.repository;
 
-import com.example.sendowl.domain.category.entity.CategoryName;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ public class CategoryRepositoryTest {
 
     @Test
     public void 카테고리조회가문자열인경우(){
-        categoryRepository.findByCategoryName(CategoryName.FREE);
+        categoryRepository.findByCategoryName("FREE");
     }
 
 }
