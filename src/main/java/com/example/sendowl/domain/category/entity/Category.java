@@ -18,16 +18,16 @@ public class Category {
     private Long id;
 
     @Column(nullable = false)
-    private String categoryName;
+    private String name;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(String name) {
+        this.name = name;
     }
-    public void setCategoryName(String categoryName){
-        this.categoryName = categoryName;
+    public void setCategoryName(String name){
+        this.name = name;
     }
 }
