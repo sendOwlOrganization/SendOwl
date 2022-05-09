@@ -31,6 +31,19 @@ public class UserDto {
     }
 
     @Data
+    public static class UserPublicRes {
+        private Long id;
+        private String nickName;
+        private String profileImage;
+
+        public UserPublicRes(User entity) {
+            this.id = entity.getId();
+            this.nickName = entity.getNickName();
+            this.profileImage = entity.getProfileImage();
+        }
+    }
+
+    @Data
     public static class JoinReq {
         @NotBlank
         @Email
