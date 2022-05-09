@@ -80,10 +80,10 @@ public class CommentService {
         List<CommentRes> commentList = new ArrayList<>();
 
         for(Comment crs : comments) {
-            Long childCnt = commentRepository.countByParentIdAndActive(crs.getId(), true);
+            Long childCnt = commentRepository.countByParentIdAndIsDelete(crs.getId(), true);
 
             CommentRes temp = new CommentRes(crs);
-            // child active Y 갯수 = 0 && 본인 active도 false이면 프론트에서 구분
+
             temp.setChildCnt(childCnt);
             commentList.add(temp);
         }

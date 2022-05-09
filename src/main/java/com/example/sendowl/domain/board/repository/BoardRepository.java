@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecificationExecutor {
 
-    List<Board> findByActive(boolean active);
+    List<Board> findByIsDelete(boolean isDelete);
 
     Page<Board> findByTitleContaining(Pageable pageable, String text);
     Page<Board> findByContentContaining(Pageable pageable, String text);

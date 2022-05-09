@@ -21,7 +21,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "comment insert api", description = "comment insert api")
-    @PostMapping(path = "/comment") // 댓글 등록
+    @PostMapping(path = "") // 댓글 등록
     public ResponseEntity<?> insertComment(@RequestBody CommentReq vo){
         Optional<Comment> comment = this.commentService.insertComment(vo);
 
@@ -32,14 +32,14 @@ public class CommentController {
     }
 
     @Operation(summary = "comment list api", description = "list api")
-    @GetMapping(path = "") // 댓글 목록
+    @GetMapping(path = "/{boardId}") // 댓글 목록
     public BaseResponseDto<List<CommentRes>> getCommentList(@RequestParam("board-id") Long boardId){
 
         return new BaseResponseDto<List<CommentRes>>(commentService.selectCommentList(boardId));
     }
 
     @Operation(summary = "comment delete api", description = "delete api")
-    @PutMapping(path = "/comment/content") // 댓글 내용 수정
+    @PutMapping(path = "") // 댓글 내용 수정
     public ResponseEntity<?> updateComment(updCommentReq crq){
         Optional<Comment> comment = this.commentService.updateComment(crq);
 
@@ -51,7 +51,7 @@ public class CommentController {
     }
 
     @Operation(summary = "comment delete api", description = "delete api")
-    @PutMapping(path = "/comment") // 댓글 삭제
+    @DeleteMapping(path = "{commentId}") // 댓글 삭제
     public ResponseEntity<?> deleteComment(@RequestParam("comment-id") Long commentId){
         Optional<Comment> comment = this.commentService.deleteComment(commentId);
         
