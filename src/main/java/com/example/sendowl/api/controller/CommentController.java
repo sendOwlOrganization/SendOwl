@@ -33,9 +33,10 @@ public class CommentController {
 
     @Operation(summary = "comment list api", description = "list api")
     @GetMapping(path = "/{boardId}") // 댓글 목록
-    public BaseResponseDto<List<CommentRes>> getCommentList(@RequestParam("board-id") Long boardId){
+    public ResponseEntity<?> getCommentList(@RequestParam("board-id") Long boardId){
+        List<CommentRes> commentResList = commentService.selectCommentList(boardId);
 
-        return new BaseResponseDto<List<CommentRes>>(commentService.selectCommentList(boardId));
+        return ResponseEntity.ok(commentResList);
     }
 
     @Operation(summary = "comment delete api", description = "delete api")

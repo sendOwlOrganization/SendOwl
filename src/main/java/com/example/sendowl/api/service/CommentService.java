@@ -80,11 +80,8 @@ public class CommentService {
         List<CommentRes> commentList = new ArrayList<>();
 
         for(Comment crs : comments) {
-            Long childCnt = commentRepository.countByParentIdAndIsDelete(crs.getId(), true);
-
             CommentRes temp = new CommentRes(crs);
 
-            temp.setChildCnt(childCnt);
             commentList.add(temp);
         }
 
