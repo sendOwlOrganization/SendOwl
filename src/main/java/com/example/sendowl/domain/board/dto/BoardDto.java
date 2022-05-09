@@ -62,14 +62,14 @@ public class BoardDto {
         private Long id;
         private String title;
         private String content;
-        private UserRes user;
+        private UserPublicRes user;
         private LocalDateTime regDate;
         private Integer hit;
 
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
-            this.user = new UserRes(entity.getUser());
+            this.user = new UserPublicRes(entity.getUser());
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
