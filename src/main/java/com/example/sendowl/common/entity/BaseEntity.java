@@ -26,7 +26,7 @@ public abstract class BaseEntity {
 
     @Convert(converter = BooleanToTFConverter.class)
     @Column(columnDefinition = "char default 'N'")
-    private Boolean isDelete = true;
+    private Boolean isDelete = false;
 
     public void activate() {
         this.isDelete = true;
