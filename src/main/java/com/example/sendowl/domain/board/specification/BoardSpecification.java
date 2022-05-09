@@ -36,12 +36,12 @@ public class BoardSpecification {
             }
         };
     }
-    public static Specification<Board> equalActive(Boolean active){
+    public static Specification<Board> equalActive(Boolean isDelete){
         return new Specification<Board>() {
             @Override
             public Predicate toPredicate(Root<Board> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 // 1) like
-                return criteriaBuilder.equal(root.get("active"), active);
+                return criteriaBuilder.equal(root.get("isDelete"), isDelete);
             }
         };
     }

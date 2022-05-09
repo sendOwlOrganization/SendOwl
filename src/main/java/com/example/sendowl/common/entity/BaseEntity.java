@@ -25,14 +25,14 @@ public abstract class BaseEntity {
     private LocalDateTime modDate;
 
     @Convert(converter = BooleanToTFConverter.class)
-    @Column(columnDefinition = "char default 'T'")
-    private Boolean active = true;
+    @Column(columnDefinition = "char default 'N'")
+    private Boolean isDelete = true;
 
     public void activate() {
-        this.active = true;
+        this.isDelete = true;
     }
 
     public void deactivate() {
-        this.active = false;
+        this.isDelete = false;
     }
 }
