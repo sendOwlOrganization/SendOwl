@@ -13,11 +13,11 @@ public class CategoryDto {
     @NoArgsConstructor
     public static class CategoriesRes{
         private Long id;
-        private String categoryName;
+        private String name;
 
         public CategoriesRes(Category entity) {
             this.id = entity.getId();
-            this.categoryName = entity.getCategoryName();
+            this.name = entity.getName();
         }
     }
 
@@ -25,10 +25,10 @@ public class CategoryDto {
     @NoArgsConstructor
     public static class CategoryInsertReq {
         @NotBlank
-        private String categoryName;
+        private String name;
 
         public Category toEntity() {
-            return new Category(categoryName);
+            return new Category(name);
         }
     }
 
@@ -38,10 +38,10 @@ public class CategoryDto {
         @NotNull
         private Long id;
         @NotBlank
-        private String categoryName;
+        private String name;
 
         public Category toEntity() {
-            return new Category(categoryName);
+            return new Category(name);
         }
     }
     @Getter

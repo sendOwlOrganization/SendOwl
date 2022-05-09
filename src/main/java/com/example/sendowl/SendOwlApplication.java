@@ -9,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @RequiredArgsConstructor
 public class SendOwlApplication {
 
-    private final CategoryRepository categoryRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(SendOwlApplication.class, args);
     }

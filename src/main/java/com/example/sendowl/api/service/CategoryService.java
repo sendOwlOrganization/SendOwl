@@ -33,7 +33,7 @@ public class CategoryService {
 
     @Transactional
     public CategoriesRes insertCategory(CategoryInsertReq rq) {
-        if(categoryRepository.existsByCategoryName(rq.getCategoryName()).isPresent()){
+        if(categoryRepository.existsByName(rq.getName()).isPresent()){
             throw new CategoryNameAlreadyExistsException(ALREADY_EXISTS);
         }
         Category category = categoryRepository.save(rq.toEntity());
@@ -43,7 +43,7 @@ public class CategoryService {
     @Transactional
     public CategoriesRes updateCategory(CategoryUpdateReq rq) {
         Category category = categoryRepository.findById(rq.getId()).orElseThrow(()->new CategoryNotFoundException(NOT_FOUND));
-        category.setCategoryName(rq.getCategoryName());
+        category.setCategoryName(rq.getName());
         Category savedCategory = categoryRepository.save(category);
         return new CategoriesRes(savedCategory);
     }
