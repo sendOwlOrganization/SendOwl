@@ -28,11 +28,11 @@ public abstract class BaseEntity {
     @Column(columnDefinition = "char default 'N'")
     private Boolean isDelete = false;
 
-    public void activate() {
-        this.isDelete = true;
+    public void restore() {
+        this.isDelete = false;
     }
 
-    public void deactivate() {
-        this.isDelete = false;
+    public void delete() {
+        this.isDelete = true;
     }
 }
