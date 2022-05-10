@@ -20,13 +20,13 @@ public class BoardDto {
 
     @Getter
     public static class BoardsRes {
-        private List<DetailRes> boards;
+        private List<ListThumbRes> boards;
         private Long totalElement;
         private Integer totalPages;
         private Pageable pageable;
 
         public BoardsRes(Page<Board> pages) {
-            this.boards = pages.get().map(DetailRes::new).collect(Collectors.toList());
+            this.boards = pages.get().map(ListThumbRes::new).collect(Collectors.toList());
             this.totalElement = pages.getTotalElements();
             this.totalPages = pages.getTotalPages();
             this.pageable = pages.getPageable();
@@ -74,7 +74,24 @@ public class BoardDto {
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
+
+
     }
 
+    @Getter
+    public static class ListThumbRes {
+        private Long id;
+        private String title;
+        private String nickname;
+        private LocalDateTime regDate;
+        private Integer hit;
 
+        public ListThumbRes(Board entity) {
+            this.id = entity.getId();
+            this.title = entity.getTitle();
+            this.nickname = entity.getUser().getNickName();
+            this.regDate = entity.getRegDate();
+            this.hit = entity.getHit();
+        }
+    }
 }
