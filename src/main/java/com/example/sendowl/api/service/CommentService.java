@@ -80,7 +80,6 @@ public class CommentService {
 
         for(Comment crs : comments) {
             CommentRes temp = new CommentRes(crs);
-
             commentList.add(temp);
         }
 

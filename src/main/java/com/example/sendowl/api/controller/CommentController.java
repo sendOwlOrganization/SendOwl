@@ -34,7 +34,7 @@ public class CommentController {
 
         return ResponseEntity.ok(commentResList);
     }
-
+  
     @Operation(summary = "comment update content api", description = "update content api")
     @PutMapping(path = "") // 댓글 내용 수정
     public ResponseEntity<?> updateComment(UpdateReq crq){
