@@ -28,7 +28,7 @@ public class BoardController {
     @GetMapping(path = "") // 게시글 목록
     public ResponseEntity<?> boards(Pageable pageable){
         BoardsRes boardsRes = boardService.getBoardList(pageable);
-        return ResponseEntity.ok(boardsRes);
+        return new ResponseEntity(boardsRes, HttpStatus.OK);
     }
 
     @Operation(summary = "board insert api", description = "board insert api")
@@ -37,7 +37,7 @@ public class BoardController {
 
         DetailRes detailRes = boardService.insertBoard(rq);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(detailRes, HttpStatus.OK);
     }
 
     @Operation(summary = "board api", description = "board api")
@@ -45,15 +45,23 @@ public class BoardController {
     public ResponseEntity<?> boardDetail(@PathVariable Long id){
         DetailRes detailRes = boardService.boardDetail(id);
 
-        return ResponseEntity.ok(detailRes);
+        return new ResponseEntity(detailRes, HttpStatus.OK);
     }
 
-    @Operation(summary = "board insert api", description = "board insert api")
+    @Operation(summary = "board update api", description = "board update api")
     @PutMapping(path = "") // 게시글 수정
     public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateReq req){
         UpdateRes updatedRes = boardService.updateBoard(req);
 
-        return ResponseEntity.ok(updatedRes);
+        return new ResponseEntity(updatedRes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "board delete api", description = "board delete api")
+    @DeleteMapping(path = "/{id}") // 게시글 삭제
+    public ResponseEntity<?> boardDelete(@PathVariable Long id){
+        boardService.deleteBoard(id);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }
