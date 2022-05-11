@@ -75,4 +75,21 @@ public class BoardService {
 
         return new DetailRes(board);
     }
+
+    @Transactional
+    public UpdateRes updateBoard(UpdateReq req) {
+        Board board = boardRepository.findById(req.getId()).orElseThrow(
+                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
+        Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
+                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+
+        board.updateBoard(req.getTitle(), req.getContent(), category);
+
+        boardRepository.save(board);
+
+        UpdateRes updatedBoard = new UpdateRes(board);
+
+        return updatedBoard;
+    }
 }

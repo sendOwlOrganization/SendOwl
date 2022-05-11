@@ -50,11 +50,10 @@ public class BoardController {
 
     @Operation(summary = "board insert api", description = "board insert api")
     @PutMapping(path = "") // 게시글 수정
-    public ResponseEntity<?> boardUpdate(final @Valid @RequestBody BoardReq rq){
+    public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateReq req){
+        UpdateRes updatedRes = boardService.updateBoard(req);
 
-        DetailRes detailRes = boardService.insertBoard(rq);
-
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(updatedRes);
     }
 
 }
