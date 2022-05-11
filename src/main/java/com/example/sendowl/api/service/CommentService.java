@@ -23,7 +23,6 @@ import static com.example.sendowl.domain.comment.dto.CommentDto.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Optional<Comment> insertComment(CommentReq vo) {
+    public CommentRes insertComment(CommentReq vo) {
 
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(()->new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
@@ -65,10 +64,10 @@ public class CommentService {
                     .build();
         }
 
+        Comment savedComment = commentRepository.save(comment);
+        CommentRes commentRes = new CommentRes(savedComment);
 
-        Optional<Comment> savedComment = Optional.ofNullable(this.commentRepository.save(comment));
-
-        return savedComment;
+        return commentRes;
     }
 
     public List<CommentRes> selectCommentList(Long boardId){
@@ -80,11 +79,7 @@ public class CommentService {
         List<CommentRes> commentList = new ArrayList<>();
 
         for(Comment crs : comments) {
-            Long childCnt = commentRepository.countByParentIdAndIsDelete(crs.getId(), true);
-
             CommentRes temp = new CommentRes(crs);
-
-            temp.setChildCnt(childCnt);
             commentList.add(temp);
         }
 
@@ -92,34 +87,32 @@ public class CommentService {
     }
 
     @Transactional
-    public Optional<Comment> updateComment(updCommentReq crq) {
+    public CommentRes updateComment(UpdateReq crq) {
 
-        Optional<Comment> updComment = Optional.ofNullable(this.commentRepository.findById(crq.getCommentId()).orElseThrow(
-                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND)));
+        Comment updComment = commentRepository.findById(crq.getCommentId()).orElseThrow(
+                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
 
-        updComment.ifPresent(c -> {
-            c.updateContent(crq.getContent());
+        updComment.updateContent(crq.getContent());
 
-            this.commentRepository.save(c);
+        commentRepository.save(updComment);
 
-        });
+        CommentRes commentRes = new CommentRes(updComment);
 
-        return updComment;
+        return commentRes;
     }
 
     @Transactional
-    public Optional<Comment> deleteComment(Long commentId) {
+    public CommentRes deleteComment(Long commentId) {
 
-        Optional<Comment> delComment = Optional.ofNullable(this.commentRepository.findById(commentId).orElseThrow(
-                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND)));
+        Comment delComment = commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
 
-        delComment.ifPresent(c -> {
-            c.deactivate();
+        delComment.delete();
 
-            this.commentRepository.save(c);
+        commentRepository.save(delComment);
 
-        });
+        CommentRes commentRes = new CommentRes(delComment);
 
-        return delComment;
+        return commentRes;
     }
 }

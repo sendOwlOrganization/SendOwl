@@ -1,7 +1,5 @@
 package com.example.sendowl.domain.comment.dto;
 
-import com.example.sendowl.domain.board.dto.BoardDto;
-import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.repository.UserRepository;
@@ -9,7 +7,6 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -25,8 +22,8 @@ public class CommentDto {
         private Comment parent;
         private String content;
         private LocalDateTime regDate;
+        private LocalDateTime modDate;
         private Long depth;
-        private Long childCnt;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
@@ -35,6 +32,7 @@ public class CommentDto {
             this.parent = entity.getParent();
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
+            this.modDate = entity.getModDate();
             this.depth = entity.getDepth();
         }
     }
@@ -45,8 +43,6 @@ public class CommentDto {
     public static class CommentReq {
         @NotNull
         private Long boardId;
-
-        private Long commentId;
 
         @NotNull
         private String email;
@@ -61,7 +57,7 @@ public class CommentDto {
     @Data
     @Getter
     @Builder
-    public static class updCommentReq {
+    public static class UpdateReq {
         @NotNull
         private Long commentId;
 
@@ -73,7 +69,7 @@ public class CommentDto {
     @Data
     @Getter
     @Builder
-    public static class deleteReq {
+    public static class DeleteReq {
         @NotNull
         private Long commentId;
 
