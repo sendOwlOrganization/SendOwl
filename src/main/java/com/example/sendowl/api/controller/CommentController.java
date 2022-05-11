@@ -46,7 +46,7 @@ public class CommentController {
     @Operation(summary = "comment delete api", description = "delete api")
     @DeleteMapping(path = "{commentId}") // 댓글 삭제
     public ResponseEntity<?> deleteComment(@RequestParam("comment-id") Long commentId){
-        CommentRes comment = this.commentService.deleteComment(commentId);
+        commentService.deleteComment(commentId);
 
         return new ResponseEntity(HttpStatus.OK);
     }

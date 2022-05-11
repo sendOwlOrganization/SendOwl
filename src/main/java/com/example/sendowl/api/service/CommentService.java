@@ -102,17 +102,12 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentRes deleteComment(Long commentId) {
-
+    public void deleteComment(Long commentId) {
         Comment delComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
 
         delComment.delete();
 
         commentRepository.save(delComment);
-
-        CommentRes commentRes = new CommentRes(delComment);
-
-        return commentRes;
     }
 }
