@@ -24,7 +24,7 @@ public class CommentController {
     public ResponseEntity<?> insertComment(@RequestBody CommentReq vo){
         CommentRes commentRes = this.commentService.insertComment(vo);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(commentRes, HttpStatus.OK);
     }
 
     @Operation(summary = "comment list api", description = "list api")
@@ -32,7 +32,7 @@ public class CommentController {
     public ResponseEntity<?> getCommentList(@RequestParam("board-id") Long boardId){
         List<CommentRes> commentResList = commentService.selectCommentList(boardId);
 
-        return ResponseEntity.ok(commentResList);
+        return new ResponseEntity(commentResList, HttpStatus.OK);
     }
   
     @Operation(summary = "comment update content api", description = "update content api")
@@ -40,7 +40,7 @@ public class CommentController {
     public ResponseEntity<?> updateComment(UpdateReq crq){
         CommentRes commentRes = commentService.updateComment(crq);
 
-        return ResponseEntity.ok(commentRes);
+        return new ResponseEntity(commentRes, HttpStatus.OK);
     }
 
     @Operation(summary = "comment delete api", description = "delete api")
