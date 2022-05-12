@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,20 +26,42 @@ public class BoardController {
 
     @Operation(summary = "list api", description = "http://localhost:8080/api/boards?page=0&size=10&sort=id,DESC")
     @GetMapping(path = "") // 게시글 목록
-    public BaseResponseDto<BoardsRes> boards(Pageable pageable){
-        return new BaseResponseDto<BoardsRes>(boardService.getBoardList(pageable));
+    public ResponseEntity<?> boards(Pageable pageable){
+        BoardsRes boardsRes = boardService.getBoardList(pageable);
+        return new ResponseEntity(boardsRes, HttpStatus.OK);
     }
 
     @Operation(summary = "board insert api", description = "board insert api")
-    @PostMapping(path = "/board") // 게시글 등록
-    public BaseResponseDto<DetailRes> board(final @Valid @RequestBody BoardReq rq){
-        return new BaseResponseDto<DetailRes>(boardService.insertBoard(rq));
+    @PostMapping(path = "") // 게시글 등록
+    public ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq){
+
+        DetailRes detailRes = boardService.insertBoard(rq);
+
+        return new ResponseEntity(detailRes, HttpStatus.OK);
     }
 
     @Operation(summary = "board api", description = "board api")
     @GetMapping(path = "/{id}") // 게시글 상세
-    public BaseResponseDto<DetailRes> boardDetail(@PathVariable Long id){
-        return new BaseResponseDto<DetailRes>(boardService.boardDetail(id));
+    public ResponseEntity<?> boardDetail(@PathVariable Long id){
+        DetailRes detailRes = boardService.boardDetail(id);
+
+        return new ResponseEntity(detailRes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "board update api", description = "board update api")
+    @PutMapping(path = "") // 게시글 수정
+    public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateReq req){
+        UpdateRes updatedRes = boardService.updateBoard(req);
+
+        return new ResponseEntity(updatedRes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "board delete api", description = "board delete api")
+    @DeleteMapping(path = "/{id}") // 게시글 삭제
+    public ResponseEntity<?> boardDelete(@PathVariable Long id){
+        boardService.deleteBoard(id);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

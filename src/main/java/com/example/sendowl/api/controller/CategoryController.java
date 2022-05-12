@@ -8,6 +8,8 @@ import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.category.dto.CategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,25 +27,33 @@ public class CategoryController {
 
     @Operation(summary = "list api", description = "list api")
     @GetMapping(path = "") // 카테고리 목록
-    public BaseResponseDto<List<CategoriesRes>> categories() {
-        return new BaseResponseDto<>(categoryService.getCategoryList());
+    public ResponseEntity<?> categories() {
+        List<CategoriesRes> categoriesRes = categoryService.getCategoryList();
+
+        return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
     @Operation(summary = "insert category api", description = "insert category api")
     @PostMapping(path = "") // 카테고리 저장
-    public BaseResponseDto<CategoriesRes> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
-        return new BaseResponseDto<>(categoryService.insertCategory(rq));
+    public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
+        CategoriesRes categoriesRes = categoryService.insertCategory(rq);
+
+        return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
     @Operation(summary = "update category api", description = "update category api")
     @PutMapping(path = "") // 카테고리 변경
-    public BaseResponseDto<CategoriesRes> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
-        return new BaseResponseDto<>(categoryService.updateCategory(rq));
+    public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
+        CategoriesRes categoriesRes = categoryService.updateCategory(rq);
+
+        return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
     @Operation(summary = "update category api", description = "update category api")
     @DeleteMapping(path = "") // 카테고리 삭제
-    public void updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
+    public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
         categoryService.deleteCategory(rq);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

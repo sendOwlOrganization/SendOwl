@@ -41,6 +41,13 @@ public class Board extends BaseEntity {
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
+    public Board(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+    @Builder
     public Board(User user, String title, String content, Category category, Integer hit) {
         this.user = user;
         this.title = title;
@@ -51,6 +58,12 @@ public class Board extends BaseEntity {
 
     public void setHit(Integer hit) {
         this.hit = hit;
+    }
+
+    public void updateBoard(String title, String content, Category category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
     }
 
     @Override

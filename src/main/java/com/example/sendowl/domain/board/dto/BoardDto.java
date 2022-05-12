@@ -3,30 +3,32 @@ package com.example.sendowl.domain.board.dto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.validation.constraints.*;
-import javax.xml.soap.Detail;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.sendowl.domain.user.dto.UserDto.*;
+import static com.example.sendowl.domain.user.dto.UserDto.UserPublicRes;
 
 public class BoardDto {
 
     @Getter
     public static class BoardsRes {
-        private List<DetailRes> boards;
+        private List<ListRes> boards;
         private Long totalElement;
         private Integer totalPages;
         private Pageable pageable;
 
         public BoardsRes(Page<Board> pages) {
-            this.boards = pages.get().map(DetailRes::new).collect(Collectors.toList());
+            this.boards = pages.get().map(ListRes::new).collect(Collectors.toList());
             this.totalElement = pages.getTotalElements();
             this.totalPages = pages.getTotalPages();
             this.pageable = pages.getPageable();
@@ -76,5 +78,54 @@ public class BoardDto {
         }
     }
 
+    @Getter
+    public static class ListRes {
+        private Long id;
+        private String title;
+        private String nickname;
+        private LocalDateTime regDate;
+        private Integer hit;
 
+        public ListRes(Board entity) {
+            this.id = entity.getId();
+            this.title = entity.getTitle();
+            this.nickname = entity.getUser().getNickName();
+            this.regDate = entity.getRegDate();
+            this.hit = entity.getHit();
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    public static class UpdateReq {
+        @NotBlank
+        private Long id;
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String content;
+
+        @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
+        private Long categoryId;
+
+    }
+
+    @Getter
+    public static class UpdateRes {
+        private Long id;
+        private String title;
+        private String content;
+        private UserPublicRes user;
+        private LocalDateTime regDate;
+        private Integer hit;
+
+        public UpdateRes(Board entity) {
+            this.id = entity.getId();
+            this.title = entity.getTitle();
+            this.user = new UserPublicRes(entity.getUser());
+            this.content = entity.getContent();
+            this.regDate = entity.getRegDate();
+            this.hit = entity.getHit();
+        }
+    }
 }
