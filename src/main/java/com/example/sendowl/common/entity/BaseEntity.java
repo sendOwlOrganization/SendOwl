@@ -26,13 +26,13 @@ public abstract class BaseEntity {
 
     @Convert(converter = BooleanToTFConverter.class)
     @Column(columnDefinition = "char default 'N'")
-    private Boolean isDelete = false;
+    private Boolean isDeleted = false;
 
     public void restore() {
-        this.isDelete = false;
+        this.isDeleted = false;
     }
 
     public void delete() {
-        this.isDelete = true;
+        this.isDeleted = true;
     }
 }
