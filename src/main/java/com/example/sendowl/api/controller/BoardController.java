@@ -24,10 +24,11 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @Operation(summary = "list api", description = "http://localhost:8080/api/boards?page=0&size=10&sort=id,DESC")
+    @Operation(summary = "list api", description = "http://localhost:8080/api/boards?categoryId=0&page=0&size=1&sort=id,DESC")
     @GetMapping(path = "") // 게시글 목록
-    public ResponseEntity<?> boards(Pageable pageable){
-        BoardsRes boardsRes = boardService.getBoardList(pageable);
+    public ResponseEntity<?> boards(final @RequestParam Long categoryId, Pageable pageable){
+        BoardsRes boardsRes = boardService.getBoardList(categoryId, pageable);
+
         return new ResponseEntity(boardsRes, HttpStatus.OK);
     }
 

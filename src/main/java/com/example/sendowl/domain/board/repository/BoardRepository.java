@@ -16,6 +16,14 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
 
     List<Board> findByIsDeleted(boolean isDeleted);
 
+    @Query(value = "SELECT b FROM Board b join fetch b.user",
+            countQuery = "SELECT COUNT(b) FROM Board b")
+    Page<Board> findAllFetchJoin(Pageable pageable);
+
+    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId",
+            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId")
+    Page<Board> findByCategoryIdFetchJoin(Long categoryId, Pageable pageable);
+
     Page<Board> findByTitleContaining(Pageable pageable, String text);
     Page<Board> findByContentContaining(Pageable pageable, String text);
 
