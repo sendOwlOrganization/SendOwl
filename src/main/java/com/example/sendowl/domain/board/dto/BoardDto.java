@@ -82,6 +82,7 @@ public class BoardDto {
     public static class ListRes {
         private Long id;
         private String title;
+        private String content;
         private String nickname;
         private LocalDateTime regDate;
         private Integer hit;
@@ -89,6 +90,10 @@ public class BoardDto {
         public ListRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
+            this.content = entity.getContent();
+            if(entity.getContent().length() > 100) {
+                this.content = entity.getContent().substring(0, 50);
+            }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
