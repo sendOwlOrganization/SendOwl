@@ -76,8 +76,8 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
-        // Redis insert if Absent with shadowkey
-        redisBoardService.setIfAbsent(id);
+        // Redis add hit count
+        redisBoardService.setAddCount(id);
 
         return new DetailRes(board);
     }
