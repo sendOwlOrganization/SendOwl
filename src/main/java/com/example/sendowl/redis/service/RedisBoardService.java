@@ -14,7 +14,7 @@ public class RedisBoardService {
 
     private RedisShadowService redisShadowService;
     private String prefixKey = RedisEnum.BOARD + ":"; // "board:"
-    private Long ttl = 60L;
+    private Long ttl = 30L;
 
     public RedisBoardService(RedisTemplate redisTemplate, RedisShadowService redisShadowService) {
         this.redisTemplate = redisTemplate;
