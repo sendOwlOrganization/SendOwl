@@ -92,7 +92,7 @@ public class BoardDto {
             this.title = entity.getTitle();
             this.content = entity.getContent();
             if(entity.getContent().length() > 100) {
-                this.content = entity.getContent().substring(0, 50);
+                this.content = entity.getContent().substring(0, 100);
             }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
