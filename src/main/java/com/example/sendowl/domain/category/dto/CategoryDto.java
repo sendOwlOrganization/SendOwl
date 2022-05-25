@@ -28,9 +28,10 @@ public class CategoryDto {
     public static class CategoryInsertReq {
         @NotBlank
         private String name;
+        private String koName;
 
         public Category toEntity() {
-            return new Category(name);
+            return new Category(name,koName);
         }
     }
 
@@ -41,9 +42,10 @@ public class CategoryDto {
         private Long id;
         @NotBlank
         private String name;
+        private String koName;
 
         public Category toEntity() {
-            return new Category(name);
+            return new Category(name, koName);
         }
     }
     @Getter
