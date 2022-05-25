@@ -14,10 +14,12 @@ public class CategoryDto {
     public static class CategoriesRes{
         private Long id;
         private String name;
+        private String koName;
 
         public CategoriesRes(Category entity) {
             this.id = entity.getId();
             this.name = entity.getName();
+            this.koName = entity.getKoName();
         }
     }
 
