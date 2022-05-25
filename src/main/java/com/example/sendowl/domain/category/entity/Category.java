@@ -19,15 +19,15 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
-
     private String koName;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public Category(String name) {
+    public Category(String name, String koName) {
         this.name = name;
+        this.koName = koName;
     }
     public void setName(String name){
         this.name = name;
