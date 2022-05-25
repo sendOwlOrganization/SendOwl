@@ -20,6 +20,8 @@ public class Category {
     @Column(nullable = false)
     private String name;
 
+    private String koName;
+
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
