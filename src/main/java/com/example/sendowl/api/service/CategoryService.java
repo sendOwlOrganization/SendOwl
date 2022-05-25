@@ -40,6 +40,7 @@ public class CategoryService {
     public CategoriesRes updateCategory(CategoryUpdateReq rq) {
         Category category = categoryRepository.findById(rq.getId()).orElseThrow(()->new CategoryNotFoundException(NOT_FOUND));
         category.setName(rq.getName());
+        category.setKoName(rq.getKoName());
         Category savedCategory = categoryRepository.save(category);
         return new CategoriesRes(savedCategory);
     }
