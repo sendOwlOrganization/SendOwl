@@ -32,4 +32,7 @@ public class Category {
     public void setName(String name){
         this.name = name;
     }
+    public void setKoName(String koName){
+        this.koName = koName;
+    }
 }
