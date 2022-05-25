@@ -1,0 +1,3 @@
+spring:
+  jwt:
+    secret: {AccessToken}
