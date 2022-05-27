@@ -18,16 +18,6 @@ public class RedisRepositoryTest {
     private StringRedisTemplate redisTemplate;
 
     @Test
-    void repoTest() {
-        //redisBoardRepository.delete(redisBoard);
-
-    }
-
-    @Test
-    void repoShadowKeyTest() {
-    }
-
-    @Test
     void AddShadowkey(){
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         valueOperations.set("shadowKey:board:1", "");

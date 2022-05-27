@@ -3,6 +3,7 @@ package com.example.sendowl.redis.service;
 import com.example.sendowl.redis.enums.RedisEnum;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ public class RedisBoardService {
 
     private RedisShadowService redisShadowService;
     private String prefixKey = RedisEnum.BOARD + ":"; // "board:"
-    private Long ttl = 60L;
+    private Long ttl = 30L;
 
     public RedisBoardService(RedisTemplate redisTemplate, RedisShadowService redisShadowService) {
         this.redisTemplate = redisTemplate;
@@ -26,13 +27,11 @@ public class RedisBoardService {
     }
 
     // key의 카운트를 반환
-    public void setIfAbsent(Long id) {
+    @Async
+    public void setAddCount(Long id) {
         String key = prefixKey + String.valueOf(id);
-        if (!valueOperations.setIfAbsent(key, "1")) {
-            valueOperations.increment(prefixKey + Long.toString(id));
-        } else {
-            setShadowKeyTtl(id);
-        }
+        valueOperations.increment(prefixKey + Long.toString(id));
+        setShadowKeyTtl(id);
     }
 
     // 해당 key를 삭제

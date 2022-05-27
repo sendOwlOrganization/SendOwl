@@ -13,7 +13,7 @@ public class RedisBoardServiceTest {
 
     @Test
     public void RedisBoardAdd(){
-        redisBoardService.setIfAbsent(1L);
+        redisBoardService.setAddCount(1L);
     }
     @Test
     public void RedisDelete(){
@@ -21,7 +21,7 @@ public class RedisBoardServiceTest {
     }
     @Test
     public void Redis(){
-        redisBoardService.setIfAbsent(2L);
+        redisBoardService.setAddCount(2L);
     }
     @Test
     public void RedisGetHit(){
