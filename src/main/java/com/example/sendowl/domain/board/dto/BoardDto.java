@@ -49,11 +49,12 @@ public class BoardDto {
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.") // Long형에는 NotNull을 써야한다고 합니다.
         private Long categoryId;
 
-        public Board toEntity(User user, Category category) {
+        public Board toEntity(User user, Category category, String refinedContent) {
             return Board.builder()
                     .hit(0)
                     .title(title)
                     .content(content)
+                    .refinedContent(refinedContent)
                     .user(user)
                     .category(category)
                     .build();

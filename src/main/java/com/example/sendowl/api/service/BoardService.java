@@ -1,5 +1,6 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.common.converter.MarkdownToText;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.category.entity.Category;
@@ -20,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 @Service
@@ -67,7 +70,9 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        Board savedBoard = boardRepository.save(req.toEntity(user, category));
+        String plainText = new MarkdownToText(req.getContent()).getPlainText();
+
+        Board savedBoard = boardRepository.save(req.toEntity(user, category, plainText));
         return new DetailRes(savedBoard);
     }
 
