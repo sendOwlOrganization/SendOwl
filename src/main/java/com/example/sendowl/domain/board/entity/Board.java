@@ -56,10 +56,11 @@ public class Board extends BaseEntity {
         this.hit = hit;
     }
 
-    public void updateBoard(String title, String content, Category category) {
+    public void updateBoard(String title, String content, Category category, String refinedContent) {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.refinedContent = refinedContent;
     }
 
     @Override

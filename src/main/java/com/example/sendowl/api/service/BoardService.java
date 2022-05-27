@@ -95,12 +95,12 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
                 () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        board.updateBoard(req.getTitle(), req.getContent(), category);
+        String plainText = new MarkdownToText(req.getContent()).getPlainText();
 
+        board.updateBoard(req.getTitle(), req.getContent(), category, plainText);
         boardRepository.save(board);
 
         UpdateRes updatedBoard = new UpdateRes(board);
-
         return updatedBoard;
     }
 
