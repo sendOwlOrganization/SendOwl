@@ -30,6 +30,8 @@ public class Board extends BaseEntity {
 
     private String content;
 
+    private String refinedContent;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

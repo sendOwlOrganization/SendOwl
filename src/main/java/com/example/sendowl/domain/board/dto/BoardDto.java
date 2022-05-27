@@ -42,6 +42,7 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
+
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 message = "올바른 이메일 형식이 아닙니다.")
         private String email;
