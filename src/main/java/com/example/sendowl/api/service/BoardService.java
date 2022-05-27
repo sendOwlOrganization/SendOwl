@@ -70,9 +70,9 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        String plainText = new MarkdownToText(req.getContent()).getPlainText();
+        String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
 
-        Board savedBoard = boardRepository.save(req.toEntity(user, category, plainText));
+        Board savedBoard = boardRepository.save(req.toEntity(user, category, refinedText));
         return new DetailRes(savedBoard);
     }
 
@@ -95,9 +95,9 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
                 () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        String plainText = new MarkdownToText(req.getContent()).getPlainText();
+        String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
 
-        board.updateBoard(req.getTitle(), req.getContent(), category, plainText);
+        board.updateBoard(req.getTitle(), req.getContent(), category, refinedText);
         boardRepository.save(board);
 
         UpdateRes updatedBoard = new UpdateRes(board);

@@ -8,7 +8,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 @Data
 public class MarkdownToText {
 
-    private String plainText;
+    private String refinedText;
 
     public MarkdownToText(String markText){
         Parser parser = Parser.builder().build();
@@ -16,9 +16,9 @@ public class MarkdownToText {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         String htmlText = renderer.render(document);
 
-        String plainText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+        String refinedText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
 
-        this.plainText = plainText;
+        this.refinedText = refinedText;
     }
 
     public String markDownToText (String markText) {
@@ -27,8 +27,8 @@ public class MarkdownToText {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         String htmlText = renderer.render(document);
 
-        String plainText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+        String refinedText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
 
-        return plainText;
+        return refinedText;
     }
 }
