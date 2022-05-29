@@ -19,7 +19,7 @@ UI : figma<br>
 백엔드 : Java(11), java sdk(11) , Spring Boot(2.6.3)<br>
 DB : Mysql(8.0.27)<br>
 서버 : AWS Amazon Linux2<br>
-
+캐시 : Redis(7.0.0)
 <br>
 
 # 노션을 활용한 프로젝트 관리
