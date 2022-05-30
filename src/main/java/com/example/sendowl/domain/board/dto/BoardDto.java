@@ -42,17 +42,19 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
+
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 message = "올바른 이메일 형식이 아닙니다.")
         private String email;
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.") // Long형에는 NotNull을 써야한다고 합니다.
         private Long categoryId;
 
-        public Board toEntity(User user, Category category) {
+        public Board toEntity(User user, Category category, String refinedContent) {
             return Board.builder()
                     .hit(0)
                     .title(title)
                     .content(content)
+                    .refinedContent(refinedContent)
                     .user(user)
                     .category(category)
                     .build();
@@ -82,6 +84,7 @@ public class BoardDto {
     public static class ListRes {
         private Long id;
         private String title;
+        private String content;
         private String nickname;
         private LocalDateTime regDate;
         private Integer hit;
@@ -89,6 +92,10 @@ public class BoardDto {
         public ListRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
+            this.content = entity.getContent();
+            if(entity.getContent().length() > 100) {
+                this.content = entity.getContent().substring(0, 100);
+            }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();

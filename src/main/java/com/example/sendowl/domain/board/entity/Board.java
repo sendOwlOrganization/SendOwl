@@ -30,6 +30,8 @@ public class Board extends BaseEntity {
 
     private String content;
 
+    private String refinedContent;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -41,10 +43,11 @@ public class Board extends BaseEntity {
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
     @Builder
-    public Board(User user, String title, String content, Category category, Integer hit) {
+    public Board(User user, String title, String content, String refinedContent, Category category, Integer hit) {
         this.user = user;
         this.title = title;
         this.content = content;
+        this.refinedContent = refinedContent;
         this.category = category;
         this.hit = hit;
     }
@@ -53,10 +56,11 @@ public class Board extends BaseEntity {
         this.hit = hit;
     }
 
-    public void updateBoard(String title, String content, Category category) {
+    public void updateBoard(String title, String content, Category category, String refinedContent) {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.refinedContent = refinedContent;
     }
 
     @Override
