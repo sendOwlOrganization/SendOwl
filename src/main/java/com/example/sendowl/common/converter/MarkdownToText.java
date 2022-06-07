@@ -11,23 +11,15 @@ public class MarkdownToText {
     private String refinedText;
 
     public MarkdownToText(String markText){
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(markText);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        String htmlText = renderer.render(document);
-
-        String refinedText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+        String range = "[^\uAC00-\uD7A30-9a-zA-Z]";
+        String refinedText = markText.replaceAll(range, " ");
 
         this.refinedText = refinedText;
     }
 
     public String markDownToText (String markText) {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(markText);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        String htmlText = renderer.render(document);
-
-        String refinedText = htmlText.replaceAll("(?s)<[^>]*>(\\s*<[^>]*>)*", " ");
+        String range = "[^\uAC00-\uD7A30-9a-zA-Z]";
+        String refinedText = markText.replaceAll(range, " ");
 
         return refinedText;
     }
