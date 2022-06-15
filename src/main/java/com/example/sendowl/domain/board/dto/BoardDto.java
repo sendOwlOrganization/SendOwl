@@ -70,6 +70,14 @@ public class BoardDto {
         private LocalDateTime regDate;
         private Integer hit;
 
+        public DetailRes(Board entity, Integer redisHit) {
+            this.id = entity.getId();
+            this.title = entity.getTitle();
+            this.user = new UserPublicRes(entity.getUser());
+            this.content = entity.getContent();
+            this.regDate = entity.getRegDate();
+            this.hit = entity.getHit()+redisHit;
+        }
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
@@ -78,6 +86,7 @@ public class BoardDto {
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
+
     }
 
     @Getter

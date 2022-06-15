@@ -22,8 +22,8 @@ public class RedisBoardService {
         this.redisShadowService = redisShadowService;
     }
 
-    public Optional<String> getHit(Long id) {
-        return Optional.ofNullable(valueOperations.get(prefixKey + Long.toString(id)));
+    public Integer getHit(Long id) {
+        return Integer.parseInt(valueOperations.get(prefixKey + Long.toString(id)));
     }
 
     // key의 카운트를 반환

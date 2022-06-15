@@ -83,8 +83,9 @@ public class BoardService {
 
         // Redis add hit count
         redisBoardService.setAddCount(id);
+        Integer hit = redisBoardService.getHit(id);
 
-        return new DetailRes(board);
+        return new DetailRes(board, hit);
     }
 
     @Transactional
