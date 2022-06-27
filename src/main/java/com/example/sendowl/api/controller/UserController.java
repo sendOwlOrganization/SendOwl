@@ -52,7 +52,7 @@ public class UserController {
         return new BaseResponseDto<>(userService.getUser(id));
     }
 
-    @Operation(summary = "oauth 토큰을 전달받음")
+    @Operation(summary = "토큰기반 Oauth2인증")
     @PostMapping("/oauth2")
     public BaseResponseDto<Boolean> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
         userService.oauthService(req).forEach(servletResponse::addHeader);
