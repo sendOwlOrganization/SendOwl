@@ -1,9 +1,7 @@
 package com.example.sendowl.oauth;
 
-import com.example.sendowl.domain.user.oauth.Oauth2User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Headers;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 

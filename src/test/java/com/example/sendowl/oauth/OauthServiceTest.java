@@ -4,7 +4,7 @@ import com.example.sendowl.api.service.UserService;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.oauth.Oauth2User;
+import com.example.sendowl.api.oauth.Oauth2User;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ public class OauthServiceTest {
         // given
         User existUser = new User();
         // when
-        Oauth2User oauth2User = userService.getProfileByToken("google", "ya29.A0ARrdaM_dcLcSYHkbiMeirbMVL3yE_onTEAuM5JLGkT1xQed0SX5Y8Jh6FBjxpnwPjOkj7T0idI2dlfgvwRjG2dzGZZsSaqw-5hGnMUUZ7dwGxhvAf18pHqsrvaJfIOUCcGxHx_qutSfXlt_c4QPOmdUefMMlYUNnWUtBVEFTQVRBU0ZRRl91NjFWc0NkSFRjaWJHLTdGMmktSlYxR1NCZw0163");
+        Oauth2User oauth2User = userService.getProfileByToken("google", "");
         // then
         System.out.println(oauth2User.getEmail());
     }
