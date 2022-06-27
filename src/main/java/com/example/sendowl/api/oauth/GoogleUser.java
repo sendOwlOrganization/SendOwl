@@ -1,4 +1,4 @@
-package com.example.sendowl.domain.user.oauth;
+package com.example.sendowl.api.oauth;
 
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ public class GoogleUser extends Oauth2User{
     private String locale;
 
     public GoogleUser(Map<String,String> res) {
-        super(res.get("name"), res.get("email"), res.get("transactionId"));
+        super(res.get("name"), res.get("email"), "google");
         this.sub = res.get("sub");
         this.givenName = res.get("givenName");
         this.familName = res.get("familName");
