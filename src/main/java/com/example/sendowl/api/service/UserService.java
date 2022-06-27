@@ -1,19 +1,24 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.api.oauth.exception.Oauth2Exception;
+import com.example.sendowl.api.oauth.exception.Oauth2Exception.TransactionIdNotValid;
+import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.*;
-import com.example.sendowl.domain.user.oauth.GoogleUser;
-import com.example.sendowl.domain.user.oauth.Oauth2User;
+import com.example.sendowl.api.oauth.GoogleUser;
+import com.example.sendowl.api.oauth.Oauth2User;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
@@ -85,19 +90,24 @@ public class UserService {
 
         return new EmailVerifyRes(token.equals(req.getToken()));
     }
+    @Transactional // write 작업이 있는 메소드에만 달아준다
     public Map<String, String> oauthService(Oauth2Req req){
         // 토큰의 유효성 검증
         Oauth2User user = getProfileByToken(req.getTransactionId(), req.getToken());
-
         // 회원여부 확인
-        if(!userRepository.existsUserByEmailAndTransactionId(req.getTransactionId(), req.getToken())){// 없으므로 회원가입하기
-            System.out.println("회원가입 필요합니다.");
-            // OAuth2User to User
-            userRepository.save(User.builder().email(user.getEmail()).name(user.getName()).transactionId(user.getTransactionId()).build());
+        if(!userRepository.existsUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId())){
+            userRepository.save(
+                    User.builder()
+                            .email(user.getEmail())
+                            .name(user.getName())
+                            .transactionId(user.getTransactionId())
+                            .build()
+            );
         }
         // 로그인 (토큰 반환)
-        User existUser = userRepository.findByEmail(user.getEmail()).orElseThrow();
-        return makeToken(existUser);
+        return makeToken(
+                userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
+        );
     }
 
     public Oauth2User getProfileByToken(String transactionId, String token){
@@ -107,15 +117,21 @@ public class UserService {
         } else if (transactionId.equals("kakao")) {
             url = "";
         } else{
-            url = "";
+            throw new TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity entity = new HttpEntity("", headers);
 
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        ResponseEntity<Map> response = null;
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        }
+        catch (HttpStatusCodeException e){
+            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
+        }
 
         Oauth2User oauth2User = null;
         if(transactionId.equals("google")){
