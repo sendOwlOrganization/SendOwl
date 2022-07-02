@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import java.util.Map;
-
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 @RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
@@ -58,5 +56,4 @@ public class UserController {
         userService.oauthService(req).forEach(servletResponse::addHeader);
         return new BaseResponseDto<>(true);
     }
-
 }
