@@ -35,10 +35,10 @@ public class User extends BaseEntity{
     private String name;
 
     private String nickName;
+    private String mbti;
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
-
     private String introduction;
     private String refreshToken;
     private String profileImage;
