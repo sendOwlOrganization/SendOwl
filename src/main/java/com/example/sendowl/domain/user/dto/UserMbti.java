@@ -1,4 +1,4 @@
-package com.example.sendowl.domain.user.repository;
+package com.example.sendowl.domain.user.dto;
 
 import lombok.Getter;
 
