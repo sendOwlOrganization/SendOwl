@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import java.util.Map;
+
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 @RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
@@ -49,4 +51,12 @@ public class UserController {
     public BaseResponseDto<UserRes> getUserById(@PathVariable("id") Long id) {
         return new BaseResponseDto<>(userService.getUser(id));
     }
+
+    @Operation(summary = "토큰기반 Oauth2인증")
+    @PostMapping("/oauth2")
+    public BaseResponseDto<Boolean> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
+        userService.oauthService(req).forEach(servletResponse::addHeader);
+        return new BaseResponseDto<>(true);
+    }
+
 }

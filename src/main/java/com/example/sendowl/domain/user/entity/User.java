@@ -23,8 +23,10 @@ public class User extends BaseEntity{
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = true)
+    private String transactionId;
 
     @Column(nullable = false)
     private String password;
@@ -51,8 +53,9 @@ public class User extends BaseEntity{
     private List<CommentLike> commentLikeList = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, String name, String nickName, String introduction, String profileImage) {
+    public User(String email,String transactionId, String password, String name, String nickName, String introduction, String profileImage) {
         this.email = email;
+        this.transactionId = transactionId;
         this.password = password;
         this.name = name;
         this.nickName = nickName;
