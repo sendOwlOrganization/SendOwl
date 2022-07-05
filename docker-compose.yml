@@ -33,7 +33,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
   redis:
-    image: redis
+    image: redis:6.2.7
     container_name: redis
     restart: always
     env_file: ./.env
