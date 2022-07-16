@@ -1,23 +1,6 @@
 package com.example.sendowl.common.converter;
 
-import lombok.Getter;
-
-@Getter
-class EditorJsData {
-    private String text;
-    private String[] items;
-}
-@Getter
-class EditorJsBlock {
-    private String id;
-    private String type;
-    private EditorJsData data;
-}
-@Getter
-class EditorJsContent {
-    private int time;
-    private EditorJsBlock[] blocks;
-}
+import com.example.sendowl.domain.board.dto.BoardDto;
 
 public class EditorJsHelper {
 
@@ -28,7 +11,7 @@ public class EditorJsHelper {
 
         return refinedText;
     }
-    public String extractText(EditorJsContent item) {
+    public String extractText(BoardDto.EditorJsContent item) {
         var builder = new StringBuilder();
         for (var block: item.getBlocks()) {
             if (block.getType().equals("list")) {
