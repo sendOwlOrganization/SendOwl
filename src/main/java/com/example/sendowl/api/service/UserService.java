@@ -3,6 +3,7 @@ package com.example.sendowl.api.service;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception.TransactionIdNotValid;
 import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
+import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.api.oauth.GoogleUser;
@@ -13,7 +14,6 @@ import com.example.sendowl.kafka.producer.KafkaProducer;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.*;
@@ -142,5 +143,8 @@ public class UserService {
 
         }
         return oauth2User;
+    }
+    public List<UserMbti> getUserMbti(){
+        return userRepository.findAllWithJPQL();
     }
 }

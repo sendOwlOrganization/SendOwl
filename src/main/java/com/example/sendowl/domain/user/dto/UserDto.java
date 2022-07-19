@@ -137,5 +137,4 @@ public class UserDto {
         @NotBlank
         private String token;
     }
-
 }
