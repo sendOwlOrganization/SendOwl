@@ -1,6 +1,7 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.common.converter.MarkdownToText;
+import com.example.sendowl.common.converter.EditorJsHelper;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.category.entity.Category;
@@ -70,7 +71,8 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
+        //String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
+        String refinedText = new EditorJsHelper().extractText(req.getEditorJsContent());
 
         Board savedBoard = boardRepository.save(req.toEntity(user, category, refinedText));
         return new DetailRes(savedBoard);
@@ -96,7 +98,8 @@ public class BoardService {
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
                 () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
-        String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
+        //String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
+        String refinedText = new EditorJsHelper().extractText(req.getEditorJsContent());
 
         board.updateBoard(req.getTitle(), req.getContent(), category, refinedText);
         boardRepository.save(board);

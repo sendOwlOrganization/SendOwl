@@ -42,6 +42,8 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
+        @NotBlank
+        private EditorJsContent EditorJsContent;
 
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 message = "올바른 이메일 형식이 아닙니다.")
@@ -120,6 +122,8 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
+        @NotBlank
+        private EditorJsContent EditorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
         private Long categoryId;
@@ -143,5 +147,24 @@ public class BoardDto {
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
+    }
+
+    @Getter
+    public class EditorJsData {
+        private String text;
+        private String[] items;
+    }
+
+    @Getter
+    public class EditorJsBlock {
+        private String id;
+        private String type;
+        private EditorJsData data;
+    }
+
+    @Getter
+    public class EditorJsContent {
+        private int time;
+        private EditorJsBlock[] blocks;
     }
 }
