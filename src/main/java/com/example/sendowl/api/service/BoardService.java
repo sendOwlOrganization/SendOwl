@@ -78,16 +78,19 @@ public class BoardService {
         return new DetailRes(savedBoard);
     }
 
+    @Transactional
     public DetailRes boardDetail(Long id) {
 
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         // Redis add hit count
-        redisBoardService.setAddCount(id);
-        Integer hit = redisBoardService.getHit(id);
+//        redisBoardService.setAddCount(id);
+//        Integer hit = redisBoardService.getHit(id);
+        Integer hit = board.getHit();
+        board.setHit(hit+1);
 
-        return new DetailRes(board, hit);
+        return new DetailRes(board);
     }
 
     @Transactional
