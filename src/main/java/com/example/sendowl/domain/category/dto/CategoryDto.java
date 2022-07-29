@@ -39,7 +39,6 @@ public class CategoryDto {
     public static class CategoryInsertReq {
         @NotBlank
         private String name;
-
         public Category toEntity() {
             return new Category(name);
         }
