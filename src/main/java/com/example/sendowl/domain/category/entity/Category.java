@@ -19,20 +19,23 @@ public class Category {
 
     @Column(nullable = false)
     private String name;
-    private String koName;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList = new ArrayList<>();
 
     @Builder
-    public Category(String name, String koName) {
+    public Category(String name) {
         this.name = name;
-        this.koName = koName;
     }
     public void setName(String name){
         this.name = name;
     }
-    public void setKoName(String koName){
-        this.koName = koName;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

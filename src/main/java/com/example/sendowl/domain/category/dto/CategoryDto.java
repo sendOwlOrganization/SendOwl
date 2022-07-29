@@ -14,12 +14,23 @@ public class CategoryDto {
     public static class CategoriesRes{
         private Long id;
         private String name;
-        private String koName;
 
         public CategoriesRes(Category entity) {
             this.id = entity.getId();
             this.name = entity.getName();
-            this.koName = entity.getKoName();
+        }
+    }
+    @Getter
+    @NoArgsConstructor
+    public static class CategoriesCountRes{
+        private Long id;
+        private String name;
+        private Long count;
+
+        public CategoriesCountRes(CategoryCount dto) {
+            this.id = dto.getCategoryId();
+            this.name = dto.getName();
+            this.count = dto.getCount();
         }
     }
 
@@ -28,10 +39,9 @@ public class CategoryDto {
     public static class CategoryInsertReq {
         @NotBlank
         private String name;
-        private String koName;
 
         public Category toEntity() {
-            return new Category(name,koName);
+            return new Category(name);
         }
     }
 
@@ -42,10 +52,8 @@ public class CategoryDto {
         private Long id;
         @NotBlank
         private String name;
-        private String koName;
-
         public Category toEntity() {
-            return new Category(name, koName);
+            return new Category(name);
         }
     }
     @Getter
