@@ -20,13 +20,25 @@ public class CategoryDto {
             this.name = entity.getName();
         }
     }
+    @Getter
+    @NoArgsConstructor
+    public static class CategoriesCountRes{
+        private Long id;
+        private String name;
+        private Long count;
+
+        public CategoriesCountRes(CategoryCount dto) {
+            this.id = dto.getCategoryId();
+            this.name = dto.getName();
+            this.count = dto.getCount();
+        }
+    }
 
     @Getter
     @NoArgsConstructor
     public static class CategoryInsertReq {
         @NotBlank
         private String name;
-
         public Category toEntity() {
             return new Category(name);
         }
@@ -39,7 +51,6 @@ public class CategoryDto {
         private Long id;
         @NotBlank
         private String name;
-
         public Category toEntity() {
             return new Category(name);
         }

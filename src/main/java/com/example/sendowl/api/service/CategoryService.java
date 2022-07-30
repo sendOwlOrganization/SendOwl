@@ -1,5 +1,6 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.category.dto.CategoryCount;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.exception.CategoryNameAlreadyExistsException;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
@@ -26,6 +27,11 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(CategoriesRes::new).collect(Collectors.toList());
     }
+    public List<CategoriesCountRes> getCategoryCountList() {
+        List<CategoryCount> categories = categoryRepository.findCategoriesWithCount();
+        return categories.stream().map(CategoriesCountRes::new).collect(Collectors.toList());
+    }
+
 
     @Transactional
     public CategoriesRes insertCategory(CategoryInsertReq rq) {
