@@ -3,6 +3,8 @@ package com.example.sendowl.domain.board.repository;
 
 import com.example.sendowl.domain.board.entity.Board;
 
+import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.user.dto.UserMbti;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

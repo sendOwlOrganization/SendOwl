@@ -3,6 +3,10 @@ package com.example.sendowl.api.service;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception.TransactionIdNotValid;
 import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
+import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.category.enums.CategoryErrorCode;
+import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
+import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.*;
@@ -36,6 +40,8 @@ import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final KafkaProducer kafkaProducer;
@@ -146,5 +152,10 @@ public class UserService {
     }
     public List<UserMbti> getUserMbti(){
         return userRepository.findAllWithJPQL();
+    }
+
+    public List<UserMbti>getUserMbtiFromCategoryId(Long categoryId){
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        return userRepository.findUserMbtiFromCategory(category);
     }
 }
