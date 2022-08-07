@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/files")
@@ -30,11 +32,11 @@ public class FileController {
 
     @Operation(summary = "multiple file upload api", description = "multiple file upload api")
     @PostMapping(path = "multiple") // 다중 파일 업로드
-    public ResponseEntity<?> multipleFileUpload(@RequestPart MultipartFile file) throws Exception {
+    public ResponseEntity<?> multipleFileUpload(@RequestPart List<MultipartFile> files) throws Exception {
 
-        String fileName = fileService.fileUpload(file);
+        List<String> fileNames = fileService.multipleFileUpload(files);
 
-        return new ResponseEntity(fileName, HttpStatus.OK);
+        return new ResponseEntity(fileNames, HttpStatus.OK);
     }
 
 }
