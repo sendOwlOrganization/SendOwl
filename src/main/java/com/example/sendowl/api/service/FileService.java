@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -35,8 +37,6 @@ public class FileService {
             FileDto.FileRes dto = new FileDto.FileRes(UUID.randomUUID().toString(),
                     file.getOriginalFilename(),
                     file.getContentType());
-            System.err.println(file);
-            System.err.println(file.getOriginalFilename());
 
             File newFileName = new File(filePath,dto.getUuid() + "_" +dto.getFileName());
             file.transferTo(newFileName);
@@ -45,5 +45,34 @@ public class FileService {
         } else {
             return null;
         }
+    }
+
+    public List<String> multipleFileUpload(List<MultipartFile> files) throws Exception{
+        List<String> fileNames = new ArrayList<String>();
+
+        // 경로 지정, (없을 시 폴더 생성)
+        String filePath = "C:\\Temp\\upload";
+        File fileDir = new File(filePath);
+        if(!fileDir.exists()){
+            fileDir.mkdir();
+        }
+
+        for(MultipartFile file : files){
+            if(!file.isEmpty()){
+
+                FileDto.FileRes dto = new FileDto.FileRes(UUID.randomUUID().toString(),
+                        file.getOriginalFilename(),
+                        file.getContentType());
+
+                File newFileName = new File(filePath,dto.getUuid() + "_" +dto.getFileName());
+                file.transferTo(newFileName);
+
+                fileNames.add(file.getOriginalFilename());
+            } else {
+                continue;
+            }
+        }
+
+        return fileNames;
     }
 }
