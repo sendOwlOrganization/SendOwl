@@ -47,7 +47,7 @@ public class FileService {
         }
     }
 
-    public List<String> multipleFileUpload(List<MultipartFile> files) throws Exception{
+    public List<String> multipleFilesUpload(List<MultipartFile> files) throws Exception{
         List<String> fileNames = new ArrayList<String>();
 
         // 경로 지정, (없을 시 폴더 생성)
