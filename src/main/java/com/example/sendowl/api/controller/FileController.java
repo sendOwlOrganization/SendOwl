@@ -19,9 +19,18 @@ public class FileController {
 
     private final FileService fileService;
 
-    @Operation(summary = "file upload api", description = "file upload api")
-    @PostMapping(path = "upload") // 파일 업로드 테스트
+    @Operation(summary = "single file upload api", description = "single file upload api")
+    @PostMapping(path = "single") // 단일 파일 업로드
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
+
+        String fileName = fileService.fileUpload(file);
+
+        return new ResponseEntity(fileName, HttpStatus.OK);
+    }
+
+    @Operation(summary = "multiple file upload api", description = "multiple file upload api")
+    @PostMapping(path = "multiple") // 다중 파일 업로드
+    public ResponseEntity<?> multipleFileUpload(@RequestPart MultipartFile file) throws Exception {
 
         String fileName = fileService.fileUpload(file);
 
