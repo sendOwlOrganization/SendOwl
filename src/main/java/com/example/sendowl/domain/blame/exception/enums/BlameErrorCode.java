@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum BlameErrorCode implements BaseErrorCodeIF {
 
     ALREADYEXIST(HttpStatus.BAD_REQUEST, "이미 등록된 신고 타입입니다."),
+    NOTFOUND(HttpStatus.NOT_FOUND, "등록되지 않은 신고 타입입니다."),
     ;
     private final HttpStatus errorStatus;
     private final String errorMessage;
