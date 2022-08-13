@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +23,29 @@ public class BlameController {
     @PostMapping(path = "") // 게시글 목록
     public ResponseEntity<?> blame(final @Valid @RequestBody BlameDto.BlameReq rq){
         blameService.insertBlame(rq);
-        
+
         return new ResponseEntity(null,HttpStatus.OK);
     }
+    @Operation(summary = "신고 종류", description = "신고 가능한 종류를 나타낸다.")
+    @GetMapping(path = "/type") // 게시글 목록
+    public ResponseEntity<?> blameTypeList(){
+        List<BlameDto.BlameTypeRes> blameTypeList = blameService.getBlameTypeList();
+        blameTypeList.forEach(blameTypeRes -> System.out.println(blameTypeRes));
+        return new ResponseEntity(blameTypeList,HttpStatus.OK);
+    }
+
+    @Operation(summary = "신고 종류 삽입", description = "신고 가능한 종류를 나타낸다.")
+    @PostMapping(path = "/type") // 게시글 목록
+    public ResponseEntity<?> insertBlameType(final @Valid @RequestBody BlameDto.BlameTypeReq rq){
+        blameService.insertBlameType(rq);
+        return new ResponseEntity(null,HttpStatus.OK);
+    }
+
+    @Operation(summary = "신고 종류 제거", description = "신고 가능한 종류를 나타낸다.")
+    @DeleteMapping(path = "/type/{id}") // 게시글 목록
+    public ResponseEntity<?> insertBlameType(final @PathVariable Long id){
+        blameService.deleteBlameType(id);
+        return new ResponseEntity(null,HttpStatus.OK);
+    }
+
 }
