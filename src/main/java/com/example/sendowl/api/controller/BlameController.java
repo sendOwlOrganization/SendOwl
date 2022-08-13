@@ -34,14 +34,21 @@ public class BlameController {
         return new ResponseEntity(blameTypeList,HttpStatus.OK);
     }
 
-    @Operation(summary = "신고 종류 삽입", description = "신고 가능한 종류를 나타낸다.")
+    @Operation(summary = "신고 종류 삽입", description = "신고 가능 종류 하나를 새롭게 삽입한다.")
     @PostMapping(path = "/type") // 게시글 목록
     public ResponseEntity<?> insertBlameType(final @Valid @RequestBody BlameDto.BlameTypeReq rq){
         blameService.insertBlameType(rq);
         return new ResponseEntity(null,HttpStatus.OK);
     }
+    @Operation(summary = "신고 종류 수정", description = "신고 가능한 종류를 수정한다.")
+    @PutMapping(path = "/type") // 게시글 목록
+    public ResponseEntity<?> insertBlameType(final @Valid @RequestBody BlameDto.BlameTypeUpdateReq rq){
+        blameService.updateBlameType(rq);
+        return new ResponseEntity(null,HttpStatus.OK);
+    }
 
-    @Operation(summary = "신고 종류 제거", description = "신고 가능한 종류를 나타낸다.")
+
+    @Operation(summary = "신고 종류 제거", description = "신고 가능한 종류 중 하나를 삭제한다.")
     @DeleteMapping(path = "/type/{id}") // 게시글 목록
     public ResponseEntity<?> insertBlameType(final @PathVariable Long id){
         blameService.deleteBlameType(id);
