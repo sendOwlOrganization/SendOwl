@@ -50,4 +50,10 @@ public class BlameDto {
             this.name = entity.getName();
         }
     }
+
+    @Getter
+    public static class BlameTypeUpdateReq {
+        private Long id; //  바꿀 아이디
+        private String name;
+    }
 }
