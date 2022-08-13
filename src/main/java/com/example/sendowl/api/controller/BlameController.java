@@ -25,12 +25,4 @@ public class BlameController {
         
         return new ResponseEntity(null,HttpStatus.OK);
     }
-    @Operation(summary = "신고 종류", description = "부적절한 글이나 댓글을 신고할 때 사용한다.")
-    @PostMapping(path = "") // 게시글 목록
-    public ResponseEntity<?> blame(final @Valid @RequestBody BlameDto.BlameReq rq){
-        blameService.insertBlame(rq);
-
-        return new ResponseEntity(null,HttpStatus.OK);
-    }
-
 }
