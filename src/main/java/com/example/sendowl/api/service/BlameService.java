@@ -30,7 +30,6 @@ public class BlameService {
     public List<BlameDto.BlameTypeRes> getBlameTypeList() {
         List<BlameType> blameTypeList = blameTypeRepository.findAll();
         return blameTypeList.stream().map(BlameDto.BlameTypeRes::new).collect(Collectors.toList());
-
     }
 
     @Transactional
@@ -49,5 +48,11 @@ public class BlameService {
         }else{
             throw new BlameTypeNotFoundException(BlameErrorCode.NOTFOUND);
         }
+    }
+
+    @Transactional
+    public void updateBlameType(BlameDto.BlameTypeUpdateReq rq) {
+        BlameType blameType = blameTypeRepository.findById(rq.getId()).orElseThrow(() -> new BlameTypeNotFoundException(BlameErrorCode.NOTFOUND));
+        blameType.setName(rq.getName());
     }
 }
