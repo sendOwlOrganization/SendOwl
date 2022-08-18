@@ -158,4 +158,8 @@ public class UserService {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
         return userRepository.findUserMbtiFromCategory(category);
     }
+
+    public boolean duplicationCheckNickName(String nickName) {
+        return userRepository.existsUserByNickName(nickName);
+    }
 }
