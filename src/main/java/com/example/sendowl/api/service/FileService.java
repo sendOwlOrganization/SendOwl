@@ -46,7 +46,7 @@ public class FileService {
         String filePath = fa.makeFileFolder();
         File fileDir = new File(filePath);
         if(!fileDir.exists()){
-            fileDir.mkdir();
+            fileDir.mkdirs();
         }
 
         for(MultipartFile file : files){
