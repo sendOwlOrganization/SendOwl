@@ -5,10 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileApi {
-    public String getFolder(){
+
+    public String makeFileFolder(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
         String str = sdf.format(date);
-        return str.replace("-", File.separator);
+
+        String filePath = "C:\\Temp\\upload\\" + str.replace("-", "\\");
+
+        return filePath;
     }
 }
