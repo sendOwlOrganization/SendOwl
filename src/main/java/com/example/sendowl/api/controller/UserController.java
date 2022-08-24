@@ -56,4 +56,11 @@ public class UserController {
         userService.oauthService(req).forEach(servletResponse::addHeader);
         return new BaseResponseDto<>(true);
     }
+
+    @Operation(summary = "닉네임 중복 확인")
+    @GetMapping("/nickname-check")
+    public BaseResponseDto<Boolean> checkUserNickName(final @Valid @RequestParam("nickname") String nickName) {
+        return new BaseResponseDto<>(userService.duplicationCheckNickName(nickName));
+    }
+
 }
