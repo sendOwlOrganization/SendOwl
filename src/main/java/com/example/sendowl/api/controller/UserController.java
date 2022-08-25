@@ -1,10 +1,16 @@
 package com.example.sendowl.api.controller;
 
 
+import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.common.dto.BaseResponseDto;
 import com.example.sendowl.api.service.UserService;
+import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -52,8 +58,17 @@ public class UserController {
 
     @Operation(summary = "토큰기반 Oauth2인증")
     @PostMapping("/oauth2")
-    public BaseResponseDto<Boolean> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
-        userService.oauthService(req).forEach(servletResponse::addHeader);
+    public BaseResponseDto<Oauth2Res> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
+        Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
+        return new BaseResponseDto<>(oauth2Res);
+    }
+
+    @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정")
+    @PostMapping("/set-profile")
+    public BaseResponseDto<Boolean> setUser( final @Valid @RequestBody ProfileReq req) {
+        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // mbti는 바로 삽입
+        userService.setUserProfile(req, principal.getUser());
         return new BaseResponseDto<>(true);
     }
 
