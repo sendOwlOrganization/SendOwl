@@ -49,4 +49,16 @@ public class UserException {
         }
     }
 
+    public static class UserNickNameAlreadyExistException extends BaseException {
+        public UserNickNameAlreadyExistException(BaseErrorCodeIF errorCode) {
+            super(errorCode);
+        }
+
+        public UserNickNameAlreadyExistException(BaseErrorCodeIF errorCode, Throwable throwable) {
+            super(errorCode, throwable);
+        }
+    }
+
+
+
 }
