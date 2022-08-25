@@ -4,19 +4,25 @@ import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.entity.BoardLike;
 import com.example.sendowl.domain.comment.entity.CommentLike;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Getter
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(indexes = @Index(name="idx_user", columnList = "email"))
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // null 넣으면 DB가 알아서 autoincrement해준다.
@@ -38,30 +44,23 @@ public class User extends BaseEntity{
     private String mbti;
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    @Builder.Default
+    private Role role  = Role.USER;
     private String introduction;
     private String refreshToken;
     private String profileImage;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Board> boardList = new ArrayList<>();
+    private LocalDateTime accessDate;
+    private Long accessCount;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BoardLike> boardLikeList = new ArrayList<>();
+    private List<Board> boardList;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CommentLike> commentLikeList = new ArrayList<>();
+    private List<BoardLike> boardLikeList;
 
-    @Builder
-    public User(String email,String transactionId, String password, String name, String nickName, String introduction, String profileImage) {
-        this.email = email;
-        this.transactionId = transactionId;
-        this.password = password;
-        this.name = name;
-        this.nickName = nickName;
-        this.introduction = introduction;
-        this.profileImage = profileImage;
-    }
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<CommentLike> commentLikeList;
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
@@ -71,18 +70,11 @@ public class User extends BaseEntity{
         this.profileImage = profileImage;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", nickName='" + nickName + '\'' +
-                ", role=" + role +
-                ", introduction='" + introduction + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                ", profileImage='" + profileImage + '\'' +
-                '}';
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setMbti(String mbti) {
+        this.mbti = mbti;
     }
 }
