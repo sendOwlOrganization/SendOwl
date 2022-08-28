@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +29,7 @@ public class BlameService {
     }
 
     public List<BlameDto.BlameTypeRes> getBlameTypeList() {
-        List<BlameType> blameTypeList = blameTypeRepository.findAll();
+        List<BlameType> blameTypeList = blameTypeRepository.findAllByIsDeletedFalse();
         return blameTypeList.stream().map(BlameDto.BlameTypeRes::new).collect(Collectors.toList());
     }
 
@@ -44,7 +45,8 @@ public class BlameService {
     @Transactional
     public void deleteBlameType(Long id) {
         if (blameTypeRepository.existsById(id)) { // 존재하는 경우 삭제
-            blameTypeRepository.deleteById(id);
+            BlameType blameType = blameTypeRepository.findById(id).get();
+            blameType.setDeleted(true);
         }else{
             throw new BlameTypeNotFoundException(BlameErrorCode.NOTFOUND);
         }
