@@ -3,6 +3,7 @@ package com.example.sendowl.domain.board.dto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
@@ -42,7 +44,7 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
-        @NotBlank
+        @NotNull(message = "EditorJsContent가 올바르지 않습니다.")
         private EditorJsContent EditorJsContent;
 
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
@@ -122,7 +124,7 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
-        @NotBlank
+        @NotNull
         private EditorJsContent EditorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
@@ -150,21 +152,30 @@ public class BoardDto {
     }
 
     @Getter
-    public class EditorJsData {
-        private String text;
-        private String[] items;
+    public static class EditorJsContent {
+        @NotNull
+        private int time;
+        @NotNull
+        private EditorJsBlock[] blocks;
     }
 
     @Getter
-    public class EditorJsBlock {
+    public static class EditorJsBlock {
+        @NotNull
         private String id;
+        @NotNull
         private String type;
+        @NotNull
         private EditorJsData data;
     }
 
     @Getter
-    public class EditorJsContent {
-        private int time;
-        private EditorJsBlock[] blocks;
+    public static class EditorJsData {
+        @NotNull
+        private String text;
+        @NotNull
+        private String[] items;
     }
+
+
 }
