@@ -35,6 +35,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
             "/api/comments/**",
             "/api/search/**",
             "/api/files/**",
+            "/api/blame/**",
             // -- Swagger UI v3 (OpenAPI)
             "/v3/**",
             "/v2/**",
