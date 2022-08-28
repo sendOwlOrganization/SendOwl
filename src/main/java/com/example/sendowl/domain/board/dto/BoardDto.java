@@ -4,6 +4,7 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,15 +38,15 @@ public class BoardDto {
         }
     }
 
-    @Getter // @Data는 사용하지 않는 것을 추천한다고 합니다. 왜냐하면 양방향 호출을 통해 무한루프가 발생할 수 있습니다.
+    @Getter
     @NoArgsConstructor
     public static class BoardReq {
         @NotBlank
         private String title;
         @NotBlank
         private String content;
-        @NotNull(message = "EditorJsContent가 올바르지 않습니다.")
-        private EditorJsContent EditorJsContent;
+
+        private EditorJsContent editorJsContent;
 
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 message = "올바른 이메일 형식이 아닙니다.")
@@ -124,7 +125,7 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
-        @NotNull
+
         private EditorJsContent EditorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
@@ -153,27 +154,20 @@ public class BoardDto {
 
     @Getter
     public static class EditorJsContent {
-        @NotNull
         private int time;
-        @NotNull
         private EditorJsBlock[] blocks;
     }
 
     @Getter
     public static class EditorJsBlock {
-        @NotNull
         private String id;
-        @NotNull
         private String type;
-        @NotNull
         private EditorJsData data;
     }
 
     @Getter
     public static class EditorJsData {
-        @NotNull
         private String text;
-        @NotNull
         private String[] items;
     }
 

@@ -24,6 +24,13 @@ public class EditorJsHelper {
                 builder.append(sanitizedText);
             }
         }
-        return builder.toString();// 여기에 100 글자수 제한 로직 추가;
+
+        // 글자수 제한 로직 추가
+        if(builder.toString().length() > 100) {
+            return builder.toString().substring(0, 100);
+        } else {
+            return builder.toString();
+        }
+
     }
 }

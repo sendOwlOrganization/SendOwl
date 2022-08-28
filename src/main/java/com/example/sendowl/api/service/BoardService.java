@@ -63,6 +63,7 @@ public class BoardService {
         return new BoardsRes(boardRepository.findAll(spec, pageable));
     }
 
+    @Transactional
     public DetailRes insertBoard(BoardReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(UserErrorCode.NOT_FOUND));
