@@ -47,13 +47,8 @@ public class BalanceController {
 
     @Operation(summary = "밸런스 게임 투표하기", description = "밸런스 게임에 투표한다.")
     @PostMapping("/vote")  // 밸런스 게임 등록
-    public ResponseEntity<?> voteBalanceGame(final @Valid @RequestBody BalanceDto.VoteBalanceReq rq){
-        // 사용자 토큰 확인하기
+    public void voteBalanceGame(final @Valid @RequestBody BalanceDto.VoteBalanceReq rq){
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         balanceService.voteBalanceGame(rq, principal.getUser());
-        // 사용자 토큰 기반으로 어디에 투표하는지
-        return new ResponseEntity<>(balanceService.getBalances(), HttpStatus.OK);
     }
-
-
 }
