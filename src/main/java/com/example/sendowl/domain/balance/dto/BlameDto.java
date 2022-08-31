@@ -1,55 +1,130 @@
 package com.example.sendowl.domain.balance.dto;
 
-import com.example.sendowl.domain.blame.entity.Blame;
-import com.example.sendowl.domain.blame.entity.BlameType;
+import com.example.sendowl.domain.balance.entity.Balance;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 
-public class BlameDto {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    @Getter
-    public static class BlameReq {
-        private Long userId;
-        private Long blameType;
-        private String blameDetails;
-        private Long targetUserId;
-        private Long contentType;
-        private Long contentId;
-        private String contentDetails;
-        public Blame toEntity(){
-            return Blame.builder()
-                    .userId(userId)
-                    .blameType(blameType)
-                    .blameDetails(blameDetails)
-                    .targetUserId(targetUserId)
-                    .contentsType(contentType)
-                    .contentsId(contentId)
-                    .contentsDetails(contentDetails).build();
-        }
-    }
 
-    @Getter
-    public static class BlameTypeReq {
-        private String name;
+public class BalanceDto {
 
-        public BlameType toEntity(){
-            return BlameType.builder().name(name).build();
-        }
 
-    }
-    @Getter
-    public static class BlameTypeRes {
+    public static class BalanceRes {
         private Long id;
-        private String name;
+        private String title;
+        @JsonProperty("a_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String aDetail;
+        @JsonProperty("b_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String bDetail;
 
-        public BlameTypeRes(BlameType entity) {
-            this.id = entity.getId();
-            this.name = entity.getName();
+        public BalanceRes(Balance balance) {
+            this.id = balance.getId();
+            this.title = balance.getTitle();
+            this.aDetail = balance.getaDetail();
+            this.bDetail = balance.getbDetail();
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getaDetail() {
+            return aDetail;
+        }
+
+        public String getbDetail() {
+            return bDetail;
+        }
+    }
+    @Getter
+    public static class GetBalanceRes {
+        private List<BalanceRes> balances;
+        public GetBalanceRes(List<Balance> items) {
+            balances = items.stream().map(BalanceDto.BalanceRes::new).collect(Collectors.toList());
+        }
+    }
+
+    public static class InsertBalanceReq {
+        private String title;
+        @JsonProperty("a_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String aDetail;
+        @JsonProperty("b_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String bDetail;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getaDetail() {
+            return aDetail;
+        }
+
+        public String getbDetail() {
+            return bDetail;
+        }
+
+        @Override
+        public String toString() {
+            return "BalanceReq{" +
+                    "title='" + title + '\'' +
+                    ", aDetail='" + aDetail + '\'' +
+                    ", bDetail='" + bDetail + '\'' +
+                    '}';
+        }
+
+        public Balance toEntity(){
+            return Balance.builder()
+                    .title(this.title)
+                    .aDetail(this.aDetail)
+                    .bDetail(this.bDetail)
+                    .build();
+        }
+    }
+
+    public static class UpdateBalanceReq {
+        private Long id;
+        private String title;
+        @JsonProperty("a_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String aDetail;
+        @JsonProperty("b_detail") // json 직렬화시 문제가 발생하기 때문에 직접 key를 등록하여 문제를 해결한다.
+        private String bDetail;
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getaDetail() {
+            return aDetail;
+        }
+
+        public String getbDetail() {
+            return bDetail;
+        }
+
+        @Override
+        public String toString() {
+            return "BalanceReq{" +
+                    "title='" + title + '\'' +
+                    ", aDetail='" + aDetail + '\'' +
+                    ", bDetail='" + bDetail + '\'' +
+                    '}';
         }
     }
 
     @Getter
-    public static class BlameTypeUpdateReq {
-        private Long id; //  바꿀 아이디
-        private String name;
+    public static class VoteBalanceReq {
+        private Long balanceId;
+        private String pick;
     }
 }
