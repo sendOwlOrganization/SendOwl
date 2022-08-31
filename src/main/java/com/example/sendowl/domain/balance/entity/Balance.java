@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.sendowl.domain.balance.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
@@ -28,4 +29,7 @@ public class Balance extends BaseEntity {
                 ", secondDetail='" + secondDetail + '\'' +
                 '}';
     }
+=======
+package com.example.sendowl.domain.balance.entity;public class Balance {
+>>>>>>> 799c1e2 (feat: BalanceController)
 }

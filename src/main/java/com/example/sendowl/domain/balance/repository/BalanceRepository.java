@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package com.example.sendowl.domain.balance.repository;
 
 import com.example.sendowl.domain.balance.dto.BalanceCount;
@@ -35,4 +36,7 @@ public interface BalanceRepository  extends JpaRepository<Balance, Long>, JpaSpe
             "from Balance B left join BalanceCheck BC on B = BC.balance " +
             "where B.isDeleted=false and B.id=:balanceId")
     Optional<BalanceCount> getBalanceCount(Long balanceId);
+=======
+package com.example.sendowl.domain.balance.repository;public class BalanceRepository {
+>>>>>>> 799c1e2 (feat: BalanceController)
 }
