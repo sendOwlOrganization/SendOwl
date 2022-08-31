@@ -137,4 +137,23 @@ public class UserDto {
         @NotBlank
         private String token;
     }
+
+    @Getter
+    public static class Oauth2Res {
+        private Boolean alreadyJoined;
+
+        public Oauth2Res(Boolean alreadyJoined) {
+            this.alreadyJoined = alreadyJoined;
+        }
+    }
+    @Getter
+    public static class ProfileReq {
+        private String nickName;
+        private String mbti;
+        public ProfileReq(String nickName, String mbti) {
+            this.nickName = nickName;
+            this.mbti = mbti;
+        }
+    }
+
 }

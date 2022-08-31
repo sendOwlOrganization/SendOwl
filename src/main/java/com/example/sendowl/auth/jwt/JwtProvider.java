@@ -2,6 +2,7 @@ package com.example.sendowl.auth.jwt;
 
 import com.example.sendowl.auth.PrincipalDetailsService;
 import com.example.sendowl.domain.user.entity.Role;
+import com.example.sendowl.domain.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -32,15 +34,13 @@ public class JwtProvider {
     protected void init(){
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes()); // 키를 들고와서 Base64로 변환
     }
-    public String createAccessToken(String userPk, Role roles){
+    public String createAccessToken(User user){
         //user 구분을 위해 Claim에 User Pk값 넣어줌
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
+        Claims claims = Jwts.claims().setSubject(user.getEmail()+"/"+user.getTransactionId());
+        claims.put("roles", user.getRole());
         claims.put("type", "access");
-
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
-
         return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -48,15 +48,13 @@ public class JwtProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-    public String createRefreshToken(String userPk, Role roles){
+    public String createRefreshToken(User user){
         //user 구분을 위해 Claim에 User Pk값 넣어줌
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
+        Claims claims = Jwts.claims().setSubject(user.getEmail()+"/"+user.getTransactionId());
+        claims.put("roles", user.getRole());
         claims.put("type", "refresh");
-
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
-
         return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
                 .setClaims(claims)
                 .setIssuedAt(now)

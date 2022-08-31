@@ -12,12 +12,14 @@ import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.api.oauth.GoogleUser;
 import com.example.sendowl.api.oauth.Oauth2User;
+import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +58,8 @@ public class UserService {
     }
 
     public HashMap<String, String> makeToken(User user){
-        String accessToken = jwtProvider.createAccessToken(user.getEmail(), user.getRole());
-        String refreshToken = jwtProvider.createRefreshToken(user.getEmail(), user.getRole());
+        String accessToken = jwtProvider.createAccessToken(user);
+        String refreshToken = jwtProvider.createRefreshToken(user);
         return new HashMap<>(Map.of(
                 ACCESS_TOKEN, accessToken,
                 REFRESH_TOKEN, refreshToken));
@@ -98,9 +101,10 @@ public class UserService {
         return new EmailVerifyRes(token.equals(req.getToken()));
     }
     @Transactional // write 작업이 있는 메소드에만 달아준다
-    public Map<String, String> oauthService(Oauth2Req req){
+    public Oauth2Res oauthService(Oauth2Req req, HttpServletResponse servletResponse){
         // 토큰의 유효성 검증
         Oauth2User user = getProfileByToken(req.getTransactionId(), req.getToken());
+        Boolean alreadyJoined = true;
         // 회원여부 확인
         if(!userRepository.existsUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId())){
             userRepository.save(
@@ -110,11 +114,15 @@ public class UserService {
                             .transactionId(user.getTransactionId())
                             .build()
             );
+            alreadyJoined = false;
         }
+
         // 로그인 (토큰 반환)
-        return makeToken(
+        makeToken(
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
-        );
+        ).forEach(servletResponse::addHeader);
+
+        return new Oauth2Res(alreadyJoined);
     }
 
     public Oauth2User getProfileByToken(String transactionId, String token){
@@ -161,5 +169,18 @@ public class UserService {
 
     public boolean duplicationCheckNickName(String nickName) {
         return userRepository.existsUserByNickName(nickName);
+    }
+    @Transactional
+    public void setUserProfile(ProfileReq req, User user) {
+        // 닉네임 중복확인
+        if(!userRepository.existsUserByNickName(req.getNickName())) {
+            User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
+            savedUser.setNickName(req.getNickName());
+            savedUser.setMbti(req.getMbti());
+        }
+        else{
+            // 중복된 이메일인 경우 반환
+            throw new UserNickNameAlreadyExistException(EXISTING_NICKNAME);
+        }
     }
 }
