@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 248c94f (feat: Balance BalanceCheck entity)
 package com.example.sendowl.domain.balance.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
@@ -31,7 +34,10 @@ public class BalanceCheck extends BaseEntity {
     public void setPick(String pick) {
         this.pick = pick;
     }
+<<<<<<< HEAD
 =======
 package com.example.sendowl.domain.balance.entity;public class BalanceCheck {
 >>>>>>> 799c1e2 (feat: BalanceController)
+=======
+>>>>>>> 248c94f (feat: Balance BalanceCheck entity)
 }
