@@ -4,7 +4,6 @@ package com.example.sendowl.domain.balance.exception.handler;
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
 import com.example.sendowl.domain.balance.exception.BalanceNotFoundException;
 import com.example.sendowl.domain.balance.exception.enums.BalanceErrorCode;
-import com.example.sendowl.domain.balance.exception.enums.BlameErrorCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
