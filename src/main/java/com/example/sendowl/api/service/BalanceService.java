@@ -1,17 +1,19 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.balance.dto.BalanceCount;
 import com.example.sendowl.domain.balance.dto.BalanceDto;
+import com.example.sendowl.domain.balance.entity.Balance;
+import com.example.sendowl.domain.balance.entity.BalanceCheck;
 import com.example.sendowl.domain.balance.exception.BalanceNotFoundException;
 import com.example.sendowl.domain.balance.exception.enums.BalanceErrorCode;
 import com.example.sendowl.domain.balance.repository.BalanceCheckRepository;
+import com.example.sendowl.domain.balance.repository.BalanceRepository;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,39 +31,30 @@ public class BalanceService {
     @Transactional
     public void updateBalance(BalanceDto.UpdateBalanceReq rq) {
         // 존재하는지 확인
-        Balance balance = balanceRepository.findById(rq.getId()).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+        Balance balance = balanceRepository.findById(rq.getId()).orElseThrow(()->new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
         balance.setTitle(rq.getTitle());
-        balance.setFirstDetail(rq.getFirstDetail());
-        balance.setSecondDetail(rq.getSecondDetail());
+        balance.setaDetail(rq.getaDetail());
+        balance.setbDetail(rq.getbDetail());
     }
 
     @Transactional
     public void deleteBalance(Long id) {
-        Balance balance = balanceRepository.findById(id).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+        Balance balance = balanceRepository.findById(id).orElseThrow(()->new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
         balance.delete();
     }
 
-    public BalanceDto.GetAllBalanceRes getAllBalances() {
-        List<BalanceCount> balances = balanceRepository.getAllBalanceCount(PageRequest.of(0, 10));
-        return new BalanceDto.GetAllBalanceRes(balances);
+    public BalanceDto.GetBalanceRes getBalances() {
+        List<Balance> balances = balanceRepository.findTop10ByIsDeletedFalseOrderByRegDateDesc();
+        return new BalanceDto.GetBalanceRes(balances);
     }
-
-    public BalanceDto.BalanceRes getBalances(Long balanceId) {
-        BalanceCount balanceCount = balanceRepository.getBalanceCount(balanceId).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
-        return new BalanceDto.BalanceRes(balanceCount);
-    }
-
 
     @Transactional
     public void voteBalanceGame(BalanceDto.VoteBalanceReq rq, User user) {
-        // 밸런스 게임 존재 여부 확인
         Balance balance = balanceRepository.findById(rq.getBalanceId()).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
 
-        // 해당 유저가 밸런스 게임이 참여 했는지 확인
         Optional<BalanceCheck> balanceCheck = balanceCheckRepository.findByBalanceAndUser(balance, user);
 
-        // 해당 밸런스 게임에 첫 참여인 경우
-        if (balanceCheck.isEmpty()) {
+        if(balanceCheck.isEmpty()){
             balanceCheckRepository.save(
                     BalanceCheck
                             .builder()
@@ -69,12 +62,9 @@ public class BalanceService {
                             .user(user)
                             .pick(rq.getPick())
                             .build());
-        } else {// 해당 밸런스 게임에 이미 참여한 적이 있는 경우
+        }else{
             BalanceCheck savedBalanceCheck = balanceCheck.get();
-            savedBalanceCheck.setPick(rq.getPick()); // 유저가 선택한 데이터로 갱신
+            savedBalanceCheck.setPick(rq.getPick());
         }
-
-        // 해당 밸런스 게임의 최종 결과 반환
-
     }
 }
