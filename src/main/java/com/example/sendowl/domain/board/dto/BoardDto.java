@@ -3,6 +3,8 @@ package com.example.sendowl.domain.board.dto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
@@ -35,15 +38,15 @@ public class BoardDto {
         }
     }
 
-    @Getter // @Data는 사용하지 않는 것을 추천한다고 합니다. 왜냐하면 양방향 호출을 통해 무한루프가 발생할 수 있습니다.
+    @Getter
     @NoArgsConstructor
     public static class BoardReq {
         @NotBlank
         private String title;
         @NotBlank
         private String content;
-        @NotBlank
-        private EditorJsContent EditorJsContent;
+
+        private EditorJsContent editorJsContent;
 
         @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
                 message = "올바른 이메일 형식이 아닙니다.")
@@ -122,7 +125,7 @@ public class BoardDto {
         private String title;
         @NotBlank
         private String content;
-        @NotBlank
+
         private EditorJsContent EditorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
@@ -150,21 +153,23 @@ public class BoardDto {
     }
 
     @Getter
-    public class EditorJsData {
-        private String text;
-        private String[] items;
+    public static class EditorJsContent {
+        private int time;
+        private EditorJsBlock[] blocks;
     }
 
     @Getter
-    public class EditorJsBlock {
+    public static class EditorJsBlock {
         private String id;
         private String type;
         private EditorJsData data;
     }
 
     @Getter
-    public class EditorJsContent {
-        private int time;
-        private EditorJsBlock[] blocks;
+    public static class EditorJsData {
+        private String text;
+        private String[] items;
     }
+
+
 }

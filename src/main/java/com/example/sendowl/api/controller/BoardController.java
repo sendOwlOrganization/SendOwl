@@ -33,8 +33,8 @@ public class BoardController {
     }
 
     @Operation(summary = "board insert api", description = "board insert api")
-    @PostMapping(path = "") // 게시글 등록
-    public ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq){
+    @PostMapping(path = "", produces = "application/json; charset=utf8") // 게시글 등록
+    public @ResponseBody ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq){
 
         DetailRes detailRes = boardService.insertBoard(rq);
 
