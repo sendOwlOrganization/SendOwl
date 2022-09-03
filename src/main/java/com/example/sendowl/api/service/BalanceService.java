@@ -1,5 +1,6 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.balance.dto.BalanceCount;
 import com.example.sendowl.domain.balance.dto.BalanceDto;
 import com.example.sendowl.domain.balance.entity.Balance;
 import com.example.sendowl.domain.balance.entity.BalanceCheck;
@@ -9,6 +10,7 @@ import com.example.sendowl.domain.balance.repository.BalanceCheckRepository;
 import com.example.sendowl.domain.balance.repository.BalanceRepository;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +46,7 @@ public class BalanceService {
     }
 
     public BalanceDto.GetBalanceRes getBalances() {
-        List<Balance> balances = balanceRepository.findTop10ByIsDeletedFalseOrderByRegDateDesc();
+        List<BalanceCount> balances = balanceRepository.getBalanceCount(PageRequest.of(0,10));
         return new BalanceDto.GetBalanceRes(balances);
     }
 
