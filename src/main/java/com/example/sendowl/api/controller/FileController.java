@@ -21,7 +21,7 @@ public class FileController {
 
     private final FileService fileService;
 
-    @Operation(summary = "single file upload api", description = "single file upload api")
+    @Operation(summary = "파일 싱글 업로드", description = "single file upload api")
     @PostMapping(path = "single") // 단일 파일 업로드
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
 
@@ -30,7 +30,7 @@ public class FileController {
         return new ResponseEntity(fileName, HttpStatus.OK);
     }
 
-    @Operation(summary = "multiple files upload api", description = "multiple files upload api")
+    @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api")
     @PostMapping(path = "multiple") // 다중 파일 업로드
     public ResponseEntity<?> multipleFilesUpload(@RequestPart List<MultipartFile> files) throws Exception {
 

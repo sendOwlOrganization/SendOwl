@@ -32,7 +32,6 @@ public class CategoryService {
         return categories.stream().map(CategoriesCountRes::new).collect(Collectors.toList());
     }
 
-
     @Transactional
     public CategoriesRes insertCategory(CategoryInsertReq rq) {
         if(categoryRepository.existsByName(rq.getName())){

@@ -25,13 +25,13 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Operation(summary = "카테고리의 리스트만 반환한다.", description = "카테고리의 리스트만 반환한다.")
+    @Operation(summary = "카테고리 목록 조회", description = "카테고리의 리스트만 반환한다.")
     @GetMapping(path = "") // 카테고리 목록
     public ResponseEntity<?> categories() {
         List<CategoriesRes> categoriesRes = categoryService.getCategoryList();
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
-    @Operation(summary = "카테고리의 카운트(인기도)순으로 반환한다.", description = "카테고리의 카운트(인기도)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
+    @Operation(summary = "카테고리의 카운트(인기도)순으로 조회", description = "카테고리의 카운트(인기도)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
     @GetMapping(path = "/popular") // 카테고리 목록
     public ResponseEntity<?> categoriesCount() {
         List<CategoriesCountRes> categoriesRes = categoryService.getCategoryCountList();
@@ -39,7 +39,7 @@ public class CategoryController {
     }
 
 
-    @Operation(summary = "insert category api", description = "insert category api")
+    @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.")
     @PostMapping(path = "") // 카테고리 저장
     public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
         CategoriesRes categoriesRes = categoryService.insertCategory(rq);
@@ -47,7 +47,7 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @Operation(summary = "update category api", description = "update category api")
+    @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.")
     @PutMapping(path = "") // 카테고리 변경
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
         CategoriesRes categoriesRes = categoryService.updateCategory(rq);
@@ -55,7 +55,7 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @Operation(summary = "update category api", description = "update category api")
+    @Operation(summary = "카테고리 소프트 수정", description = "카테고리를 소프트 삭제한다.")
     @DeleteMapping(path = "") // 카테고리 삭제
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
         categoryService.deleteCategory(rq);
