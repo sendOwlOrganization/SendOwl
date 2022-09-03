@@ -17,13 +17,13 @@ public class MbtiController {
 
     final private UserService userService;
 
-    @Operation(summary = "유저들의 mbti")
+    @Operation(summary = "유저들의 mbti 조회", description = "모든 유저들의 mbti 수를 반환한다.")
     @PostMapping("/users")
     public BaseResponseDto<List<UserMbti>> getUserMbti() {
         return new BaseResponseDto<>(userService.getUserMbti());
     }
 
-    @Operation(summary = "카테고리의 유저 mbti", description = "카테고리id를 통해 해당 카테고리에 게시글을 쓴 유저들의 mbti순위(유저수)를 반환한다.")
+    @Operation(summary = "카테고리의 유저 mbti 조회.", description = "카테고리id를 통해 해당 카테고리에 게시글을 쓴 유저들의 mbti 순위(유저수)를 반환한다.")
     @PostMapping("/category/{categoryId}")
     public BaseResponseDto<List<UserMbti>> getUserMbtiFromCategory(@PathVariable Long categoryId) {
         return new BaseResponseDto<>(userService.getUserMbtiFromCategoryId(categoryId));

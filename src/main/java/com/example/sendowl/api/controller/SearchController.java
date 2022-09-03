@@ -19,11 +19,13 @@ public class SearchController {
 
     private final BoardService boardService;
 
-    @Operation(summary = "list api", description = "http://localhost:8080/api/search?page=0&size=10&sort=id,DESC&query=sendowl&type=title")
-    @GetMapping(path = "") // 게시글 목록
+    @Operation(summary = "검색 조회", description = "원하는 쿼리, 분류를 통해 검색한다." +
+            "http://localhost:8080/api/search?page=0&size=10&sort=id,DESC&query=sendowl&type=title")
+
+    @GetMapping // 게시글 목록
     public BaseResponseDto<BoardsRes> boards(Pageable pageable,
-                                             @RequestParam(name = "query", defaultValue = "") String query,
-                                             @RequestParam(name = "where", defaultValue = "title") String where
+                                             @RequestParam(name = "query", defaultValue = "mbti") String query,
+                                             @RequestParam(name = "where", defaultValue = "title/content/nickName") String where
     ){
         return new BaseResponseDto<BoardsRes>(boardService.getBoardBySearch(pageable, where, query));
     }
