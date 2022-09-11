@@ -1,11 +1,6 @@
 package com.example.sendowl.api.controller;
 
-
-import com.example.sendowl.api.service.BoardService;
 import com.example.sendowl.api.service.CategoryService;
-import com.example.sendowl.common.dto.BaseResponseDto;
-import com.example.sendowl.domain.board.dto.BoardDto;
-import com.example.sendowl.domain.category.dto.CategoryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

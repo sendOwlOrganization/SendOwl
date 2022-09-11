@@ -1,9 +1,6 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.common.dto.BaseResponseDto;
-import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
-import com.example.sendowl.domain.comment.dto.CommentDto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.comment.exception.CommentNotFoundException;

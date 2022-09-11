@@ -2,10 +2,11 @@ package com.example.sendowl.api.controller;
 
 
 import com.example.sendowl.api.service.UserService;
-import com.example.sendowl.common.dto.BaseResponseDto;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class MbtiController {
 
     @Operation(summary = "유저들의 mbti 조회", description = "모든 유저들의 mbti 수를 반환한다.")
     @PostMapping("/users")
-    public BaseResponseDto<List<UserMbti>> getUserMbti() {
-        return new BaseResponseDto<>(userService.getUserMbti());
+    public ResponseEntity<List<UserMbti>> getUserMbti() {
+        return new ResponseEntity(userService.getUserMbti(), HttpStatus.OK);
     }
 
     @Operation(summary = "카테고리의 유저 mbti 조회.", description = "카테고리id를 통해 해당 카테고리에 게시글을 쓴 유저들의 mbti 순위(유저수)를 반환한다.")
     @PostMapping("/category/{categoryId}")
-    public BaseResponseDto<List<UserMbti>> getUserMbtiFromCategory(@PathVariable Long categoryId) {
-        return new BaseResponseDto<>(userService.getUserMbtiFromCategoryId(categoryId));
+    public ResponseEntity<List<UserMbti>> getUserMbtiFromCategory(@PathVariable Long categoryId) {
+        return new ResponseEntity(userService.getUserMbtiFromCategoryId(categoryId), HttpStatus.OK);
     }
 
 }

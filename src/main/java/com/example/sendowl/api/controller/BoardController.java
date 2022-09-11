@@ -1,12 +1,9 @@
 package com.example.sendowl.api.controller;
 
 
-import com.example.sendowl.common.dto.BaseResponseDto;
 import com.example.sendowl.api.service.BoardService;
-import com.example.sendowl.domain.board.entity.Board;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
