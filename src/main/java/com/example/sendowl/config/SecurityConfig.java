@@ -29,7 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
     // SecurityConfigure에서 한번에 관리하는게 좋을거 같아서 AUTH_WHITELIST를 분리하여 정의해놓았습니다.
     public static final String[] AUTH_WHITELIST = {
-            "/api/users/**",
+            "/api/users/login",
+            "/api/users/join",
+            "/api/users/nickname-check",
+            "/api/users/oauth2",
             "/api/mbti/**",
             "/api/boards/**",
             "/api/categories/**",
