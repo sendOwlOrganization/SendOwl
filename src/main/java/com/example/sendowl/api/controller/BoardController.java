@@ -2,11 +2,16 @@ package com.example.sendowl.api.controller;
 
 
 import com.example.sendowl.api.service.BoardService;
+import com.example.sendowl.auth.PrincipalDetails;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,9 +37,12 @@ public class BoardController {
 
     @Operation(summary = "게시글 삽입", description = "새로운 게시글을 삽입한다.")
     @PostMapping(path = "", produces = "application/json; charset=utf8") // 게시글 등록
-    public @ResponseBody ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq){
+    public @ResponseBody ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq) {
 
-        DetailRes detailRes = boardService.insertBoard(rq);
+        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long id = principal.getUser().getId();
+        System.out.println(principal.getUser().getEmail());
+        DetailRes detailRes = boardService.insertBoard(rq, id);
 
         return new ResponseEntity(detailRes, HttpStatus.OK);
     }
