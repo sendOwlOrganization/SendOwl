@@ -73,8 +73,9 @@ public class JwtProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
     // HTTP Request의 Header에서 Token Parsing->"X-AUTH-TOKEN: jwt" // 인증 토큰 빼내기
-    public String resolveToken(HttpServletRequest request){
-        return request.getHeader("X-AUTH-TOKEN");
+    public String resolveToken(HttpServletRequest request, String type){
+        String bearer = request.getHeader("Authorization"); // 인증 토큰을 받는다.
+        return bearer.substring(type.length()).trim(); // 토큰의 prefix를 제거하고 반환한다.
     }
 
     // jwt의 유효성 및 만료일자 확인

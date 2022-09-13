@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import static com.example.sendowl.auth.exception.enums.JwtErrorCode.INVALID;
 import static com.example.sendowl.auth.exception.enums.JwtErrorCode.NOT_FOUND;
-import static com.example.sendowl.config.SecurityConfigure.AUTH_WHITELIST;
+import static com.example.sendowl.config.SecurityConfig.AUTH_WHITELIST;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // request 로 들어오는 Jwt의 유효성을 검증 - JwtProvider.validationToken을 필터로서 FilterChain에 추가
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtProvider.resolveToken((HttpServletRequest) request);
+        String token = jwtProvider.resolveToken((HttpServletRequest) request, "Bearer");
         // 토큰에 대한 인증을 진행한다.
         if(token == null ){
             throw new JwtNotFoundException(NOT_FOUND);

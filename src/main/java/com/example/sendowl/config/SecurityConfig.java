@@ -21,7 +21,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfigure extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_LIST = {
             // other public endpoints of your API may be appended to this array
@@ -29,7 +29,10 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     };
     // SecurityConfigure에서 한번에 관리하는게 좋을거 같아서 AUTH_WHITELIST를 분리하여 정의해놓았습니다.
     public static final String[] AUTH_WHITELIST = {
-            "/api/users/**",
+            "/api/users/login",
+            "/api/users/join",
+            "/api/users/nickname-check",
+            "/api/users/oauth2",
             "/api/mbti/**",
             "/api/boards/**",
             "/api/categories/**",
