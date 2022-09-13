@@ -5,6 +5,8 @@ import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,22 +46,23 @@ public class BoardDto {
     public static class BoardReq {
         @NotBlank
         private String title;
-        @NotBlank
-        private String content;
-
         private EditorJsContent editorJsContent;
 
-        @Pattern(regexp = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-                message = "올바른 이메일 형식이 아닙니다.")
-        private String email;
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.") // Long형에는 NotNull을 써야한다고 합니다.
         private Long categoryId;
 
         public Board toEntity(User user, Category category, String refinedContent) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String value = "";
+            try{
+                value = objectMapper.writeValueAsString(editorJsContent);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
             return Board.builder()
                     .hit(0)
                     .title(title)
-                    .content(content)
+                    .content(value)
                     .refinedContent(refinedContent)
                     .user(user)
                     .category(category)
@@ -154,7 +158,7 @@ public class BoardDto {
 
     @Getter
     public static class EditorJsContent {
-        private int time;
+        private Long time;
         private EditorJsBlock[] blocks;
     }
 
@@ -163,6 +167,7 @@ public class BoardDto {
         private String id;
         private String type;
         private EditorJsData data;
+
     }
 
     @Getter
