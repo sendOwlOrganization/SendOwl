@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.alarm.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +20,10 @@ public class Alarm extends BaseEntity {
 
     @Column(nullable = false)
     private String type;
+
+    @Builder
+    public Alarm(String content, String type) {
+        this.content = content;
+        this.type = type;
+    }
 }

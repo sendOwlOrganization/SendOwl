@@ -1,4 +1,7 @@
 package com.example.sendowl.domain.alarm.repository;
 
-public class AlarmChkRepository {
+import com.example.sendowl.domain.alarm.entity.AlarmChk;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AlarmChkRepository extends JpaRepository<AlarmChk, Long> {
 }
