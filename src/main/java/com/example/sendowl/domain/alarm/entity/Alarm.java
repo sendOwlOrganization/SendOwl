@@ -1,4 +1,4 @@
-package com.example.sendowl.domain.alram.entity;
+package com.example.sendowl.domain.alarm.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
 import lombok.Getter;
