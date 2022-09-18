@@ -1,9 +1,7 @@
 package com.example.sendowl.domain.alarm.dto;
 
 import com.example.sendowl.domain.alarm.entity.Alarm;
-import com.example.sendowl.domain.blame.entity.Blame;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 public class AlarmDto {
     @Getter
