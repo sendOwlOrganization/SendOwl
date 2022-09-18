@@ -1,20 +1,18 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.blame.Blame;
-import com.example.sendowl.domain.blame.BlameType;
+import com.example.sendowl.domain.blame.entity.Blame;
+import com.example.sendowl.domain.blame.dto.BlameType;
 import com.example.sendowl.domain.blame.dto.BlameDto;
 import com.example.sendowl.domain.blame.exception.BlameTypeExistException;
 import com.example.sendowl.domain.blame.exception.BlameTypeNotFoundException;
 import com.example.sendowl.domain.blame.exception.enums.BlameErrorCode;
 import com.example.sendowl.domain.blame.repository.BlameRepository;
 import com.example.sendowl.domain.blame.repository.BlameTypeRepository;
-import com.example.sendowl.domain.category.dto.CategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

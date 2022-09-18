@@ -1,12 +1,7 @@
 package com.example.sendowl.domain.blame.dto;
 
-import com.example.sendowl.domain.blame.Blame;
-import com.example.sendowl.domain.blame.BlameType;
-import com.example.sendowl.domain.board.entity.Board;
+import com.example.sendowl.domain.blame.entity.Blame;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public class BlameDto {
 
