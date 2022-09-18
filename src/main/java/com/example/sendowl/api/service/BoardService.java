@@ -52,13 +52,13 @@ public class BoardService {
     public BoardsRes getBoardBySearch(Pageable pageable, String where, String queryText){
         Specification<Board> spec = (root, query, builder) -> null;
         if(where.contains("title")){
-            spec = spec.and(BoardSpecification.likeTitle(queryText));
+            spec = spec.or(BoardSpecification.likeTitle(queryText));
         }
         if(where.contains("content")){
-            spec = spec.and(BoardSpecification.likeContent(queryText));
+            spec = spec.or(BoardSpecification.likeContent(queryText));
         }
         if(where.contains("nickName")){
-            spec = spec.and(BoardSpecification.likeUserNickName(queryText));
+            spec = spec.or(BoardSpecification.likeUserNickName(queryText));
         }
         return new BoardsRes(boardRepository.findAll(spec, pageable));
     }
