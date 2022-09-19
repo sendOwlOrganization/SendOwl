@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.alarm.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
+import com.example.sendowl.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,12 +19,17 @@ public class Alarm extends BaseEntity {
 
     private String content;
 
-    @Column(nullable = false)
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_id")
+    private AlarmType alarmType;
 
-    @Builder
-    public Alarm(String content, String type) {
+    public void insertAlarm(String content, AlarmType alarmType) {
         this.content = content;
-        this.type = type;
+        this.alarmType = alarmType;
+    }
+
+    public void updateAlarm(String content, AlarmType alarmType) {
+        this.content = content;
+        this.alarmType = alarmType;
     }
 }

@@ -29,7 +29,7 @@ public class AlarmController {
     }
 
     @Operation(summary = "전체 알림 수정", description = "관리자 -> 전체 알림 수정")
-    @PutMapping(path = "/{id}/content")
+    @PutMapping(path = "/content")
     public ResponseEntity<?> updateAlarm(final @Valid @RequestBody AlarmUdtReq rq){
         alarmService.updateAlarm(rq);
         return new ResponseEntity(null,HttpStatus.OK);
@@ -45,7 +45,7 @@ public class AlarmController {
     @Operation(summary = "알림 확인", description = "알림 확인 시, 알림체크 테이블에 등록")
     @PostMapping(path = "/{id}")
     public ResponseEntity<?> insertAlarmChk(final @Valid @RequestBody AlarmChkReq rq){
-        alarmService.insertAlarmChk(rq);
+        alarmService.checkAlarm(rq);
         return new ResponseEntity(null,HttpStatus.OK);
     }
 
