@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 public enum JwtErrorCode implements BaseErrorCodeIF {
 
     NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
-    INVALID(HttpStatus.NOT_ACCEPTABLE, "유효하지 않은 토큰입니다.")
+    INVALID(HttpStatus.NOT_ACCEPTABLE, "유효하지 않은 토큰입니다."),
+    FORBIDDEN(HttpStatus.FORBIDDEN  , "토큰 검증에 실패했습니다.")
     ;
     private final HttpStatus errorStatus;
     private final String errorMessage;
