@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -21,6 +22,7 @@ public class FileController {
 
     private final FileService fileService;
 
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "파일 싱글 업로드", description = "single file upload api")
     @PostMapping(path = "single") // 단일 파일 업로드
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
@@ -30,6 +32,7 @@ public class FileController {
         return new ResponseEntity(fileName, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api")
     @PostMapping(path = "multiple") // 다중 파일 업로드
     public ResponseEntity<?> multipleFilesUpload(@RequestPart List<MultipartFile> files) throws Exception {
