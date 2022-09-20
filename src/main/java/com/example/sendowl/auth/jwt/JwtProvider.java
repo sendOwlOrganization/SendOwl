@@ -1,5 +1,7 @@
 package com.example.sendowl.auth.jwt;
 
+import com.example.sendowl.api.oauth.exception.Oauth2Exception;
+import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.auth.PrincipalDetailsService;
 import com.example.sendowl.domain.user.entity.Role;
 import com.example.sendowl.domain.user.entity.User;
@@ -74,8 +76,14 @@ public class JwtProvider {
     }
     // HTTP Request의 Header에서 Token Parsing->"X-AUTH-TOKEN: jwt" // 인증 토큰 빼내기
     public String resolveToken(HttpServletRequest request, String type){
-        String bearer = request.getHeader("Authorization"); // 인증 토큰을 받는다.
-        return bearer.substring(type.length()).trim(); // 토큰의 prefix를 제거하고 반환한다.
+        String token = null;
+        try{
+            String bearer = request.getHeader("Authorization"); // 인증 토큰을 받는다.
+            token = bearer.substring(type.length()).trim();// 토큰의 prefix를 제거하고 반환한다.
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+        return token;
     }
 
     // jwt의 유효성 및 만료일자 확인
