@@ -34,7 +34,7 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.")
     @PostMapping(path = "") // 카테고리 저장
     public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
@@ -43,7 +43,7 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.")
     @PutMapping(path = "") // 카테고리 변경
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
@@ -52,7 +52,7 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "카테고리 소프트 수정", description = "카테고리를 소프트 삭제한다.")
     @DeleteMapping(path = "") // 카테고리 삭제
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
