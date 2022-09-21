@@ -1,3 +1,33 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@pis03133 
+sendOwlOrganization
+/
+SendOwl
+Public
+Code
+Issues
+2
+Pull requests
+2
+Projects
+Wiki
+Security
+Insights
+Settings
+SendOwl/src/main/java/com/example/sendowl/config/SecurityConfig.java /
+@Dev-Guccin
+Dev-Guccin del: unneccessary auth link
+Latest commit 83fa665 13 hours ago
+ History
+ 1 contributor
+87 lines (77 sloc)  3.93 KB
+
 package com.example.sendowl.config;
 
 import com.example.sendowl.auth.jwt.JwtAuthenticationFilter;
@@ -85,3 +115,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 }
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+You have unread notifications

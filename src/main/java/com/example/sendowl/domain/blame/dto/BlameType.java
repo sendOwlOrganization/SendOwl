@@ -1,4 +1,4 @@
-package com.example.sendowl.domain.blame;
+package com.example.sendowl.domain.blame.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
