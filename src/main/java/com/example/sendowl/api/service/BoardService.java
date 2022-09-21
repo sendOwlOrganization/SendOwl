@@ -16,10 +16,12 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.service.RedisBoardService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.commonmark.node.Node;
@@ -52,21 +54,22 @@ public class BoardService {
     public BoardsRes getBoardBySearch(Pageable pageable, String where, String queryText){
         Specification<Board> spec = (root, query, builder) -> null;
         if(where.contains("title")){
-            spec = spec.and(BoardSpecification.likeTitle(queryText));
+            spec = spec.or(BoardSpecification.likeTitle(queryText));
         }
         if(where.contains("content")){
-            spec = spec.and(BoardSpecification.likeContent(queryText));
+            spec = spec.or(BoardSpecification.likeContent(queryText));
         }
         if(where.contains("nickName")){
-            spec = spec.and(BoardSpecification.likeUserNickName(queryText));
+            spec = spec.or(BoardSpecification.likeUserNickName(queryText));
         }
         return new BoardsRes(boardRepository.findAll(spec, pageable));
     }
 
     @Transactional
-    public DetailRes insertBoard(BoardReq req) {
-        User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.NOT_FOUND));
+    public DetailRes insertBoard(BoardReq req, Long id) {
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException(UserErrorCode.NOT_FOUND)
+        );
 
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));

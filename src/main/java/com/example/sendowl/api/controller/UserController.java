@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,7 @@ public class UserController {
         return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정")
     @PostMapping("/set-profile")
     public ResponseEntity<Boolean> setUser( final @Valid @RequestBody ProfileReq req) {

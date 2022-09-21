@@ -1,3 +1,33 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@pis03133 
+sendOwlOrganization
+/
+SendOwl
+Public
+Code
+Issues
+2
+Pull requests
+2
+Projects
+Wiki
+Security
+Insights
+Settings
+SendOwl/src/main/java/com/example/sendowl/config/SecurityConfig.java /
+@Dev-Guccin
+Dev-Guccin del: unneccessary auth link
+Latest commit 83fa665 13 hours ago
+ History
+ 1 contributor
+87 lines (77 sloc)  3.93 KB
+
 package com.example.sendowl.config;
 
 import com.example.sendowl.auth.jwt.JwtAuthenticationFilter;
@@ -19,30 +49,19 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] AUTH_LIST = {
-            // other public endpoints of your API may be appended to this array
-            "/api/admin/**",
-    };
     // SecurityConfigure에서 한번에 관리하는게 좋을거 같아서 AUTH_WHITELIST를 분리하여 정의해놓았습니다.
-    public static final String[] AUTH_WHITELIST = {
-            "/api/users/login",
-            "/api/users/join",
-            "/api/users/nickname-check",
-            "/api/users/oauth2",
-            "/api/mbti/**",
-            "/api/boards/**",
-            "/api/categories/**",
-            "/api/comments/**",
-            "/api/search/**",
-            "/api/files/**",
-            "/api/blame/**",
-            "/api/alarm/**",
-            // -- Swagger UI v3 (OpenAPI)
+    public static final List<String> AUTH_WHITELIST = Collections.unmodifiableList(
+            Arrays.asList(
+//       -- Swagger UI v3 (OpenAPI)
             "/v3/**",
             "/v2/**",
             "/swagger/**",
@@ -52,8 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             "/configuration/ui",
             "/configuration/security",
-
-    };
+            "/error"));
 
     private final JwtProvider jwtProvider;
 
@@ -79,19 +97,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable() // 사용자 인증방법으로는 HTTP Basic Authentication을 사용
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// JWT를 사용하므로 세션은 막는다.
                 .and()
-                .authorizeRequests()// 사용권한 체크
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers(AUTH_LIST).permitAll()
-                .anyRequest().hasAuthority(Role.USER.getKey()) // 주어진 역할이 있다면 허용 아니면 반환 // userDetailService에서 Authority를 가져올때 자동으로 ROLE을 붙여서 확인한다.
-                .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class)// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
-
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/mem/**","/swagger-ui/**").permitAll() // 해당 URI만 허용한다. permitAll은 무조건 허용
-//                .anyRequest().authenticated();
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -107,3 +115,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 }
+Footer
+© 2022 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+You have unread notifications

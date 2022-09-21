@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "댓글 삽입", description = "댓글을 삽입한다.")
     @PostMapping(path = "") // 댓글 등록
     public ResponseEntity<?> insertComment(@RequestBody CommentReq vo){
@@ -33,7 +35,8 @@ public class CommentController {
 
         return new ResponseEntity(commentResList, HttpStatus.OK);
     }
-  
+
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "댓글 내용 수정", description = "댓글의 내용을 수정한다.")
     @PutMapping(path = "") // 댓글 내용 수정
     public ResponseEntity<?> updateComment(UpdateReq crq){
@@ -42,6 +45,7 @@ public class CommentController {
         return new ResponseEntity(commentRes, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "댓글 소프트 삭제", description = "댓글을 소프트 삭제한다.")
     @DeleteMapping(path = "{commentId}") // 댓글 삭제
     public ResponseEntity<?> deleteComment(@RequestParam("comment-id") Long commentId){

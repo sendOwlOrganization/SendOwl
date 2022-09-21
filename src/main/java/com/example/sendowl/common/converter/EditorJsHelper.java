@@ -17,11 +17,11 @@ public class EditorJsHelper {
             if (block.getType().equals("list")) {
                 for (String s : block.getData().getItems()) {
                     var sanitizedText = this.sanitize(s);
-                    builder.append(sanitizedText);
+                    builder.append(sanitizedText+" ");
                 }
             } else {
                 var sanitizedText = this.sanitize(block.getData().getText());
-                builder.append(sanitizedText);
+                builder.append(sanitizedText+" ");
             }
         }
 
