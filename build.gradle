@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.atlassian.commonmark:commonmark:0.17.0'
 
     // swagger
-    implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
 }
 
 group = 'com.example'
