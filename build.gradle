@@ -37,6 +37,9 @@ dependencies {
 
     // markdown
     implementation 'com.atlassian.commonmark:commonmark:0.17.0'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.9'
 }
 
 group = 'com.example'
