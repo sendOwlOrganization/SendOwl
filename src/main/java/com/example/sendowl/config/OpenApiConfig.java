@@ -12,15 +12,10 @@ import java.util.Arrays;
 @Configuration
 class OpenApiConfig { // Swagger 의 springdoco-openapi 를 통해 토큰을 사용할 수 있게 만들었다.
     @Bean
-    OpenAPI customOpenAPI() {
-        SecurityScheme securityScheme = new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
-        SecurityRequirement schemaRequirement = new SecurityRequirement().addList("bearerAuth");
-        return new OpenAPI().components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(Arrays.asList(schemaRequirement));
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+            .components(new Components()
+                    .addSecuritySchemes("bearerAuth",
+                            new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")));
     }
 }
