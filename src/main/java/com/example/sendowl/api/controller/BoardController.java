@@ -4,6 +4,7 @@ package com.example.sendowl.api.controller;
 import com.example.sendowl.api.service.BoardService;
 import com.example.sendowl.auth.PrincipalDetails;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class BoardController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "게시글 삽입", description = "새로운 게시글을 삽입한다.")
+    @Operation(summary = "게시글 삽입", description = "새로운 게시글을 삽입한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping(path = "", produces = "application/json; charset=utf8") // 게시글 등록
     public @ResponseBody ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq) {
 
@@ -54,7 +55,7 @@ public class BoardController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
+    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PutMapping(path = "") // 게시글 수정
     public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateReq req){
         UpdateRes updatedRes = boardService.updateBoard(req);
@@ -62,7 +63,7 @@ public class BoardController {
         return new ResponseEntity(updatedRes, HttpStatus.OK);
     }
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "게시글 소프트 삭제", description = "게시글을 소프트 삭제한다.")
+    @Operation(summary = "게시글 소프트 삭제", description = "게시글을 소프트 삭제한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @DeleteMapping(path = "/{id}") // 게시글 삭제
     public ResponseEntity<?> boardDelete(@PathVariable Long id){
         boardService.deleteBoard(id);

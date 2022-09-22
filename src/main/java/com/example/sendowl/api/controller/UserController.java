@@ -4,6 +4,7 @@ package com.example.sendowl.api.controller;
 import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정")
+    @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping("/set-profile")
     public ResponseEntity<Boolean> setUser( final @Valid @RequestBody ProfileReq req) {
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
