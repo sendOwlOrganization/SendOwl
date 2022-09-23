@@ -3,6 +3,7 @@ package com.example.sendowl.api.controller;
 
 import com.example.sendowl.api.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "파일 싱글 업로드", description = "single file upload api")
+    @Operation(summary = "파일 싱글 업로드", description = "single file upload api", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping(path = "single") // 단일 파일 업로드
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
 
@@ -33,7 +34,7 @@ public class FileController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api")
+    @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping(path = "multiple") // 다중 파일 업로드
     public ResponseEntity<?> multipleFilesUpload(@RequestPart List<MultipartFile> files) throws Exception {
 

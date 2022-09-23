@@ -2,6 +2,7 @@ package com.example.sendowl.api.controller;
 
 import com.example.sendowl.api.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.")
+    @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping(path = "") // 카테고리 저장
     public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
         CategoriesRes categoriesRes = categoryService.insertCategory(rq);
@@ -44,7 +45,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.")
+    @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PutMapping(path = "") // 카테고리 변경
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
         CategoriesRes categoriesRes = categoryService.updateCategory(rq);
@@ -53,7 +54,7 @@ public class CategoryController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 소프트 수정", description = "카테고리를 소프트 삭제한다.")
+    @Operation(summary = "카테고리 소프트 수정", description = "카테고리를 소프트 삭제한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @DeleteMapping(path = "") // 카테고리 삭제
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
         categoryService.deleteCategory(rq);
