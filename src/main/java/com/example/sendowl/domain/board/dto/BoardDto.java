@@ -39,6 +39,13 @@ public class BoardDto {
             this.totalPages = pages.getTotalPages();
             this.pageable = pages.getPageable();
         }
+        public BoardsRes(Page<Board> pages, Integer textLength) {
+            this.boards = pages.get().map((page)-> new ListRes(page,textLength)).collect(Collectors.toList());
+            this.totalElement = pages.getTotalElements();
+            this.totalPages = pages.getTotalPages();
+            this.pageable = pages.getPageable();
+        }
+
     }
 
     @Getter
@@ -111,13 +118,24 @@ public class BoardDto {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.content = entity.getContent();
-            if(entity.getContent().length() > 100) {
-                this.content = entity.getContent().substring(0, 100);
+            if(content.length() > 100) {
+                this.content = content.substring(0, 100);
             }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
+        public ListRes(Board entity, Integer textLength) {
+            this.id = entity.getId();
+            this.title = entity.getTitle();
+            this.content = entity.getContent();
+            if(content.length() > textLength)
+                this.content = content.substring(0, textLength);
+            this.nickname = entity.getUser().getNickName();
+            this.regDate = entity.getRegDate();
+            this.hit = entity.getHit();
+        }
+
     }
 
     @Data
