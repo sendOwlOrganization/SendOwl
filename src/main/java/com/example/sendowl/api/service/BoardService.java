@@ -39,7 +39,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final RedisBoardService redisBoardService;
 
-    public BoardsRes getBoardList(Long categoryId, Pageable pageable) {
+    public BoardsRes getBoardList(Long categoryId,Integer textLength, Pageable pageable) {
         Page<Board> pages;
         if(categoryId == 0L){
             pages = boardRepository.findAllFetchJoin(pageable);
@@ -47,7 +47,7 @@ public class BoardService {
         else {
             pages = boardRepository.findByCategoryIdFetchJoin(categoryId, pageable);
         }
-        BoardsRes boardsRes = new BoardsRes(pages);
+        BoardsRes boardsRes = new BoardsRes(pages, textLength);
         return boardsRes;
     }
 
