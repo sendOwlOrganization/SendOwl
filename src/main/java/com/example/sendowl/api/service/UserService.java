@@ -181,12 +181,13 @@ public class UserService {
         return userRepository.existsUserByNickName(nickName);
     }
     @Transactional
-    public void setUserProfile(ProfileReq req, User user) {
+    public UserRes setUserProfile(ProfileReq req, User user) {
         // 닉네임 중복확인
         if(!userRepository.existsUserByNickName(req.getNickName())) {
             User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
             savedUser.setNickName(req.getNickName());
             savedUser.setMbti(req.getMbti());
+            return new UserRes(savedUser);
         }
         else{
             // 중복된 이메일인 경우 반환
