@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.apache.kafka.common.protocol.types.Field;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -141,10 +142,12 @@ public class UserDto {
     @Getter
     public static class Oauth2Res {
         private Boolean alreadyJoined;
+        private Boolean alreadySetted;
         private UserRes userRes;
 
-        public Oauth2Res(Boolean alreadyJoined, User user) {
+        public Oauth2Res(Boolean alreadyJoined,Boolean alreadySetted, User user) {
             this.alreadyJoined = alreadyJoined;
+            this.alreadySetted = alreadySetted;
             this.userRes = new UserRes(user);
         }
     }
