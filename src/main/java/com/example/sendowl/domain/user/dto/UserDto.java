@@ -141,9 +141,11 @@ public class UserDto {
     @Getter
     public static class Oauth2Res {
         private Boolean alreadyJoined;
+        private UserRes userRes;
 
-        public Oauth2Res(Boolean alreadyJoined) {
+        public Oauth2Res(Boolean alreadyJoined, User user) {
             this.alreadyJoined = alreadyJoined;
+            this.userRes = new UserRes(user);
         }
     }
     @Getter
