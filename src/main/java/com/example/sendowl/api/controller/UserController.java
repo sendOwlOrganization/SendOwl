@@ -65,11 +65,11 @@ public class UserController {
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping("/set-profile")
-    public ResponseEntity<Boolean> setUser( final @Valid @RequestBody ProfileReq req) {
+    public ResponseEntity<UserRes> setUser( final @Valid @RequestBody ProfileReq req) {
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // mbti는 바로 삽입
-        userService.setUserProfile(req, principal.getUser());
-        return new ResponseEntity(true, HttpStatus.OK);
+        UserRes userRes = userService.setUserProfile(req, principal.getUser());
+        return new ResponseEntity(userRes, HttpStatus.OK);
     }
 
     @Operation(summary = "닉네임 중복 확인")
