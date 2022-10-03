@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import org.apache.kafka.common.protocol.types.Field;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +18,7 @@ public class UserDto {
         private String email;
         private String name;
         private String nickName;
+        private String mbti;
         private String introduction;
         private String profileImage;
 
@@ -27,6 +27,7 @@ public class UserDto {
             this.email = entity.getEmail();
             this.name = entity.getName();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.introduction = entity.getIntroduction();
             this.profileImage = entity.getProfileImage();
         }
@@ -36,11 +37,13 @@ public class UserDto {
     public static class UserPublicRes {
         private Long id;
         private String nickName;
+        private String mbti;
         private String profileImage;
 
         public UserPublicRes(User entity) {
             this.id = entity.getId();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.profileImage = entity.getProfileImage();
         }
     }
@@ -80,6 +83,7 @@ public class UserDto {
         private String email;
         private String name;
         private String nickName;
+        private String mbti;
         private String introduction;
         private String profileImage;
 
@@ -88,6 +92,7 @@ public class UserDto {
             this.email = entity.getEmail();
             this.name = entity.getName();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.introduction = entity.getIntroduction();
             this.profileImage = entity.getProfileImage();
         }
