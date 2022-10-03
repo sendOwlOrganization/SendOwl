@@ -15,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByEmail(String email);
     boolean existsUserByNickName(String nickName);
     boolean existsUserByEmailAndTransactionId(String email, String trancationId);
+    Optional<User> findUserByEmailAndTransactionId(String email, String trancationId);
 
     @Query(value = "select new com.example.sendowl.domain.user.dto.UserMbti(u.mbti, count(u)) " +
             "from User u group by u.mbti")
