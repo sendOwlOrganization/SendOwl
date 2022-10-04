@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.*;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
@@ -105,9 +106,13 @@ public class UserService {
         // 토큰의 유효성 검증
         Oauth2User user = getProfileByToken(req.getTransactionId(), req.getToken());
         Boolean alreadyJoined = true;
+        Boolean alreadySetted = true;
+        User retUser = null;
+
         // 회원여부 확인
-        if(!userRepository.existsUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId())){
-            userRepository.save(
+        Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId());
+        if(optionalUser.isEmpty()){
+            retUser = userRepository.save(
                     User.builder()
                             .email(user.getEmail())
                             .name(user.getName())
@@ -116,13 +121,18 @@ public class UserService {
             );
             alreadyJoined = false;
         }
+        retUser = optionalUser.get();
 
+        // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
+        if(retUser.getNickName() == null || retUser.getMbti() == null){
+            alreadySetted = false;
+        }
         // 로그인 (토큰 반환)
         makeToken(
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
 
-        return new Oauth2Res(alreadyJoined);
+        return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
 
     public Oauth2User getProfileByToken(String transactionId, String token){
@@ -171,12 +181,13 @@ public class UserService {
         return userRepository.existsUserByNickName(nickName);
     }
     @Transactional
-    public void setUserProfile(ProfileReq req, User user) {
+    public UserRes setUserProfile(ProfileReq req, User user) {
         // 닉네임 중복확인
         if(!userRepository.existsUserByNickName(req.getNickName())) {
             User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
             savedUser.setNickName(req.getNickName());
             savedUser.setMbti(req.getMbti());
+            return new UserRes(savedUser);
         }
         else{
             // 중복된 이메일인 경우 반환

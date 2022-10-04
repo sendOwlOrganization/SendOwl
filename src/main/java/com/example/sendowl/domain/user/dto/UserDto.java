@@ -18,6 +18,7 @@ public class UserDto {
         private String email;
         private String name;
         private String nickName;
+        private String mbti;
         private String introduction;
         private String profileImage;
 
@@ -26,6 +27,7 @@ public class UserDto {
             this.email = entity.getEmail();
             this.name = entity.getName();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.introduction = entity.getIntroduction();
             this.profileImage = entity.getProfileImage();
         }
@@ -35,11 +37,13 @@ public class UserDto {
     public static class UserPublicRes {
         private Long id;
         private String nickName;
+        private String mbti;
         private String profileImage;
 
         public UserPublicRes(User entity) {
             this.id = entity.getId();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.profileImage = entity.getProfileImage();
         }
     }
@@ -79,6 +83,7 @@ public class UserDto {
         private String email;
         private String name;
         private String nickName;
+        private String mbti;
         private String introduction;
         private String profileImage;
 
@@ -87,6 +92,7 @@ public class UserDto {
             this.email = entity.getEmail();
             this.name = entity.getName();
             this.nickName = entity.getNickName();
+            this.mbti = entity.getMbti();
             this.introduction = entity.getIntroduction();
             this.profileImage = entity.getProfileImage();
         }
@@ -141,9 +147,13 @@ public class UserDto {
     @Getter
     public static class Oauth2Res {
         private Boolean alreadyJoined;
+        private Boolean alreadySetted;
+        private UserRes userRes;
 
-        public Oauth2Res(Boolean alreadyJoined) {
+        public Oauth2Res(Boolean alreadyJoined,Boolean alreadySetted, User user) {
             this.alreadyJoined = alreadyJoined;
+            this.alreadySetted = alreadySetted;
+            this.userRes = new UserRes(user);
         }
     }
     @Getter
