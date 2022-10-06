@@ -44,4 +44,12 @@ public class UserExceptionHandler {
         return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException, req.getEmail()),
                 boxedException.getErrorStatus());
     }
+    @ExceptionHandler(UserUnauthorityException.class)
+    public final ResponseEntity<BaseErrorResponseDto> handleUserUnauthorityException(Exception ex, WebRequest request) {
+        UserDto.LoginReq req = (UserDto.LoginReq) request;
+        UserUnauthorityException boxedException = new UserUnauthorityException(
+                UserErrorCode.EXPIRED_VERIFICATION_TOKEN, ex);
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException, req.getEmail()),
+                boxedException.getErrorStatus());
+    }
 }
