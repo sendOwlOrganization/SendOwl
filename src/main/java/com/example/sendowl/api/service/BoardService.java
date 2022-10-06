@@ -51,7 +51,7 @@ public class BoardService {
         return boardsRes;
     }
 
-    public BoardsRes getBoardBySearch(Pageable pageable, String where, String queryText){
+    public BoardsRes getBoardBySearch(Pageable pageable,Integer textLength, String where, String queryText){
         Specification<Board> spec = (root, query, builder) -> null;
         if(where.contains("title")){
             spec = spec.or(BoardSpecification.likeTitle(queryText));
@@ -62,7 +62,7 @@ public class BoardService {
         if(where.contains("nickName")){
             spec = spec.or(BoardSpecification.likeUserNickName(queryText));
         }
-        return new BoardsRes(boardRepository.findAll(spec, pageable));
+        return new BoardsRes(boardRepository.findAll(spec, pageable), textLength);
     }
 
     @Transactional
