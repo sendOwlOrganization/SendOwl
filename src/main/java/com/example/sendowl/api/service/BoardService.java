@@ -1,7 +1,7 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.common.converter.MarkdownToText;
 import com.example.sendowl.common.converter.EditorJsHelper;
+import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.category.entity.Category;
@@ -17,16 +17,13 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.redis.service.RedisBoardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 @Service
@@ -66,11 +63,7 @@ public class BoardService {
     }
 
     @Transactional
-    public DetailRes insertBoard(BoardReq req, Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new UserNotFoundException(UserErrorCode.NOT_FOUND)
-        );
-
+    public DetailRes insertBoard(BoardReq req, User user) {
         Category category = categoryRepository.findById(req.getCategoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
 
@@ -97,27 +90,43 @@ public class BoardService {
     }
 
     @Transactional
-    public UpdateRes updateBoard(UpdateReq req) {
-        Board board = boardRepository.findById(req.getId()).orElseThrow(
+    public UpdateBoardRes updateBoard(UpdateBoardReq req, User user) {
+        Board board = boardRepository.findById(req.getBoardId()).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
                 () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        if(board.getUser().getId() != user.getId()){
+            throw new UserUnauthorityException(UserErrorCode.UNAUTHORIZED);
+        }
 
         //String refinedText = new MarkdownToText(req.getContent()).getRefinedText();
         String refinedText = new EditorJsHelper().extractText(req.getEditorJsContent());
 
-        board.updateBoard(req.getTitle(), req.getContent(), category, refinedText);
-        boardRepository.save(board);
+        // editorJS내용을 content로 바꾼다.
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = "";
+        try{
+            content = objectMapper.writeValueAsString(req.getEditorJsContent());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        UpdateRes updatedBoard = new UpdateRes(board);
+        board.updateBoard(req.getTitle(), content, category, refinedText);
+
+        boardRepository.save(board);
+        UpdateBoardRes updatedBoard = new UpdateBoardRes(board);
         return updatedBoard;
     }
 
     @Transactional
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, User user) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
+        if(board.getUser().getId() != user.getId()){
+            throw new UserUnauthorityException(UserErrorCode.UNAUTHORIZED);
+        }
 
         board.delete();
 
