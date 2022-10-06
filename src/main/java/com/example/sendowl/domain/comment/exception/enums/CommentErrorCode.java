@@ -9,6 +9,7 @@ public enum CommentErrorCode implements BaseErrorCodeIF {
 
     NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "등록되지 않은 댓글입니다."),
     NOT_FOUND_PARENT(HttpStatus.INTERNAL_SERVER_ERROR, "상위 댓글이 존재하지 않습니다."),
+    NO_PERMISSON(HttpStatus.UNAUTHORIZED, "댓글에 대한 권한이 없습니다."),
     ;
     private final HttpStatus errorStatus;
     private final String errorMessage;

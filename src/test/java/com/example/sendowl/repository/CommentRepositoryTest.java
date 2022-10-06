@@ -6,6 +6,7 @@ import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.comment.dto.CommentDto;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +39,14 @@ public class CommentRepositoryTest {
 
 
     @Test
+    @Disabled
     public void 코멘트인서트() {
         log.info("코멘트인서트");
         CommentDto.CommentReq crq = CommentDto.CommentReq.builder()
                 .boardId(1L)
-                .email("a1@naver.com")
                 .content("NEST comment")
                 .build();
-        log.error(commentService.insertComment(crq).toString());
+//        log.error(commentService.insertComment(crq).toString());
 
     }
 
@@ -61,7 +62,7 @@ public class CommentRepositoryTest {
     @Test
     public void 코멘트소프트딜리트() {
         Long cid = 1l;
-        commentService.deleteComment(cid);
+//        commentService.deleteComment(cid);
     }
 
     @Test
@@ -71,6 +72,6 @@ public class CommentRepositoryTest {
                 .commentId(cid)
                 .content("test suc!!!!")
                 .build();
-        commentService.updateComment(req);
+//        commentService.updateComment(req);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.comment.exception.handler;
 
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
+import com.example.sendowl.domain.comment.exception.CommentNoPermission;
 import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
 import com.example.sendowl.domain.comment.exception.enums.CommentErrorCode;
 import org.springframework.http.ResponseEntity;
@@ -19,4 +20,12 @@ public class CommentExceptionHandler {
         return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
                 boxedException.getErrorStatus());
     }
+    @ExceptionHandler(CommentNoPermission.class) // 어떤 에러일때 핸들링 할것인지 명시한다.
+    public final ResponseEntity<BaseErrorResponseDto> handleCommentNoPermission(Exception ex, WebRequest request) {
+        CommentNotFoundException boxedException = new CommentNotFoundException(
+                CommentErrorCode.NOT_FOUND, ex);
+        return new ResponseEntity<>(BaseErrorResponseDto.of(boxedException),
+                boxedException.getErrorStatus());
+    }
+
 }
