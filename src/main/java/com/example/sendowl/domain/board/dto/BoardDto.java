@@ -4,6 +4,7 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -132,25 +133,23 @@ public class BoardDto {
 
     }
 
-    @Data
+    @Getter
     @NoArgsConstructor
-    public static class UpdateReq {
-        @NotBlank
-        private Long id;
+    public static class UpdateBoardReq {
+        private Long boardId;
         @NotBlank
         private String title;
-        @NotBlank
+        @JsonIgnore
         private String content;
 
-        private EditorJsContent EditorJsContent;
+        private EditorJsContent editorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
         private Long categoryId;
-
     }
 
     @Getter
-    public static class UpdateRes {
+    public static class UpdateBoardRes {
         private Long id;
         private String title;
         private String content;
@@ -158,7 +157,7 @@ public class BoardDto {
         private LocalDateTime regDate;
         private Integer hit;
 
-        public UpdateRes(Board entity) {
+        public UpdateBoardRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.user = new UserPublicRes(entity.getUser());
