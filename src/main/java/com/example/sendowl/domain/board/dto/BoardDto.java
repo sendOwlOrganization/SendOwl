@@ -33,12 +33,6 @@ public class BoardDto {
         private Integer totalPages;
         private Pageable pageable;
 
-        public BoardsRes(Page<Board> pages) {
-            this.boards = pages.get().map(ListRes::new).collect(Collectors.toList());
-            this.totalElement = pages.getTotalElements();
-            this.totalPages = pages.getTotalPages();
-            this.pageable = pages.getPageable();
-        }
         public BoardsRes(Page<Board> pages, Integer textLength) {
             this.boards = pages.get().map((page)-> new ListRes(page,textLength)).collect(Collectors.toList());
             this.totalElement = pages.getTotalElements();
