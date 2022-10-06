@@ -12,14 +12,12 @@ import java.time.LocalDateTime;
 
 public class CommentDto {
 
-    private static UserRepository userRepository;
-
-    @Data
+    @Getter
     public static class CommentRes {
         private Long id;
         private Long boardId;
-        private UserDto.UserRes user;
-        private Comment parent;
+        private UserDto.UserPublicRes user;
+        private Long parent; // 이게 프론트 입장에서 필요한지 잘 모르겠음...child는 있으면 좋을듯
         private String content;
         private LocalDateTime regDate;
         private LocalDateTime modDate;
@@ -28,8 +26,8 @@ public class CommentDto {
         public CommentRes(Comment entity) {
             this.id = entity.getId();
             this.boardId = entity.getBoard().getId();
-            this.user = new UserDto.UserRes(entity.getUser());
-            this.parent = entity.getParent();
+            this.user = new UserDto.UserPublicRes(entity.getUser());
+            this.parent = entity.getParent()!=null?entity.getParent().getId():null;
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
@@ -43,9 +41,6 @@ public class CommentDto {
     public static class CommentReq {
         @NotNull
         private Long boardId;
-
-        @NotNull
-        private String email;
 
         private Long parentId;
 
