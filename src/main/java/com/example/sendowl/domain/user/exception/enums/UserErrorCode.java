@@ -13,6 +13,7 @@ public enum UserErrorCode implements BaseErrorCodeIF {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 입니다."),
     EXPIRED_VERIFICATION_TOKEN(HttpStatus.INTERNAL_SERVER_ERROR, "이메일 인증 토큰이 만료되었습니다."),
     EXISTING_NICKNAME(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "유저에게 권한이 없습니다."),
     ;
     private final HttpStatus errorStatus;
     private final String errorMessage;

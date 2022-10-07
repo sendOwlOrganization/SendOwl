@@ -59,6 +59,16 @@ public class UserException {
         }
     }
 
+    public static class UserUnauthorityException extends BaseException {
+        public UserUnauthorityException(BaseErrorCodeIF errorCode) {
+            super(errorCode);
+        }
+
+        public UserUnauthorityException(BaseErrorCodeIF errorCode, Throwable throwable) {
+            super(errorCode, throwable);
+        }
+    }
+
 
 
 }

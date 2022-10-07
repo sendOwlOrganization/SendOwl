@@ -3,13 +3,14 @@ package com.example.sendowl.api.controller;
 
 import com.example.sendowl.api.service.BoardService;
 import com.example.sendowl.auth.PrincipalDetails;
+import com.example.sendowl.domain.board.dto.BoardDto;
+import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +40,8 @@ public class BoardController {
     public @ResponseBody ResponseEntity<?> board(final @Valid @RequestBody BoardReq rq) {
 
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long id = principal.getUser().getId();
-        System.out.println(principal.getUser().getEmail());
-        DetailRes detailRes = boardService.insertBoard(rq, id);
+        User user = principal.getUser();
+        DetailRes detailRes = boardService.insertBoard(rq,user);
 
         return new ResponseEntity(detailRes, HttpStatus.OK);
     }
@@ -55,10 +55,13 @@ public class BoardController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "게시글 수정", description = "게시글을 수정한다.", security = { @SecurityRequirement(name = "bearerAuth") })
+    @Operation(summary = "게시글 수정한다", description = "게시글을 수정한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PutMapping(path = "") // 게시글 수정
-    public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateReq req){
-        UpdateRes updatedRes = boardService.updateBoard(req);
+    public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateBoardReq req){
+        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principal.getUser();
+
+        UpdateBoardRes updatedRes = boardService.updateBoard(req,user);
 
         return new ResponseEntity(updatedRes, HttpStatus.OK);
     }
@@ -66,7 +69,10 @@ public class BoardController {
     @Operation(summary = "게시글 소프트 삭제", description = "게시글을 소프트 삭제한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @DeleteMapping(path = "/{id}") // 게시글 삭제
     public ResponseEntity<?> boardDelete(@PathVariable Long id){
-        boardService.deleteBoard(id);
+        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principal.getUser();
+
+        boardService.deleteBoard(id,user);
 
         return new ResponseEntity(HttpStatus.OK);
     }

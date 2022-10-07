@@ -23,9 +23,10 @@ public class SearchController {
 
     @GetMapping // 게시글 목록
     public ResponseEntity<BoardsRes> boards(Pageable pageable,
+                                            final @RequestParam Integer textLength,
                                              @RequestParam(name = "query", defaultValue = "mbti") String query,
                                              @RequestParam(name = "where", defaultValue = "title/content/nickName") String where
     ){
-        return new ResponseEntity(boardService.getBoardBySearch(pageable, where, query), HttpStatus.OK);
+        return new ResponseEntity(boardService.getBoardBySearch(pageable,textLength, where, query), HttpStatus.OK);
     }
 }
