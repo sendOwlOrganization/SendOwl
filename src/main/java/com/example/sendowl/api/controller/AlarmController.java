@@ -2,15 +2,19 @@ package com.example.sendowl.api.controller;
 
 import com.example.sendowl.api.service.AlarmService;
 import com.example.sendowl.api.service.BlameService;
+import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.domain.alarm.dto.AlarmDto.*;
 import com.example.sendowl.domain.alarm.dto.AlarmChkDto.*;
+import com.example.sendowl.domain.alarm.entity.Alarm;
 import com.example.sendowl.domain.alarm.entity.AlarmChk;
+import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -51,7 +55,10 @@ public class AlarmController {
     @Operation(summary = "알림 확인", description = "알림 확인 시, 알림체크 테이블에 등록", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping(path = "/{id}")
     public ResponseEntity<?> insertAlarmChk(final @Valid @RequestBody AlarmChkReq rq){
-        alarmService.checkAlarm(rq);
+        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principal.getUser();
+
+        alarmService.checkAlarm(rq, user);
         return new ResponseEntity(null,HttpStatus.OK);
     }
 
