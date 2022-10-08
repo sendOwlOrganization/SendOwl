@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -42,6 +43,7 @@ public class User extends BaseEntity {
 
     private String nickName;
     private String mbti;
+    private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
