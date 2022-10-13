@@ -8,6 +8,10 @@ import com.example.sendowl.domain.blame.exception.BlameTypeNotFoundException;
 import com.example.sendowl.domain.blame.exception.enums.BlameErrorCode;
 import com.example.sendowl.domain.blame.repository.BlameRepository;
 import com.example.sendowl.domain.blame.repository.BlameTypeRepository;
+import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.UserException;
+import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
+import com.example.sendowl.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +25,12 @@ import java.util.stream.Collectors;
 public class BlameService {
     private final BlameRepository blameRepository;
     private final BlameTypeRepository blameTypeRepository;
-    public void insertBlame(BlameDto.BlameReq rq){
-        Blame blame = rq.toEntity();
+    private final UserRepository userRepository;
+    @Transactional
+    public void insertBlame(BlameDto.BlameReq rq, User user){
+        // 신고당한 유저의 아이디 찾기
+        User targetUser = userRepository.findById(rq.getTargetUserId()).orElseThrow(() -> new UserException.UserNotFoundException(UserErrorCode.NOT_FOUND));
+        Blame blame = rq.toEntity(user,targetUser);
         blameRepository.save(blame);
     }
 
