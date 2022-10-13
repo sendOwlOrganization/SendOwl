@@ -35,7 +35,7 @@ public class BoardRepositoryTest {
     @Test
     public void when카테고리이름으로페치조인thenPage반환(){
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> pages = boardRepository.findAllFetchJoin(pageable);
+        Page<Board> pages = boardRepository.findBoardFetchJoin(pageable);
         for(Board b : pages.getContent()){
             System.out.println(b.getId());
             System.out.println(b.getTitle());

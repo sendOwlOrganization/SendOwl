@@ -39,10 +39,10 @@ public class BoardService {
     public BoardsRes getBoardList(Long categoryId,Integer textLength, Pageable pageable) {
         Page<Board> pages;
         if(categoryId == 0L){
-            pages = boardRepository.findAllFetchJoin(pageable);
+            pages = boardRepository.findBoardFetchJoin(pageable);
         }
         else {
-            pages = boardRepository.findByCategoryIdFetchJoin(categoryId, pageable);
+            pages = boardRepository.findBoardByCategoryIdFetchJoin(categoryId, pageable);
         }
         BoardsRes boardsRes = new BoardsRes(pages, textLength);
         return boardsRes;
