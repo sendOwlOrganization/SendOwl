@@ -1,25 +1,26 @@
 package com.example.sendowl.domain.blame.dto;
 
 import com.example.sendowl.domain.blame.entity.Blame;
+import com.example.sendowl.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 public class BlameDto {
 
     @Getter
     public static class BlameReq {
-        private Long userId;
         private Long blameType;
         private String blameDetails;
         private Long targetUserId;
         private Long contentType;
         private Long contentId;
         private String contentDetails;
-        public Blame toEntity(){
+        public Blame toEntity(User user, User targetUser){
             return Blame.builder()
-                    .userId(userId)
+                    .user(user)
                     .blameType(blameType)
                     .blameDetails(blameDetails)
-                    .targetUserId(targetUserId)
+                    .targetUser(targetUser)
                     .contentsType(contentType)
                     .contentsId(contentId)
                     .contentsDetails(contentDetails).build();
