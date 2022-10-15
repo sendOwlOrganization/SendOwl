@@ -46,6 +46,7 @@ public class BalanceController {
         balanceService.deleteBalance(id);
     }
 
+
     @Operation(summary = "밸런스게임 최신순 10개 조회", description = "밸런스 게임 10개를 받아온다.")
     @GetMapping  // 밸런스 게임 등록
     public ResponseEntity<?> getAllBalance() {
