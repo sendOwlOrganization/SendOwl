@@ -51,7 +51,8 @@ public class RedisConfigure {
     }
 
     private final BoardRepository boardRepository;
-
+/*
+redis의 message를 현재 사용하고 있지 않기 때문에 주석 처리로 불필요한 로그가 생성되지 않도록 수정함.
     @Bean
     public RedisMessageSubscriber redisMessageSubscriber(){
         return new RedisMessageSubscriber();
@@ -69,7 +70,7 @@ public class RedisConfigure {
         container.addMessageListener(messageListener(), topic());
         return container;
     }
-
+*/
     @Bean
     public PatternTopic topic() {
         return new PatternTopic(pattern);
