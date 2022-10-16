@@ -3,6 +3,7 @@ package com.example.sendowl.api.controller;
 import com.example.sendowl.api.service.BalanceService;
 import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.domain.balance.dto.BalanceDto;
+import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -42,13 +43,20 @@ public class BalanceController {
     @Operation(summary = "밸런스게임 최신순 10개 조회", description = "밸런스 게임 10개를 받아온다.")
     @GetMapping  // 밸런스 게임 등록
     public ResponseEntity<?> getAllBalance(){
-        return new ResponseEntity<>(balanceService.getBalances(), HttpStatus.OK);
+        return new ResponseEntity<>(balanceService.getAllBalances(), HttpStatus.OK);
+    }
+    @Operation(summary = "밸런스 게임 자세히 조회", description = "하나의 밸런스 게임의 데이터를 자세히 받아온다.")
+    @GetMapping("/{balanceId}")  // 밸런스 게임 등록
+    public ResponseEntity<?> getDetailBalance(final @PathVariable Long balanceId){
+        // 밸런스를 토대로 해당 유저들의 데이터를 가져와야한다.
+        return new ResponseEntity<>(balanceService.getBalances(balanceId), HttpStatus.OK);
     }
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "밸런스 게임 투표하기", description = "밸런스 게임에 투표한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping("/vote")  // 밸런스 게임 등록
     public void voteBalanceGame(final @Valid @RequestBody BalanceDto.VoteBalanceReq rq){
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        balanceService.voteBalanceGame(rq, principal.getUser());
+        User user = principal.getUser();
+        balanceService.voteBalanceGame(rq, user);
     }
 }
