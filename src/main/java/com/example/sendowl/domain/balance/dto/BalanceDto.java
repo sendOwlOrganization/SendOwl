@@ -1,6 +1,10 @@
 package com.example.sendowl.domain.balance.dto;
 
 import com.example.sendowl.domain.balance.entity.Balance;
+<<<<<<< HEAD
+=======
+import com.fasterxml.jackson.annotation.JsonProperty;
+>>>>>>> d16aa5d (feat: BalanceDto)
 import lombok.Getter;
 
 import java.util.List;
@@ -16,6 +20,7 @@ public class BalanceDto {
         private String secondDetail;
         private Long firstCount;
         private Long secondCount;
+
 
         public BalanceRes(BalanceCount balance) {
             this.id = balance.getId();
@@ -39,6 +44,7 @@ public class BalanceDto {
         private String title;
         private String firstDetail;
         private String secondDetail;
+
 
         public Balance toEntity(){
             return Balance.builder()
