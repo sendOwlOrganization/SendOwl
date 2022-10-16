@@ -55,9 +55,9 @@ public class BalanceDto {
         }
     }
     @Getter
-    public static class GetBalanceRes {
+    public static class GetAllBalanceRes {
         private List<BalanceRes> balances;
-        public GetBalanceRes(List<BalanceCount> items) {
+        public GetAllBalanceRes(List<BalanceCount> items) {
             balances = items.stream().map(BalanceDto.BalanceRes::new).collect(Collectors.toList());
         }
     }
