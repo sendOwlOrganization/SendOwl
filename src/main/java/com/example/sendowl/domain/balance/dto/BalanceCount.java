@@ -24,4 +24,16 @@ public class BalanceCount {
         this.aCount = aCount;
         this.bCount = bCount;
     }
+
+    @Override
+    public String toString() {
+        return "BalanceCount{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", aDetail='" + aDetail + '\'' +
+                ", bDetail='" + bDetail + '\'' +
+                ", aCount=" + aCount +
+                ", bCount=" + bCount +
+                '}';
+    }
 }
