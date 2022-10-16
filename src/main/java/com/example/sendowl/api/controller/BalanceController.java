@@ -59,7 +59,7 @@ public class BalanceController {
         // 밸런스를 토대로 해당 유저들의 데이터를 가져와야한다.
         return new ResponseEntity<>(balanceService.getBalances(balanceId), HttpStatus.OK);
     }
-
+    
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "밸런스 게임 투표하기", description = "밸런스 게임에 투표한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/vote")  // 밸런스 게임 등록
