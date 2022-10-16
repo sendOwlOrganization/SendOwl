@@ -2,9 +2,12 @@ package com.example.sendowl.domain.balance.dto;
 
 import com.example.sendowl.domain.balance.entity.Balance;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import com.fasterxml.jackson.annotation.JsonProperty;
 >>>>>>> d16aa5d (feat: BalanceDto)
+=======
+>>>>>>> c73d9bf (fix: rename aDetail to firstDetail, bDetail to secondDetail becasue of jsonMapping problem)
 import lombok.Getter;
 
 import java.util.List;
@@ -20,7 +23,10 @@ public class BalanceDto {
         private String secondDetail;
         private Long firstCount;
         private Long secondCount;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c73d9bf (fix: rename aDetail to firstDetail, bDetail to secondDetail becasue of jsonMapping problem)
 
         public BalanceRes(BalanceCount balance) {
             this.id = balance.getId();
@@ -44,7 +50,10 @@ public class BalanceDto {
         private String title;
         private String firstDetail;
         private String secondDetail;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c73d9bf (fix: rename aDetail to firstDetail, bDetail to secondDetail becasue of jsonMapping problem)
 
         public Balance toEntity(){
             return Balance.builder()
