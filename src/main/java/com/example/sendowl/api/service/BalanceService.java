@@ -35,8 +35,8 @@ public class BalanceService {
         // 존재하는지 확인
         Balance balance = balanceRepository.findById(rq.getId()).orElseThrow(()->new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
         balance.setTitle(rq.getTitle());
-        balance.setaDetail(rq.getaDetail());
-        balance.setbDetail(rq.getbDetail());
+        balance.setFirstDetail(rq.getFirstDetail());
+        balance.setSecondDetail(rq.getSecondDetail());
     }
 
     @Transactional
