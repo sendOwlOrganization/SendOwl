@@ -21,7 +21,7 @@ public class KafkaConsumer {
 
     private final MailService mailService;
 
-    @KafkaListener(topics = EMAIL_VERIFICATION, groupId = NOTIFY_EMAIL_VERIFICATION)
+    @KafkaListener(topics = EMAIL_VERIFICATION, groupId = NOTIFY_EMAIL_VERIFICATION, autoStartup = "${listen.auto.start:false}")
     public void sendEmailValidation(EmailVerifyDto dto) {
         new Thread(() -> {
             try {
