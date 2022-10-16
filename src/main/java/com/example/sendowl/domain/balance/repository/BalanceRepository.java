@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface BalanceRepository  extends JpaRepository<Balance, Long>, JpaSpecificationExecutor {
     @Query(value = "select new com.example.sendowl.domain.balance.dto.BalanceCount(" +
-            "B.id, B.title, B.aDetail, B.bDetail, " +
+            "B.id, B.title, B.firstDetail, B.secondDetail, " +
             "sum(case when BC.pick='A' then 1 else 0 end), " +
             "sum(case when BC.pick='B' then 1 else 0 end)) " +
             "from Balance B left join BalanceCheck BC on B = BC.balance " +
@@ -29,7 +29,7 @@ public interface BalanceRepository  extends JpaRepository<Balance, Long>, JpaSpe
     List<BalanceCount> getAllBalanceCount(Pageable pageable);
 
     @Query(value = "select new com.example.sendowl.domain.balance.dto.BalanceCount(" +
-            "B.id, B.title, B.aDetail, B.bDetail, " +
+            "B.id, B.title, B.firstDetail, B.secondDetail, " +
             "sum(case when BC.pick='A' then 1 else 0 end), " +
             "sum(case when BC.pick='B' then 1 else 0 end)) " +
             "from Balance B left join BalanceCheck BC on B = BC.balance " +
