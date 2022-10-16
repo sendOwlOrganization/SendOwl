@@ -49,8 +49,9 @@ public class BalanceService {
         List<BalanceCount> balances = balanceRepository.getAllBalanceCount(PageRequest.of(0,10));
         return new BalanceDto.GetAllBalanceRes(balances);
     }
-    public BalanceCount getBalances(Long balanceId) {
-        return balanceRepository.getBalanceCount(balanceId).orElseThrow(()->new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+    public BalanceDto.BalanceRes getBalances(Long balanceId) {
+        BalanceCount balanceCount = balanceRepository.getBalanceCount(balanceId).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+        return new BalanceDto.BalanceRes(balanceCount);
     }
 
 
