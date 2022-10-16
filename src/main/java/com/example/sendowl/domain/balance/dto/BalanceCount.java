@@ -56,4 +56,16 @@ public class BalanceCount {
         this.bCount = bCount;
 >>>>>>> 7c47d86 (feat: BalanceCount)
     }
+
+    @Override
+    public String toString() {
+        return "BalanceCount{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", aDetail='" + aDetail + '\'' +
+                ", bDetail='" + bDetail + '\'' +
+                ", aCount=" + aCount +
+                ", bCount=" + bCount +
+                '}';
+    }
 }
