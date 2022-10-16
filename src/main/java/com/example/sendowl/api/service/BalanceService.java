@@ -45,17 +45,24 @@ public class BalanceService {
         balance.delete();
     }
 
-    public BalanceDto.GetBalanceRes getBalances() {
-        List<BalanceCount> balances = balanceRepository.getBalanceCount(PageRequest.of(0,10));
-        return new BalanceDto.GetBalanceRes(balances);
+    public BalanceDto.GetAllBalanceRes getAllBalances() {
+        List<BalanceCount> balances = balanceRepository.getAllBalanceCount(PageRequest.of(0,10));
+        return new BalanceDto.GetAllBalanceRes(balances);
     }
+    public BalanceCount getBalances(Long balanceId) {
+        return balanceRepository.getBalanceCount(balanceId).orElseThrow(()->new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+    }
+
 
     @Transactional
     public void voteBalanceGame(BalanceDto.VoteBalanceReq rq, User user) {
+        // 밸런스 게임 존재 여부 확인
         Balance balance = balanceRepository.findById(rq.getBalanceId()).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
 
+        // 해당 유저가 밸런스 게임이 참여 했는지 확인
         Optional<BalanceCheck> balanceCheck = balanceCheckRepository.findByBalanceAndUser(balance, user);
 
+        // 해당 밸런스 게임에 첫 참여인 경우
         if(balanceCheck.isEmpty()){
             balanceCheckRepository.save(
                     BalanceCheck
@@ -64,9 +71,13 @@ public class BalanceService {
                             .user(user)
                             .pick(rq.getPick())
                             .build());
-        }else{
+        }else{// 해당 밸런스 게임에 이미 참여한 적이 있는 경우
             BalanceCheck savedBalanceCheck = balanceCheck.get();
-            savedBalanceCheck.setPick(rq.getPick());
+            savedBalanceCheck.setPick(rq.getPick()); // 유저가 선택한 데이터로 갱신
         }
+
+        // 해당 밸런스 게임의 최종 결과 반환
+
     }
+
 }
