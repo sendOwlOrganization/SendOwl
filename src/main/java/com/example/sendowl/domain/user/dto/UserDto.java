@@ -1,10 +1,7 @@
 package com.example.sendowl.domain.user.dto;
 
 import com.example.sendowl.domain.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -157,11 +154,10 @@ public class UserDto {
         }
     }
     @Getter
+    @NoArgsConstructor
     public static class ProfileReq {
-        private String nickName;
         private String mbti;
-        public ProfileReq(String nickName, String mbti) {
-            this.nickName = nickName;
+        public ProfileReq(String mbti) {
             this.mbti = mbti;
         }
     }
