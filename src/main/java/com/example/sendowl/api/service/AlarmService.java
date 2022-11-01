@@ -1,7 +1,11 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.alarm.dto.AlarmChkDto;
 import com.example.sendowl.domain.alarm.entity.Alarm;
+import com.example.sendowl.domain.alarm.entity.AlarmChk;
 import com.example.sendowl.domain.alarm.entity.AlarmType;
+import com.example.sendowl.domain.alarm.exception.AlarmNotFoundException;
+import com.example.sendowl.domain.alarm.exception.AlarmTypeNotFoundException;
 import com.example.sendowl.domain.alarm.repository.AlarmChkRepository;
 import com.example.sendowl.domain.alarm.repository.AlarmRepository;
 import com.example.sendowl.domain.alarm.repository.AlarmTypeRepository;
@@ -9,6 +13,7 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
+import com.example.sendowl.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +34,7 @@ public class AlarmService {
     // 알림 등록
     public void insertAlarm(AlarmReq rq) {
         AlarmType alarmType = alarmTypeRepository.findById(rq.getTypeId()).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+                () -> new AlarmTypeNotFoundException(CategoryErrorCode.NOT_FOUND));
         Alarm alarm = new Alarm();
         alarm.insertAlarm(rq.getContent(), alarmType);
         alarmRepository.save(alarm);
@@ -38,10 +43,10 @@ public class AlarmService {
     // 전체 알림 수정
     public void updateAlarm(AlarmUdtReq rq) {
         Alarm alarm = alarmRepository.findById(rq.getId()).orElseThrow(
-                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+                () -> new AlarmNotFoundException(BoardErrorCode.NOT_FOUND));
 
         AlarmType alarmType = alarmTypeRepository.findById(rq.getTypeId()).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+                () -> new AlarmTypeNotFoundException(CategoryErrorCode.NOT_FOUND));
 
         alarm.updateAlarm(rq.getContent(), alarmType);
         alarmRepository.save(alarm);
@@ -50,7 +55,7 @@ public class AlarmService {
     // 전체 알림 삭제 (soft Delete)
     public void deleteAlarm(Long id) {
         Alarm alarm = alarmRepository.findById(id).orElseThrow(
-                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+                () -> new AlarmNotFoundException(BoardErrorCode.NOT_FOUND));
 
         alarm.delete();
 
@@ -58,6 +63,13 @@ public class AlarmService {
     }
 
     // 유저 별 알람 확인
-    public void checkAlarm(AlarmChkReq rq) {
+    public void checkAlarm(AlarmChkReq rq, User user) {
+        Alarm alarm = alarmRepository.findById(rq.getAlarmId()).orElseThrow(
+                () -> new AlarmNotFoundException(BoardErrorCode.NOT_FOUND));
+
+        AlarmChk alarmChk = new AlarmChk();
+        alarmChk.insertAlarmChk(alarm, user);
+
+        alarmChkRepository.save(alarmChk);
     }
 }
