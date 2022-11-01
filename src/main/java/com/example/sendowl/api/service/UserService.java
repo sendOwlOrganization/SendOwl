@@ -20,6 +20,7 @@ import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.protocol.types.Field;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.*;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
@@ -182,16 +184,21 @@ public class UserService {
     }
     @Transactional
     public UserRes setUserProfile(ProfileReq req, User user) {
-        // 닉네임 중복확인
-        if(!userRepository.existsUserByNickName(req.getNickName())) {
+        try{
+            // mbti 형용사를 가져온다.
+            ClassPathResource resource = new ClassPathResource("mbti-feature.txt");
+            Path path = Paths.get(resource.getURI());
+            List<String> content = Files.readAllLines(path);
+
+            int random = (int)(Math.random() * content.size());
+            String mbtiNickName = content.get(random) + " "+req.getMbti();
+
             User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
-            savedUser.setNickName(req.getNickName());
             savedUser.setMbti(req.getMbti());
+            savedUser.setNickName(mbtiNickName);
             return new UserRes(savedUser);
-        }
-        else{
-            // 중복된 이메일인 경우 반환
-            throw new UserNickNameAlreadyExistException(EXISTING_NICKNAME);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

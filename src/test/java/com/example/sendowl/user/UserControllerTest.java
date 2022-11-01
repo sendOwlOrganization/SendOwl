@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc // MockMvc에 필요한 주입을 한다.
+@AutoConfigureMockMvc // 서블릿 컨테이너를 모킹하기 위해서 사용한다.
 @SpringBootTest // 테스트에 필요한 거의 모든 의존성을 제공한다.
 public class UserControllerTest {
 
@@ -61,6 +61,5 @@ public class UserControllerTest {
                         .content(string))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentNotValidException));
-
     }
 }

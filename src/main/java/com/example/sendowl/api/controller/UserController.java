@@ -62,7 +62,7 @@ public class UserController {
         return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정", security = { @SecurityRequirement(name = "bearerAuth") })
     @PostMapping("/set-profile")
     public ResponseEntity<UserRes> setUser( final @Valid @RequestBody ProfileReq req) {
