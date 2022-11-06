@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,22 +26,18 @@ public class FileController {
 
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "파일 싱글 업로드", description = "single file upload api", security = { @SecurityRequirement(name = "bearerAuth") })
-    @PostMapping(path = "single") // 단일 파일 업로드
+    @PostMapping(path = "single", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // consumes는 들어오는 데이터 타입 정의, produces는 반환타입
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
 
-        String fileName = fileService.fileUpload(file);
-
-        return new ResponseEntity(fileName, HttpStatus.OK);
+        return new ResponseEntity(fileService.fileUpload(file), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api", security = { @SecurityRequirement(name = "bearerAuth") })
-    @PostMapping(path = "multiple") // 다중 파일 업로드
+    @PostMapping(path = "multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // 다중 파일 업로드
     public ResponseEntity<?> multipleFilesUpload(@RequestPart List<MultipartFile> files) throws Exception {
 
-        List<String> fileNames = fileService.multipleFilesUpload(files);
-
-        return new ResponseEntity(fileNames, HttpStatus.OK);
+        return new ResponseEntity(fileService.multipleFilesUpload(files), HttpStatus.OK);
     }
 
 }

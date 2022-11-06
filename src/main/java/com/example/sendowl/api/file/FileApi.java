@@ -10,7 +10,7 @@ public class FileApi {
         Date date = new Date();
         String str = sdf.format(date);
 
-        String filePath = "C:\\Temp\\upload\\" + str.replace("-", "\\");
+        String filePath = "./upload/" + str.replace("-", "/");
 
         return filePath;
     }

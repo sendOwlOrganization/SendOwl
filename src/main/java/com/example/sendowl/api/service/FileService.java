@@ -29,8 +29,9 @@ public class FileService {
                     file.getOriginalFilename(),
                     file.getContentType());
 
-            File newFileName = new File(filePath,dto.getUuid() + "_" +dto.getFileName());
-            file.transferTo(newFileName);
+            File newFileName = new File(fileDir.getAbsolutePath()
+                    ,dto.getUuid() + "_" +dto.getFileName());
+            file.transferTo(newFileName); // 인자로 주는 파일에 데이터를 옮긴다.
 
             return dto.getFileName();
         } else {
@@ -56,7 +57,7 @@ public class FileService {
                         file.getOriginalFilename(),
                         file.getContentType());
 
-                File newFileName = new File(filePath,dto.getUuid() + "_" +dto.getFileName());
+                File newFileName = new File(fileDir.getAbsolutePath(),dto.getUuid() + "_" +dto.getFileName());
                 file.transferTo(newFileName);
 
                 fileNames.add(file.getOriginalFilename());
