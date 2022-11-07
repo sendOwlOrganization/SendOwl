@@ -12,8 +12,6 @@ public class UserDto {
     @Data
     public static class UserRes {
         private Long id;
-        private String email;
-        private String name;
         private String nickName;
         private String mbti;
         private String introduction;
@@ -21,8 +19,6 @@ public class UserDto {
 
         public UserRes(User entity) {
             this.id = entity.getId();
-            this.email = entity.getEmail();
-            this.name = entity.getName();
             this.nickName = entity.getNickName();
             this.mbti = entity.getMbti();
             this.introduction = entity.getIntroduction();
