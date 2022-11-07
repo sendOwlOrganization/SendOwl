@@ -9,29 +9,27 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommentDto {
 
     @Getter
     public static class CommentRes {
         private Long id;
-        private Long boardId;
         private UserDto.UserPublicRes user;
-        private Long parent; // 이게 프론트 입장에서 필요한지 잘 모르겠음...child는 있으면 좋을듯
+        private List<CommentRes> children;
         private String content;
         private LocalDateTime regDate;
         private LocalDateTime modDate;
-        private Long depth;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
-            this.boardId = entity.getBoard().getId();
             this.user = new UserDto.UserPublicRes(entity.getUser());
-            this.parent = entity.getParent()!=null?entity.getParent().getId():null;
+            this.children = entity.getChildren().stream().map(CommentRes::new).collect(Collectors.toList());
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
-            this.depth = entity.getDepth();
         }
     }
 
