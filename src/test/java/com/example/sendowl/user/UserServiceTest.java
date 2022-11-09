@@ -25,10 +25,13 @@ public class UserServiceTest {
 
     @Mock // userService에서 해당 객체를 사용하기 때문에 주입하기 위해 Mock로 선언
     private UserRepository userRepository;
+    private String mbti = "estj";
+    private String nickName = "testNickName";
+    private Integer age = 20;
 
     @Test
     void setUserTest() {
-        UserDto.ProfileReq req = new UserDto.ProfileReq("entp");
+        UserDto.ProfileReq req = new UserDto.ProfileReq(mbti, nickName, age);
         User user = new User();
 
         // userRepository의 함수가 호출될때 어떤것을 반환할지 미리 선언해준다.
@@ -41,7 +44,7 @@ public class UserServiceTest {
                 new User());
 
         System.out.println(userRes.getNickName());
-        org.junit.jupiter.api.Assertions.assertEquals(userRes.getMbti(), "entp");
+        org.junit.jupiter.api.Assertions.assertEquals(userRes.getMbti(), mbti);
     }
 }
 
