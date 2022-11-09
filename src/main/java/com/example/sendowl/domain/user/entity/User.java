@@ -8,11 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -42,6 +39,7 @@ public class User extends BaseEntity {
     private String name;
 
     private String nickName;
+    private Integer age;
     private String mbti;
     private LocalDate birthday;
 
@@ -78,5 +76,8 @@ public class User extends BaseEntity {
 
     public void setMbti(String mbti) {
         this.mbti = mbti;
+    }
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

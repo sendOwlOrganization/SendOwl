@@ -12,15 +12,12 @@ import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.*;
 import com.example.sendowl.api.oauth.GoogleUser;
 import com.example.sendowl.api.oauth.Oauth2User;
-import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.kafka.producer.KafkaProducer;
 import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.protocol.types.Field;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,10 +26,6 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.*;
@@ -184,21 +177,10 @@ public class UserService {
     }
     @Transactional
     public UserRes setUserProfile(ProfileReq req, User user) {
-        try{
-            // mbti 형용사를 가져온다.
-            ClassPathResource resource = new ClassPathResource("mbti-feature.txt");
-            Path path = Paths.get(resource.getURI());
-            List<String> content = Files.readAllLines(path);
-
-            int random = (int)(Math.random() * content.size());
-            String mbtiNickName = content.get(random) + " "+req.getMbti();
-
-            User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
-            savedUser.setMbti(req.getMbti());
-            savedUser.setNickName(mbtiNickName);
-            return new UserRes(savedUser);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        User savedUser = userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get();
+        savedUser.setMbti(req.getMbti());
+        savedUser.setNickName(req.getNickName());
+        savedUser.setAge(req.getAge());
+        return new UserRes(savedUser);
     }
 }

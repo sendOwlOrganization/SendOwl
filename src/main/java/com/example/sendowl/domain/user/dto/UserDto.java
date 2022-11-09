@@ -151,11 +151,10 @@ public class UserDto {
     }
     @Getter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class ProfileReq {
         private String mbti;
-        public ProfileReq(String mbti) {
-            this.mbti = mbti;
-        }
+        private String nickName;
+        private Integer age;
     }
-
 }
