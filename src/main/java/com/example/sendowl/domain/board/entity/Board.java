@@ -2,6 +2,7 @@ package com.example.sendowl.domain.board.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
 
