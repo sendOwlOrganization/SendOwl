@@ -35,4 +35,5 @@ public abstract class BaseEntity {
     public void delete() {
         this.isDeleted = true;
     }
+    public Boolean isDeleted(){return this.isDeleted;}
 }
