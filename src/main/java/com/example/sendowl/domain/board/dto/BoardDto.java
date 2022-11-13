@@ -2,6 +2,7 @@ package com.example.sendowl.domain.board.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,6 +81,7 @@ public class BoardDto {
         private UserPublicRes user;
         private LocalDateTime regDate;
         private Integer hit;
+        private Long likeCount;
 
         public DetailRes(Board entity, Integer redisHit) {
             this.id = entity.getId();
@@ -96,6 +98,10 @@ public class BoardDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
+            this.likeCount = entity.getBoardLikeList()
+                    .stream()
+                    .filter(boardLike -> boardLike.isDeleted().equals(false))
+                    .count();
         }
 
     }
@@ -108,6 +114,7 @@ public class BoardDto {
         private String nickname;
         private LocalDateTime regDate;
         private Integer hit;
+        private Long likeCount;
 
         public ListRes(Board entity) {
             this.id = entity.getId();
@@ -129,6 +136,10 @@ public class BoardDto {
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
+            this.likeCount = entity.getBoardLikeList()
+                    .stream()
+                    .filter(boardLike -> boardLike.isDeleted().equals(false))
+                    .count();
         }
 
     }
