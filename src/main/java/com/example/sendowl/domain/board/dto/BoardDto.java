@@ -2,25 +2,18 @@ package com.example.sendowl.domain.board.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,7 +74,8 @@ public class BoardDto {
         private UserPublicRes user;
         private LocalDateTime regDate;
         private Integer hit;
-        private Long likeCount;
+        private Long boardLikeCount;
+
 
         public DetailRes(Board entity, Integer redisHit) {
             this.id = entity.getId();
@@ -98,10 +92,7 @@ public class BoardDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
-            this.likeCount = entity.getBoardLikeList()
-                    .stream()
-                    .filter(boardLike -> boardLike.isDeleted().equals(false))
-                    .count();
+            this.boardLikeCount = entity.getBoardLikeCount();
         }
 
     }
@@ -114,7 +105,7 @@ public class BoardDto {
         private String nickname;
         private LocalDateTime regDate;
         private Integer hit;
-        private Long likeCount;
+        private Long boardLikeCount;
 
         public ListRes(Board entity) {
             this.id = entity.getId();
@@ -136,12 +127,8 @@ public class BoardDto {
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
-            this.likeCount = entity.getBoardLikeList()
-                    .stream()
-                    .filter(boardLike -> boardLike.isDeleted().equals(false))
-                    .count();
+            this.boardLikeCount = entity.getBoardLikeCount();
         }
-
     }
 
     @Getter
@@ -167,6 +154,7 @@ public class BoardDto {
         private UserPublicRes user;
         private LocalDateTime regDate;
         private Integer hit;
+        private Long boardLikeCount;
 
         public UpdateBoardRes(Board entity) {
             this.id = entity.getId();
@@ -175,6 +163,7 @@ public class BoardDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
+            this.boardLikeCount = entity.getBoardLikeCount();
         }
     }
 
@@ -197,6 +186,4 @@ public class BoardDto {
         private String text;
         private String[] items;
     }
-
-
 }

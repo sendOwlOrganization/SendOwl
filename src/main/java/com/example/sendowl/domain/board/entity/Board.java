@@ -5,6 +5,7 @@ import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class Board extends BaseEntity {
     @Column(columnDefinition = "integer default 0")
     private Integer hit;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<BoardLike> boardLikeList = new ArrayList<>();
+    @Formula("(select count(*) from board_like bl where bl.board_id = board_id)")
+    private Long boardLikeCount;
 
     @Builder
     public Board(User user, String title, String content, String refinedContent, Category category, Integer hit) {
