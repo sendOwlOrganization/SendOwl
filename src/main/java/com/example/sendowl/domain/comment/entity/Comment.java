@@ -4,6 +4,7 @@ import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class Comment extends BaseEntity {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CommentLike> commentLikeList = new ArrayList<>();
+    @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id)")
+    private Long commentLikeCount;
 
     @Builder
     public Comment(Board board, User user, String content, Comment parent, Long depth) {
