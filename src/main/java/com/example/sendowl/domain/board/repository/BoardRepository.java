@@ -22,7 +22,12 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
             countQuery = "SELECT COUNT(b) FROM Board b")
     Page<Board> findAllFetchJoin(Pageable pageable);
     @Query(value = "SELECT b FROM Board b join fetch b.user where b.isDeleted=false ",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.isDeleted=false")
+            countQuery = "SELECT COUNT(b) FROM Board b where b.isDeleted=false"
+    )
+//    @Query(value = "SELECT * FROM board b join user u on b.user_id=u.user_id where b.is_deleted='N'",
+//            countQuery = "SELECT count(*) FROM board b join user u on b.user_id=u.user_id where b.is_deleted='N'",
+//            nativeQuery = true
+//    )
     Page<Board> findBoardFetchJoin(Pageable pageable);
 
     @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId",

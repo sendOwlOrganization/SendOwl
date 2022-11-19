@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum BoardErrorCode implements BaseErrorCodeIF {
 
-    NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "등록되지 않은 게시글입니다."),
+    NOT_FOUND(HttpStatus.NOT_FOUND, "등록되지 않은 게시글입니다."),
     ;
     private final HttpStatus errorStatus;
     private final String errorMessage;
