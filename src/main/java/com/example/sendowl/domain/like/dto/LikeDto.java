@@ -1,7 +1,9 @@
 package com.example.sendowl.domain.like.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
+import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.like.entity.BoardLike;
+import com.example.sendowl.domain.like.entity.CommentLike;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,4 +41,38 @@ public class LikeDto {
     static public class BoardUnLikeRequest {
         private Long boardId;
     }
+
+    @Getter
+    @NoArgsConstructor
+    static public class CommentLikeRequest {
+        private Long commentId;
+
+        public CommentLike toEntity(User user, Comment comment) {
+            return CommentLike.builder()
+                    .comment(comment)
+                    .user(user)
+                    .build();
+        }
+
+        public CommentLikeRequest(Long commentId) {
+            this.commentId = commentId;
+        }
+    }
+
+    @Getter
+    static public class CommentLikeResponse {
+        private Long id;
+        private Long userId;
+        private Long commentId;
+        public CommentLikeResponse(CommentLike commentLike) {
+            this.id = commentLike.getId();
+            this.userId = commentLike.getUser().getId();
+            this.commentId = commentLike.getComment().getId();
+        }
+    }
+    @Getter
+    static public class CommentUnLikeRequest {
+        private Long commentId;
+    }
+
 }

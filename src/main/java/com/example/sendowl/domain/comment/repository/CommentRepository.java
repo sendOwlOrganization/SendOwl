@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.board JOIN FETCH c.user WHERE c.board=:board")
+    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0")
     Optional<List<Comment>> findAllByBoard(Board board);
 
     Long countByParentIdAndIsDeleted(Long commentId, boolean True);

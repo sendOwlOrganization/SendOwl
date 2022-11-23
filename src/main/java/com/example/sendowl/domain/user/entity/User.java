@@ -2,12 +2,12 @@ package com.example.sendowl.domain.user.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.comment.entity.CommentLike;
 import com.example.sendowl.domain.like.entity.BoardLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -58,9 +58,6 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BoardLike> boardLikeList;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<CommentLike> commentLikeList;
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
