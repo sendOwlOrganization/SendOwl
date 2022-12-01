@@ -10,13 +10,14 @@ import java.util.Map;
 public class CallRestApiTest {
 
     @Test
-    void GetRestApiForTest(){
+    void GetRestApiForTest() {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity("https://httpbin.org/get", String.class);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
     @Test
-    void GetRestApiWithHeaderWillFail(){
+    void GetRestApiWithHeaderWillFail() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("wrong-data");
 
@@ -24,29 +25,28 @@ public class CallRestApiTest {
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange("https://www.googleapis.com/oauth2/v3/userinfo", HttpMethod.GET, entity, String.class);
-        System.out.println(response);
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
     @Test
-    void GetRestApiWithHeader(){
+    void GetRestApiWithHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("test");
         HttpEntity entity = new HttpEntity("", headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange("https://www.googleapis.com/oauth2/v3/userinfo", HttpMethod.GET, entity, String.class);
-        System.out.println(response.getBody());
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
     @Test
-    void GetRestApiWithHeaderByMap(){
+    void GetRestApiWithHeaderByMap() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("test");
         HttpEntity entity = new HttpEntity("", headers);
 
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<Map> response = restTemplate.exchange("https://www.googleapis.com/oauth2/v3/userinfo", HttpMethod.GET, entity, Map.class);
-        System.out.println(response.getBody());
         Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

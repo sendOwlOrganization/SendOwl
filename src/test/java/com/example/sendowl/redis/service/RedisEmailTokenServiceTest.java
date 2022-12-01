@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class RedisEmailTokenServiceTest {
@@ -36,9 +36,6 @@ class RedisEmailTokenServiceTest {
         String redisEmailToken = optional.get();
         assertEquals(redisEmailToken, token);
 
-        System.out.println("----------------------- sout");
-        System.out.println(redisEmailToken);
-
     }
 
     @Test
@@ -52,12 +49,9 @@ class RedisEmailTokenServiceTest {
         }
 
         Set<String> allKeys = redisEmailTokenService.getAllKeys();
-        System.out.println(allKeys);
 
         // then
         Map<String, String> all = redisEmailTokenService.getAll();
-        System.out.println("testGetAll");
-        System.out.println(all);
     }
 
     @Test
@@ -70,13 +64,11 @@ class RedisEmailTokenServiceTest {
 
         Optional<String> optional = redisEmailTokenService.getToken(email);
         String redisEmailToken = optional.get();
-        System.out.println("redisEmailToken=" + redisEmailToken);
 
         this.redisEmailTokenService.save(email, token + "2");
 
         Optional<String> optional2 = this.redisEmailTokenService.getToken(email);
         String redisEmailToken2 = optional2.get();
-        System.out.println("redisEmailToken2=" + redisEmailToken2);
     }
 
 }
