@@ -4,14 +4,11 @@ import com.example.sendowl.api.service.UserService;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -43,7 +40,6 @@ public class UserServiceTest {
                 req,
                 new User());
 
-        System.out.println(userRes.getNickName());
         org.junit.jupiter.api.Assertions.assertEquals(userRes.getMbti(), mbti);
     }
 }

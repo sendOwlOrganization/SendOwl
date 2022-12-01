@@ -13,10 +13,6 @@ public class RedisMessageSubscriber implements MessageListener {
         String body = new String(message.getBody(), StandardCharsets.UTF_8);
         String event = channel.split(":")[1];
         if (event.equals(RedisEnum.EXPIRE)) {
-            System.out.println(channel);
-            System.out.println(body);
-            System.out.println(event);
-
             String[] bodyData = body.split(":");
             String prefix = bodyData[0];
             String key = bodyData[1];

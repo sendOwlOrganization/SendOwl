@@ -2,7 +2,6 @@ package com.example.sendowl.user;
 
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,6 @@ public class UserControllerTest {
         // 단언
         actions.andExpect(result -> {
             MockHttpServletResponse response = result.getResponse();
-            System.out.println(response.getContentAsString());
             assertEquals("3", response.getContentAsString());
         });
     }
