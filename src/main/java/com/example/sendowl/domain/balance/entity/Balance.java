@@ -14,21 +14,9 @@ import javax.persistence.*;
 public class Balance extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "balance_id", nullable = false)
     private Long id;
-    private String title;
+    private String balanceTitle;
     private String firstDetail;
     private String secondDetail;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }

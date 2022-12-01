@@ -10,16 +10,16 @@ public class BalanceDto {
 
     @Getter
     public static class BalanceRes {
-        private Long id;
-        private String title;
+        private Long balanceId;
+        private String balanceTitle;
         private String firstDetail;
         private String secondDetail;
         private Long firstCount;
         private Long secondCount;
 
         public BalanceRes(BalanceCount balance) {
-            this.id = balance.getId();
-            this.title = balance.getTitle();
+            this.balanceId = balance.getId();
+            this.balanceTitle = balance.getTitle();
             this.firstDetail = balance.getFirstDetail();
             this.secondDetail = balance.getSecondDetail();
             this.firstCount = balance.getFirstCount();
@@ -38,13 +38,13 @@ public class BalanceDto {
 
     @Getter
     public static class InsertBalanceReq {
-        private String title;
+        private String balanceTitle;
         private String firstDetail;
         private String secondDetail;
 
         public Balance toEntity() {
             return Balance.builder()
-                    .title(this.title)
+                    .balanceTitle(this.balanceTitle)
                     .firstDetail(this.firstDetail)
                     .secondDetail(this.secondDetail)
                     .build();
@@ -53,8 +53,8 @@ public class BalanceDto {
 
     @Getter
     public static class UpdateBalanceReq {
-        private Long id;
-        private String title;
+        private Long balanceId;
+        private String balanceTitle;
         private String firstDetail;
         private String secondDetail;
     }

@@ -4,18 +4,20 @@ import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class BalanceCheck extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "balance_check_id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
