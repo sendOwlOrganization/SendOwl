@@ -23,8 +23,6 @@ public class BalanceRepositoryTest {
     public void GetAllBalanceCountTest() {
         List<BalanceCount> balanceCounts = balanceRepository.getAllBalanceCount(PageRequest.of(0, 10));
 
-        balanceCounts.forEach(balanceCount ->
-                System.out.println(balanceCount.getId() + " / " + balanceCount.getTitle() + "/" + balanceCount.getACount() + " / " + balanceCount.getBCount()));
     }
 
     @Test
