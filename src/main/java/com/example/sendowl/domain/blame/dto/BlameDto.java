@@ -1,54 +1,45 @@
 package com.example.sendowl.domain.blame.dto;
 
-import com.example.sendowl.domain.blame.entity.Blame;
+import com.example.sendowl.domain.blame.entity.BlameContentType;
+import com.example.sendowl.domain.blame.entity.BlameType;
 import lombok.Getter;
 
 public class BlameDto {
 
     @Getter
     public static class BlameReq {
-        private Long userId;
-        private Long blameType;
+        private Long blameTypeId;
         private String blameDetails;
         private Long targetUserId;
-        private Long contentType;
+        private BlameContentType blameContentType;
         private Long contentId;
         private String contentDetails;
-        public Blame toEntity(){
-            return Blame.builder()
-                    .userId(userId)
-                    .blameType(blameType)
-                    .blameDetails(blameDetails)
-                    .targetUserId(targetUserId)
-                    .contentsType(contentType)
-                    .contentsId(contentId)
-                    .contentsDetails(contentDetails).build();
-        }
     }
 
     @Getter
     public static class BlameTypeReq {
-        private String name;
+        private String blameTypeName;
 
-        public BlameType toEntity(){
-            return BlameType.builder().name(name).build();
+        public BlameType toEntity() {
+            return BlameType.builder().name(blameTypeName).build();
         }
 
     }
+
     @Getter
     public static class BlameTypeRes {
-        private Long id;
-        private String name;
+        private Long blameTypeId;
+        private String blameTypeName;
 
         public BlameTypeRes(BlameType entity) {
-            this.id = entity.getId();
-            this.name = entity.getName();
+            this.blameTypeId = entity.getId();
+            this.blameTypeName = entity.getName();
         }
     }
 
     @Getter
     public static class BlameTypeUpdateReq {
-        private Long id; //  바꿀 아이디
-        private String name;
+        private Long blameTypeId;
+        private String blameTypeName;
     }
 }
