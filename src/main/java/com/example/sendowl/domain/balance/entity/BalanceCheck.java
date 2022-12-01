@@ -27,9 +27,9 @@ public class BalanceCheck extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    private String pick;
+    private BalancePick pick;
 
-    public void setPick(String pick) {
+    public void setPick(BalancePick pick) {
         this.pick = pick;
     }
 }

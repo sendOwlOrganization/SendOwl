@@ -1,6 +1,7 @@
 package com.example.sendowl.domain.balance.dto;
 
 import com.example.sendowl.domain.balance.entity.Balance;
+import com.example.sendowl.domain.balance.entity.BalancePick;
 import lombok.Getter;
 
 import java.util.List;
@@ -62,6 +63,6 @@ public class BalanceDto {
     @Getter
     public static class VoteBalanceReq {
         private Long balanceId;
-        private String pick;
+        private BalancePick pick;
     }
 }
