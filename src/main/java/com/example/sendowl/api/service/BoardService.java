@@ -28,7 +28,6 @@ import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BoardService {
 
     private final BoardRepository boardRepository;
