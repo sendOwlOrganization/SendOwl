@@ -20,7 +20,7 @@ import java.util.Date;
 @RequiredArgsConstructor // final , notNull 필드에 생성자 자동생성
 @Component
 public class JwtProvider {
-    private final Long accessTokenValidMillisecond = 10 * 60 * 1000L; // access 토큰 만료 시간
+    private final Long accessTokenValidMillisecond = 1000L * 60 * 60; // access 토큰 만료 시간
     private final Long refreshTokenValidMillisecond = 24 * 60 * 60 * 60 * 1000L; // refresh 토큰 만료 시간
     private final PrincipalDetailsService principalDetailsService;
     // @Value("${secretKey}") 일단 임시로
