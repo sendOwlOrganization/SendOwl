@@ -15,13 +15,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileService {
 
-    public String fileUpload(MultipartFile file) throws Exception{
-        if(!file.isEmpty()){
+    public String fileUpload(MultipartFile file) throws Exception {
+        if (!file.isEmpty()) {
             // 경로 지정, (없을 시 폴더 생성)
             FileApi fa = new FileApi();
             String filePath = fa.makeFileFolder();
             File fileDir = new File(filePath);
-            if(!fileDir.exists()){
+            if (!fileDir.exists()) {
                 fileDir.mkdirs();
             }
 
@@ -30,34 +30,34 @@ public class FileService {
                     file.getContentType());
 
             File newFileName = new File(fileDir.getAbsolutePath()
-                    ,dto.getUuid() + "_" +dto.getFileName());
+                    , dto.getUuid() + "_" + dto.getFileName());
             file.transferTo(newFileName); // 인자로 주는 파일에 데이터를 옮긴다.
 
-            return dto.getFileName();
+            return newFileName.getAbsolutePath();
         } else {
             return null;
         }
     }
 
-    public List<String> multipleFilesUpload(List<MultipartFile> files) throws Exception{
+    public List<String> multipleFilesUpload(List<MultipartFile> files) throws Exception {
         List<String> fileNames = new ArrayList<String>();
 
         // 경로 지정, (없을 시 폴더 생성)
         FileApi fa = new FileApi();
         String filePath = fa.makeFileFolder();
         File fileDir = new File(filePath);
-        if(!fileDir.exists()){
+        if (!fileDir.exists()) {
             fileDir.mkdirs();
         }
 
-        for(MultipartFile file : files){
-            if(!file.isEmpty()){
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
 
                 FileDto.FileRes dto = new FileDto.FileRes(UUID.randomUUID().toString(),
                         file.getOriginalFilename(),
                         file.getContentType());
 
-                File newFileName = new File(fileDir.getAbsolutePath(),dto.getUuid() + "_" +dto.getFileName());
+                File newFileName = new File(fileDir.getAbsolutePath(), dto.getUuid() + "_" + dto.getFileName());
                 file.transferTo(newFileName);
 
                 fileNames.add(file.getOriginalFilename());
