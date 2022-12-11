@@ -3,10 +3,14 @@ package com.example.sendowl.api.service;
 import com.example.sendowl.api.file.FileApi;
 import com.example.sendowl.domain.file.dto.FileDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -67,5 +71,12 @@ public class FileService {
         }
 
         return fileNames;
+    }
+
+    public byte[] getImage(String path) throws IOException {
+        // path 에 대한 valide 확인
+
+        InputStream in = new FileInputStream("/service/data/" + path);
+        return IOUtils.toByteArray(in);
     }
 }
