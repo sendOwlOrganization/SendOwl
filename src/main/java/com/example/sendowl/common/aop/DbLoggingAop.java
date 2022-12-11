@@ -1,6 +1,6 @@
 package com.example.sendowl.common.aop;
 
-import com.example.sendowl.api.service.LoggingBoardKeywordService;
+import com.example.sendowl.api.service.BoardLogsService;
 import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 public class DbLoggingAop {
 
 
-    private final LoggingBoardKeywordService loggingBoardKeywordService;
+    private final BoardLogsService boardLogsService;
 
     // 게시물 상세조회시
     @Around("execution(* com.example.sendowl.api.service.BoardService.getBoardList(..))")
@@ -35,7 +35,7 @@ public class DbLoggingAop {
             User user = principal.getUser();
 
             // call service
-            loggingBoardKeywordService.insertBoardKeywordLog(Long.parseLong(request.getParameter("categoryId")), "keyword", user.getMbti());
+            boardLogsService.insertBoardKeywordLog(Long.parseLong(request.getParameter("categoryId")), user.getMbti());
 //            System.out.println("This is Aop");
             return joinPoint.proceed();
 

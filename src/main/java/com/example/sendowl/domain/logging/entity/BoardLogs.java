@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Table(name="log_board_keyword")
-public class BoardKeyword extends BaseEntity {
+public class BoardLogs extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,13 +21,9 @@ public class BoardKeyword extends BaseEntity {
 
     private String mbti;
 
-    private String keyword;
-
     @Builder
-    public BoardKeyword(Long categoryId, String keyword, String mbti){
+    public BoardLogs(Long categoryId, String mbti) {
         this.categoryId = categoryId;
-        this.keyword = keyword;
-        this.mbti = mbti;
+        this.mbti=mbti;
     }
-
 }
