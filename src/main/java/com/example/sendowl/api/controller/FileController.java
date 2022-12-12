@@ -39,9 +39,10 @@ public class FileController {
         return new ResponseEntity(fileService.multipleFilesUpload(files), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "파일 받기", description = "get file", security = {@SecurityRequirement(name = "bearerAuth")})
-    @GetMapping("/service/data/{path}")
+    @GetMapping(path = "/service/data/{path}",
+            produces = {"image/bmp", "image/gif", "image/jpeg", "image/png",
+                    "image/svg+xml", "image/tiff", "image/webp"})
     public @ResponseBody byte[] getImageWithMediaType(@RequestParam("path") String path) throws IOException, IOException {
         return fileService.getImage(path);
     }

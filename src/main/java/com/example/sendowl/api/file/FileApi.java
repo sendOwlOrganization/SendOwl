@@ -12,9 +12,9 @@ public class FileApi {
 
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
-            return "/service/data/" + str.replace("-", "/");
+            return "C://service/data/" + str.replace("-", "/");
         } else if (os.contains("mac")) {
-            return "/service/data/" + str.replace("-", "/");
+            return "/Users/guccin/service/data/" + str.replace("-", "/");
         } else { // linux
             return "/service/data/" + str.replace("-", "/");
         }

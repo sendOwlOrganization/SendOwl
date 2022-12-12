@@ -3,7 +3,6 @@ package com.example.sendowl.api.service;
 import com.example.sendowl.api.file.FileApi;
 import com.example.sendowl.domain.file.dto.FileDto;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,7 +75,26 @@ public class FileService {
     public byte[] getImage(String path) throws IOException {
         // path 에 대한 valide 확인
 
-        InputStream in = new FileInputStream("/service/data/" + path);
-        return IOUtils.toByteArray(in);
+        String os = System.getProperty("os.name").toLowerCase();
+        String target = "";
+        if (os.contains("win")) {
+            target = "C://service/data/";
+        } else if (os.contains("mac")) {
+            target = "/Users/guccin/service/data/";
+        } else { // linux
+            target = "C://service/data/";
+        }
+
+        byte[] data = new byte[0];
+        String inputFile = target + path;
+        try {
+            InputStream inputStream = new FileInputStream(inputFile);
+            long fileSize = new File(inputFile).length();
+            data = new byte[(int) fileSize];
+            inputStream.read(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 }
