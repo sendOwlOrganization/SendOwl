@@ -25,7 +25,7 @@ public class BalanceOption extends BaseEntity {
 
     private String optionTitle;
 
-    private Long hit = 0L;
+    private Long hit;
 
     public void addHit() {
         this.hit += 1;
