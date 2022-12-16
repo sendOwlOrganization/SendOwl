@@ -27,13 +27,6 @@ public class BalanceController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "[admin] 밸런스게임 수정", description = "밸런스 게임을 수정한다.", security = {@SecurityRequirement(name = "bearerAuth")})
-    @PutMapping
-    public ResponseEntity<?> updateBalance(final @Valid @RequestBody BalanceDto.UpdateBalanceReq rq) {
-        return new ResponseEntity<>(balanceService.updateBalance(rq), HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "[admin] 밸런스게임 삭제", description = "밸런스 게임을 소프트 삭제한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping("/{id}")
     public ResponseEntity<?> updateBalance(final @PathVariable Long id) {
@@ -59,5 +52,13 @@ public class BalanceController {
     @PostMapping("/vote")  // 밸런스 게임 등록
     public ResponseEntity<?> voteBalanceGame(final @Valid @RequestBody BalanceDto.VoteBalanceReq rq) {
         return new ResponseEntity<>(balanceService.voteBalanceGame(rq), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @Operation(summary = "사용자 밸런스 게임 참여 여부 조회", description = "특정 밸런스 게임에 대해 특정 사용자가 어디에 참여했는지 확인한다.",
+            security = {@SecurityRequirement(name = "bearerAuth")})
+    @GetMapping("/vote/{balanceId}")
+    public ResponseEntity<?> getWhereUserVote(final @RequestParam Long balanceId) {
+        return new ResponseEntity<>(balanceService.getWhereUserVote(balanceId), HttpStatus.OK);
     }
 }

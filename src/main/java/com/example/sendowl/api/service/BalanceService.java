@@ -1,13 +1,14 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.balance.dto.BalanceCount;
 import com.example.sendowl.domain.balance.dto.BalanceDto;
 import com.example.sendowl.domain.balance.entity.Balance;
-import com.example.sendowl.domain.balance.entity.BalanceCheck;
+import com.example.sendowl.domain.balance.entity.BalanceOption;
+import com.example.sendowl.domain.balance.entity.BalanceSelect;
 import com.example.sendowl.domain.balance.exception.BalanceNotFoundException;
 import com.example.sendowl.domain.balance.exception.enums.BalanceErrorCode;
-import com.example.sendowl.domain.balance.repository.BalanceCheckRepository;
+import com.example.sendowl.domain.balance.repository.BalanceOptionRepository;
 import com.example.sendowl.domain.balance.repository.BalanceRepository;
+import com.example.sendowl.domain.balance.repository.BalanceSelectRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
@@ -24,21 +25,27 @@ import java.util.Optional;
 public class BalanceService {
 
     private final BalanceRepository balanceRepository;
-    private final BalanceCheckRepository balanceCheckRepository;
+    private final BalanceOptionRepository balanceOptionRepository;
+    private final BalanceSelectRepository balanceSelectRepository;
+
     private final JwtUserParser jwtUserParser;
 
     @Transactional
     public Long insertBalance(BalanceDto.InsertBalanceReq rq) {
-        return balanceRepository.save(rq.toEntity()).getId();
-    }
 
-    @Transactional
-    public Long updateBalance(BalanceDto.UpdateBalanceReq rq) {
-        // 존재하는지 확인
-        Balance balance = balanceRepository.findById(rq.getBalanceId()).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
-        balance.setBalanceTitle(rq.getBalanceTitle());
-        balance.setFirstDetail(rq.getFirstDetail());
-        balance.setSecondDetail(rq.getSecondDetail());
+        Balance balance = balanceRepository.save(Balance.builder()
+                .balanceTitle(rq.getBalanceTitle())
+                .build());
+
+        List<BalanceDto.InsertBalanceOptionReq> optionReqs = rq.getInsertBalanceOptionReqs();
+        for (BalanceDto.InsertBalanceOptionReq req : optionReqs) {
+            balanceOptionRepository.save(
+                    BalanceOption.builder()
+                            .balance(balance)
+                            .optionTitle(req.getTitle())
+                            .hit(0L).build());
+        }
+
         return balance.getId();
     }
 
@@ -49,14 +56,14 @@ public class BalanceService {
         return balance.getId();
     }
 
-    public BalanceDto.GetAllBalanceRes getAllBalances() {
-        List<BalanceCount> balances = balanceRepository.getAllBalanceCount(PageRequest.of(0, 10));
-        return new BalanceDto.GetAllBalanceRes(balances);
+    public BalanceDto.BalanceRes getBalances(Long balanceId) {
+        Balance balance = balanceRepository.findByIdWIthFetchJoin(balanceId).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
+        return new BalanceDto.BalanceRes(balance);
     }
 
-    public BalanceDto.BalanceRes getBalances(Long balanceId) {
-        BalanceCount balanceCount = balanceRepository.getBalanceCount(balanceId).orElseThrow(() -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND));
-        return new BalanceDto.BalanceRes(balanceCount);
+    public BalanceDto.GetAllBalanceRes getAllBalances() {
+        List<Balance> balances = balanceRepository.findAllByWithFetchJoin(PageRequest.of(0, 10));
+        return new BalanceDto.GetAllBalanceRes(balances);
     }
 
 
@@ -69,22 +76,47 @@ public class BalanceService {
                 () -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND)
         );
 
-        // 해당 유저가 밸런스 게임이 참여 했는지 확인
-        Optional<BalanceCheck> balanceCheck = balanceCheckRepository.findByBalanceAndUser(balance, user);
+        // 해당 유저가 밸런스 게임에 참여 했는지 확인
+        Optional<BalanceSelect> balanceSelectOptional = balanceSelectRepository.findByBalanceAndUser(balance, user);
 
-        // 해당 밸런스 게임에 첫 참여인 경우
-        if (balanceCheck.isEmpty()) {
-            return balanceCheckRepository.save(
-                    BalanceCheck
+        BalanceOption balanceOption = balanceOptionRepository.findById(rq.getBalanceOptionId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 밸런스 선택지 아이디입니다."));
+
+        if (balanceSelectOptional.isEmpty()) {// 해당 밸런스 게임에 첫 참여인 경우
+            balanceOption.addHit();
+            return balanceSelectRepository.save(
+                    BalanceSelect
                             .builder()
                             .balance(balance)
+                            .balanceOption(balanceOption)
                             .user(user)
-                            .pick(rq.getPick())
                             .build()).getId();
         } else {// 해당 밸런스 게임에 이미 참여한 적이 있는 경우
-            BalanceCheck savedBalanceCheck = balanceCheck.get();
-            savedBalanceCheck.setPick(rq.getPick()); // 유저가 선택한 데이터로 갱신
-            return savedBalanceCheck.getId();
+            BalanceSelect balanceSelect = balanceSelectOptional.get();
+
+            balanceSelect.getBalanceOption().subHit(); // 기존 선택지의 값을 줄임
+            balanceOption.addHit();
+            balanceSelect.setBalanceOption(balanceOption);
+
+            return balance.getId();
         }
+    }
+
+    public BalanceDto.BalanceOptionRes getWhereUserVote(Long balanceId) {
+        User user = jwtUserParser.getUser();
+
+        Balance balance = balanceRepository.findById(balanceId).orElseThrow(
+                () -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND)
+        );
+
+        BalanceSelect balanceSelect = balanceSelectRepository.findByBalanceAndUser(balance, user).orElseThrow(
+                () -> new BalanceNotFoundException(BalanceErrorCode.NOTFOUND)
+        );
+
+        BalanceOption balanceOption = balanceSelect.getBalanceOption();
+        return new BalanceDto.BalanceOptionRes(
+                balanceOption.getId(),
+                balanceOption.getOptionTitle(),
+                balanceOption.getHit());
     }
 }

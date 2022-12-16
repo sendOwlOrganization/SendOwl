@@ -1,6 +1,6 @@
 package com.example.sendowl.repository;
 
-import com.example.sendowl.domain.balance.dto.BalanceCount;
+import com.example.sendowl.domain.balance.entity.Balance;
 import com.example.sendowl.domain.balance.repository.BalanceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,12 @@ public class BalanceRepositoryTest {
     private BalanceRepository balanceRepository;
 
     @Test
-    public void GetAllBalanceCountTest() {
-        List<BalanceCount> balanceCounts = balanceRepository.getAllBalanceCount(PageRequest.of(0, 10));
-
+    public void when_밸런스를_요청하면_then_밸런스를_반환한다() {
+        Optional<Balance> byIdWIthFetchJoin = balanceRepository.findByIdWIthFetchJoin(1L);
     }
 
     @Test
-    public void GetDetailBalanceCountTest() {
-        Optional<BalanceCount> balanceCount = balanceRepository.getBalanceCount(1L);
-        balanceCount.get().toString();
+    public void when_모든_밸런스를_요청하면_then_모든밸런스를_반환한다() {
+        List<Balance> balanceCounts = balanceRepository.findAllByWithFetchJoin(PageRequest.of(0, 10));
     }
 }
