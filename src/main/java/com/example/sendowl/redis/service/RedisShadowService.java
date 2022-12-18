@@ -8,10 +8,10 @@ import java.util.concurrent.TimeUnit;
 
 public class RedisShadowService {
 
-    private RedisTemplate redisTemplate;
-    private ValueOperations<String, String> valueOperations;
-    private String prefixKey = RedisEnum.SHADOW + ":";// "shadow:"
-    private String value = "";
+    private final RedisTemplate redisTemplate;
+    private final ValueOperations<String, String> valueOperations;
+    private final String prefixKey = RedisEnum.SHADOW + ":";// "shadow:"
+    private final String value = "";
 
     public RedisShadowService(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
