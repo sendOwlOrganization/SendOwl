@@ -40,7 +40,6 @@ public class CategoryController {
     @PostMapping(path = "") // 카테고리 저장
     public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
         CategoriesRes categoriesRes = categoryService.insertCategory(rq);
-
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
@@ -49,7 +48,6 @@ public class CategoryController {
     @PutMapping(path = "") // 카테고리 변경
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
         CategoriesRes categoriesRes = categoryService.updateCategory(rq);
-
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
@@ -58,7 +56,6 @@ public class CategoryController {
     @DeleteMapping(path = "") // 카테고리 삭제
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
         categoryService.deleteCategory(rq);
-
         return new ResponseEntity(HttpStatus.OK);
     }
 }

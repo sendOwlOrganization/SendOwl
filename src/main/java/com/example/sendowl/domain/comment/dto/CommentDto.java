@@ -22,6 +22,7 @@ public class CommentDto {
         private String content;
         private LocalDateTime regDate;
         private LocalDateTime modDate;
+        private Long commentLikeCount;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
@@ -30,6 +31,7 @@ public class CommentDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
+            this.commentLikeCount = entity.getCommentLikeCount();
         }
     }
 

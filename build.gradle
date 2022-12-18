@@ -21,7 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.5'
 
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.5'
     implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.6'
     implementation 'org.springframework.boot:spring-boot-starter-security:2.6.6'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.6.6'
@@ -33,6 +33,9 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka:2.8.4'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.6.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.6'
+
+    // file
+    implementation 'commons-io:commons-io:2.11.0'
 
     // mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'

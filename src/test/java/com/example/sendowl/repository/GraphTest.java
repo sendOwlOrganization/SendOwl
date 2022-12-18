@@ -1,7 +1,7 @@
 package com.example.sendowl.repository;
 
-import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.dto.UserMbti;
+import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,16 @@ public class GraphTest {
 
     @Autowired
     UserRepository userRepository;
-    @Test
-    void test(){
-        List<User> all = userRepository.findAll();
-        for (User user: all
-             ) {
-            System.out.println(user.getId());
 
-        }
+    @Test
+    void test() {
+        List<User> all = userRepository.findAll();
     }
 
     @Test
-    void userMbtiGraph(){
+    void userMbtiGraph() {
         // given
         List<UserMbti> all = userRepository.findAllWithJPQL();
-
-        for (UserMbti g: all
-             ) {
-            System.out.println(g.getMbti()  + g.getCount());
-        }
 
         // when
 
