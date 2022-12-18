@@ -1,5 +1,6 @@
 package com.example.sendowl.domain.user.dto;
 
+import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class UserDto {
         private Long id;
         private String nickName;
         private String mbti;
+        private Gender gender;
         private String introduction;
         private String profileImage;
 
@@ -21,6 +23,7 @@ public class UserDto {
             this.id = entity.getId();
             this.nickName = entity.getNickName();
             this.mbti = entity.getMbti();
+            this.gender = entity.getGender();
             this.introduction = entity.getIntroduction();
             this.profileImage = entity.getProfileImage();
         }
@@ -128,6 +131,7 @@ public class UserDto {
         private String email;
         private String token;
     }
+
     @Getter
     @Builder
     public static class Oauth2Req {
@@ -139,16 +143,17 @@ public class UserDto {
 
     @Getter
     public static class Oauth2Res {
-        private Boolean alreadyJoined;
-        private Boolean alreadySetted;
-        private UserRes userRes;
+        private final Boolean alreadyJoined;
+        private final Boolean alreadySetted;
+        private final UserRes userRes;
 
-        public Oauth2Res(Boolean alreadyJoined,Boolean alreadySetted, User user) {
+        public Oauth2Res(Boolean alreadyJoined, Boolean alreadySetted, User user) {
             this.alreadyJoined = alreadyJoined;
             this.alreadySetted = alreadySetted;
             this.userRes = new UserRes(user);
         }
     }
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -156,5 +161,6 @@ public class UserDto {
         private String mbti;
         private String nickName;
         private Integer age;
+        private Gender gender;
     }
 }

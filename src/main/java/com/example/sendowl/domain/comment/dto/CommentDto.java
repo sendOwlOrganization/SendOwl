@@ -2,7 +2,6 @@ package com.example.sendowl.domain.comment.dto;
 
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.user.dto.UserDto;
-import com.example.sendowl.domain.user.repository.UserRepository;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -16,13 +15,13 @@ public class CommentDto {
 
     @Getter
     public static class CommentRes {
-        private Long id;
-        private UserDto.UserPublicRes user;
-        private List<CommentRes> children;
-        private String content;
-        private LocalDateTime regDate;
-        private LocalDateTime modDate;
-        private Long commentLikeCount;
+        private final Long id;
+        private final UserDto.UserPublicRes user;
+        private final List<CommentRes> children;
+        private final String content;
+        private final LocalDateTime regDate;
+        private final LocalDateTime modDate;
+        private final Long commentLikeCount;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();

@@ -23,13 +23,13 @@ public class BoardDto {
 
     @Getter
     public static class BoardsRes {
-        private List<ListRes> boards;
-        private Long totalElement;
-        private Integer totalPages;
-        private Pageable pageable;
+        private final List<ListRes> boards;
+        private final Long totalElement;
+        private final Integer totalPages;
+        private final Pageable pageable;
 
         public BoardsRes(Page<Board> pages, Integer textLength) {
-            this.boards = pages.get().map((page)-> new ListRes(page,textLength)).collect(Collectors.toList());
+            this.boards = pages.get().map((page) -> new ListRes(page, textLength)).collect(Collectors.toList());
             this.totalElement = pages.getTotalElements();
             this.totalPages = pages.getTotalPages();
             this.pageable = pages.getPageable();
@@ -50,7 +50,7 @@ public class BoardDto {
         public Board toEntity(User user, Category category, String refinedContent) {
             ObjectMapper objectMapper = new ObjectMapper();
             String value = "";
-            try{
+            try {
                 value = objectMapper.writeValueAsString(editorJsContent);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
@@ -68,12 +68,12 @@ public class BoardDto {
 
     @Getter
     public static class DetailRes {
-        private Long id;
-        private String title;
-        private String content;
-        private UserPublicRes user;
-        private LocalDateTime regDate;
-        private Integer hit;
+        private final Long id;
+        private final String title;
+        private final String content;
+        private final UserPublicRes user;
+        private final LocalDateTime regDate;
+        private final Integer hit;
         private Long boardLikeCount;
 
 
@@ -83,8 +83,9 @@ public class BoardDto {
             this.user = new UserPublicRes(entity.getUser());
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
-            this.hit = entity.getHit()+redisHit;
+            this.hit = entity.getHit() + redisHit;
         }
+
         public DetailRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
@@ -99,30 +100,31 @@ public class BoardDto {
 
     @Getter
     public static class ListRes {
-        private Long id;
-        private String title;
+        private final Long id;
+        private final String title;
+        private final String nickname;
+        private final LocalDateTime regDate;
+        private final Integer hit;
         private String content;
-        private String nickname;
-        private LocalDateTime regDate;
-        private Integer hit;
         private Long boardLikeCount;
 
         public ListRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.content = entity.getContent();
-            if(content.length() > 100) {
+            if (content.length() > 100) {
                 this.content = content.substring(0, 100);
             }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
         }
+
         public ListRes(Board entity, Integer textLength) {
             this.id = entity.getId();
             this.title = entity.getTitle();
             this.content = entity.getContent();
-            if(content.length() > textLength)
+            if (content.length() > textLength)
                 this.content = content.substring(0, textLength);
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
@@ -148,13 +150,13 @@ public class BoardDto {
 
     @Getter
     public static class UpdateBoardRes {
-        private Long id;
-        private String title;
-        private String content;
-        private UserPublicRes user;
-        private LocalDateTime regDate;
-        private Integer hit;
-        private Long boardLikeCount;
+        private final Long id;
+        private final String title;
+        private final String content;
+        private final UserPublicRes user;
+        private final LocalDateTime regDate;
+        private final Integer hit;
+        private final Long boardLikeCount;
 
         public UpdateBoardRes(Board entity) {
             this.id = entity.getId();

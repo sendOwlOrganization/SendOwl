@@ -2,9 +2,7 @@ package com.example.sendowl.repository;
 
 import com.example.sendowl.api.service.BoardService;
 import com.example.sendowl.api.service.CommentService;
-import com.example.sendowl.domain.board.dto.BoardDto;
 import com.example.sendowl.domain.comment.dto.CommentDto;
-import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -16,27 +14,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 
 @AutoConfigureMockMvc
 @SpringBootTest
 public class CommentRepositoryTest {
 
+    // 로그 관련
+    Logger log = LoggerFactory.getLogger(CommentRepositoryTest.class);
     @Autowired
     private CommentService commentService;
-
     @Autowired
     private CommentRepository commentRepository;
-
     @Autowired
     private BoardService boardService;
-
     @Autowired
     private MockMvc mockMvc;
-
-    // 로그 관련
-    Logger log = (Logger) LoggerFactory.getLogger(CommentRepositoryTest.class);
-
 
     @Test
     @Disabled
