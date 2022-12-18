@@ -7,19 +7,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(indexes = @Index(name="idx_user", columnList = "email"))
+@Table(indexes = @Index(name = "idx_user", columnList = "email"))
 public class User extends BaseEntity {
 
     @Id
@@ -40,12 +39,16 @@ public class User extends BaseEntity {
 
     private String nickName;
     private Integer age;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Gender gender = Gender.OTHER;
     private String mbti;
     private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Role role  = Role.USER;
+    private Role role = Role.USER;
     private String introduction;
     private String refreshToken;
     private String profileImage;
@@ -74,7 +77,12 @@ public class User extends BaseEntity {
     public void setMbti(String mbti) {
         this.mbti = mbti;
     }
+
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }
