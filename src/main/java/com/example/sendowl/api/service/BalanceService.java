@@ -98,7 +98,7 @@ public class BalanceService {
             balanceOption.addHit();
             balanceSelect.setBalanceOption(balanceOption);
 
-            return balance.getId();
+            return balanceSelect.getId();
         }
     }
 
