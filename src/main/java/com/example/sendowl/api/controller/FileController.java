@@ -43,7 +43,7 @@ public class FileController {
     @GetMapping(path = "/service/data/{path}",
             produces = {"image/bmp", "image/gif", "image/jpeg", "image/png",
                     "image/svg+xml", "image/tiff", "image/webp"})
-    public @ResponseBody byte[] getImageWithMediaType(@RequestParam("path") String path) throws IOException, IOException {
+    public @ResponseBody byte[] getImageWithMediaType(@RequestParam("path") String path) throws IOException {
         return fileService.getImage(path);
     }
 }

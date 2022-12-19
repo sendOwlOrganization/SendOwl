@@ -3,7 +3,9 @@ package com.example.sendowl.domain.comment.entity;
 import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.user.entity.User;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
 
@@ -14,35 +16,28 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-@Table(indexes = @Index(name="idx_comment", columnList = "board_id")) // 이미 foreign key라 index가 있지만 이름 변경
+@Table(indexes = @Index(name = "idx_comment", columnList = "board_id")) // 이미 foreign key라 index가 있지만 이름 변경
 public class Comment extends BaseEntity {
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", orphanRemoval = true)
+    @BatchSize(size = 100)
+    private final List<Comment> children = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
     @Column(nullable = false)
     private String content;
-
     private Long depth;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", orphanRemoval = true)
-    @BatchSize(size = 100)
-    private List<Comment> children = new ArrayList<>();
-
     @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id)")
     private Long commentLikeCount;
 

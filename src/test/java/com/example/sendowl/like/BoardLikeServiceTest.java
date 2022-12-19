@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardLikeServiceTest {
+    private final Long board_id = 1L;
     @InjectMocks
     private LikeService likeService;
     @Mock
@@ -31,7 +32,6 @@ public class BoardLikeServiceTest {
     private Board board;
     private User user;
     private BoardLike boardLike;
-    private Long board_id = 1L;
 
     @BeforeEach
     void setUp() {
@@ -50,12 +50,12 @@ public class BoardLikeServiceTest {
     }
 
     @Test
-    public void WhenBoradLikeIsExist_ThenGetExistBoardLike(){
+    public void WhenBoradLikeIsExist_ThenGetExistBoardLike() {
         // given
         LikeDto.BoardLikeRequest boardLikeRequest = new LikeDto.BoardLikeRequest(board_id);
 
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(boardLikeRepository.findByUserAndBoard(any(),any())).thenReturn(Optional.ofNullable(boardLike));
+        when(boardLikeRepository.findByUserAndBoard(any(), any())).thenReturn(Optional.ofNullable(boardLike));
 
         // when
         LikeDto.BoardLikeResponse boardLikeResponse = likeService.setBoardLike(boardLikeRequest, user);
@@ -63,13 +63,14 @@ public class BoardLikeServiceTest {
         // then
         assertThat(boardLikeResponse.getId()).isEqualTo(boardLike.getId());
     }
+
     @Test
-    public void WhenBoradLikeNotExist_ThenCreateBoardLike(){
+    public void WhenBoradLikeNotExist_ThenCreateBoardLike() {
         // given
         LikeDto.BoardLikeRequest boardLikeRequest = new LikeDto.BoardLikeRequest(board_id);
 
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(boardLikeRepository.findByUserAndBoard(any(),any())).thenReturn(Optional.empty());
+        when(boardLikeRepository.findByUserAndBoard(any(), any())).thenReturn(Optional.empty());
         when(boardLikeRepository.save(any())).thenReturn(boardLike);
 
         // when

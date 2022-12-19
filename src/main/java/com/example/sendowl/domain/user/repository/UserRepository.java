@@ -13,8 +13,11 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsUserByEmail(String email);
+
     boolean existsUserByNickName(String nickName);
+
     boolean existsUserByEmailAndTransactionId(String email, String trancationId);
+
     Optional<User> findUserByEmailAndTransactionId(String email, String trancationId);
 
     @Query(value = "select new com.example.sendowl.domain.user.dto.UserMbti(u.mbti, count(u)) " +
@@ -26,6 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<UserMbti> findUserMbtiFromCategory(Category category);
 
     Optional<User> findByEmail(String email);
+
     Optional<User> findByEmailAndTransactionId(String email, String trancationId);
 }
 

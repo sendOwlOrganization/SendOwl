@@ -14,7 +14,7 @@ public class RedisEmailTokenService {
 
     private final String key = RedisEnum.EMAIL_TOKEN;
 
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final ValueOperations<String, String> valueOps;
 
     public RedisEmailTokenService(RedisTemplate redisTemplate) {

@@ -11,23 +11,24 @@ public class EditorJsHelper {
 
         return refinedText;
     }
+
     public String extractText(BoardDto.EditorJsContent item) {
         var builder = new StringBuilder();
-        for (var block: item.getBlocks()) {
+        for (var block : item.getBlocks()) {
             if (block.getType().equals("list")) {
                 for (String s : block.getData().getItems()) {
                     var sanitizedText = this.sanitize(s);
-                    builder.append(sanitizedText+" ");
+                    builder.append(sanitizedText + " ");
                 }
             } else {
                 var sanitizedText = this.sanitize(block.getData().getText());
-                builder.append(sanitizedText+" ");
+                builder.append(sanitizedText + " ");
             }
         }
 
         // 글자수 제한 로직 추가
-        if(builder.toString().length() > 100) {
-            return builder.toString().substring(0, 100);
+        if (builder.toString().length() > 100) {
+            return builder.substring(0, 100);
         } else {
             return builder.toString();
         }

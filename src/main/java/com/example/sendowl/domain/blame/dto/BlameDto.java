@@ -28,8 +28,8 @@ public class BlameDto {
 
     @Getter
     public static class BlameTypeRes {
-        private Long blameTypeId;
-        private String blameTypeName;
+        private final Long blameTypeId;
+        private final String blameTypeName;
 
         public BlameTypeRes(BlameType entity) {
             this.blameTypeId = entity.getId();

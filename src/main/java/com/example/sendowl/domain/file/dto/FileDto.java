@@ -9,9 +9,10 @@ public class FileDto {
         private String fileName;
         private String contentType;
 
-        public FileRes() {};
+        public FileRes() {
+        }
 
-        public FileRes(String uuid, String fileName, String contextType){
+        public FileRes(String uuid, String fileName, String contextType) {
             this.uuid = uuid;
             this.fileName = fileName;
             this.contentType = contextType;

@@ -38,7 +38,7 @@ public class BalanceDto {
 
     @Getter
     public static class GetAllBalanceRes {
-        private List<BalanceRes> balances;
+        private final List<BalanceRes> balances;
 
         public GetAllBalanceRes(List<Balance> items) {
             balances = items.stream().map(BalanceDto.BalanceRes::new).collect(Collectors.toList());

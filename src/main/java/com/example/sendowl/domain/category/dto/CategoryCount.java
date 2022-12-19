@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class CategoryCount {
-    private Long categoryId;
-    private String name;
-    private Long count;
+    private final Long categoryId;
+    private final String name;
+    private final Long count;
 
     public CategoryCount(Long categoryId, String name, Long count) {
         this.categoryId = categoryId;

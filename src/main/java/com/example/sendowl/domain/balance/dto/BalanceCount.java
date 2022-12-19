@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class BalanceCount {
-    private Long id;
-    private String title;
-    private String firstDetail;
-    private String secondDetail;
-    private Long firstCount;
-    private Long secondCount;
+    private final Long id;
+    private final String title;
+    private final String firstDetail;
+    private final String secondDetail;
+    private final Long firstCount;
+    private final Long secondCount;
 
     @Builder
     public BalanceCount(Long id, String title, String firstDetail, String secondDetail, Long firstCount, Long secondCount) {

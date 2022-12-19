@@ -1,7 +1,6 @@
 package com.example.sendowl.api.controller;
 
 
-import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -45,10 +43,11 @@ public class UserController {
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
     public ResponseEntity<Boolean> login(final @Valid @RequestBody LoginReq req,
-                                          HttpServletResponse servletResponse) {
+                                         HttpServletResponse servletResponse) {
         userService.login(req).forEach(servletResponse::addHeader);
         return new ResponseEntity(true, HttpStatus.OK);
     }
+
     @Operation(summary = "id로 유저 검색")
     @GetMapping("/{id}")
     public ResponseEntity<UserRes> getUserById(@PathVariable("id") Long id) {
@@ -63,13 +62,10 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    @Operation(summary = "Oauth인증 후 사용자 초기화", description = "닉네임, mbti 설정", security = { @SecurityRequirement(name = "bearerAuth") })
+    @Operation(summary = "사용자 프로필 초기화", description = "Oauth 인증 후 사용자 프로필(mbti, 닉네임, 나이, 성별) 설정", security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/set-profile")
-    public ResponseEntity<UserRes> setUser( final @Valid @RequestBody ProfileReq req) {
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        // mbti는 바로 삽입
-        UserRes userRes = userService.setUserProfile(req, principal.getUser());
-        return new ResponseEntity(userRes, HttpStatus.OK);
+    public ResponseEntity<UserRes> setUser(final @Valid @RequestBody ProfileReq req) {
+        return new ResponseEntity(userService.setUserProfile(req), HttpStatus.OK);
     }
 
     @Operation(summary = "닉네임 중복 확인")
