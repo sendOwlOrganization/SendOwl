@@ -4,6 +4,8 @@ import com.example.sendowl.common.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -17,6 +19,7 @@ public class Balance extends BaseEntity {
     @Column(name = "balance_id", nullable = false)
     private Long id;
     private String balanceTitle;
-    private String firstDetail;
-    private String secondDetail;
+
+    @OneToMany(mappedBy = "balance", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<BalanceOption> balanceOptionList = new ArrayList<>();
 }
