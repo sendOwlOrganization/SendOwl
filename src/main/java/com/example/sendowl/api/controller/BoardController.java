@@ -26,7 +26,7 @@ public class BoardController {
 
     private final BoardService boardService;
     @Operation(summary = "게시글 목록 조회", description = "조건에 따라 게시글을 조회한다." +
-            "http://localhost:8080/api/boards?categoryId=0&page=0&size=1&sort=id,DESC")
+            "http://localhost:8080/api/boards?categoryId=0&page=0&size=1&sort=id,DESC", security = { @SecurityRequirement(name = "bearerAuth") })
     @GetMapping(path = "") // 게시글 목록
     public ResponseEntity<?> boards(final @RequestParam Long categoryId,final @RequestParam Integer textLength, Pageable pageable){
         BoardsRes boardsRes = boardService.getBoardList(categoryId, textLength, pageable);
