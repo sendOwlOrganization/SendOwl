@@ -48,6 +48,15 @@ public class UserController {
         return new ResponseEntity(true, HttpStatus.OK);
     }
 
+    @Operation(summary = "무한 로그인")
+    @PostMapping("/login/infinite") // 로그인
+    public ResponseEntity<Boolean> infiniteLogin(final @Valid @RequestBody LoginReq req,
+                                                 HttpServletResponse servletResponse) {
+        userService.infiniteLogin(req).forEach(servletResponse::addHeader);
+        return new ResponseEntity(true, HttpStatus.OK);
+    }
+
+
     @Operation(summary = "id로 유저 검색")
     @GetMapping("/{id}")
     public ResponseEntity<UserRes> getUserById(@PathVariable("id") Long id) {
