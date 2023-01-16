@@ -105,15 +105,15 @@ public class BoardDto {
         private final String nickname;
         private final LocalDateTime regDate;
         private final Integer hit;
-        private String content;
+        private String preview;
         private Long boardLikeCount;
 
         public ListRes(Board entity) {
             this.id = entity.getId();
             this.title = entity.getTitle();
-            this.content = entity.getContent();
-            if (content.length() > 100) {
-                this.content = content.substring(0, 100);
+            this.preview = entity.getRefinedContent();
+            if (preview.length() > 100) {
+                this.preview = preview.substring(0, 100);
             }
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
@@ -123,9 +123,9 @@ public class BoardDto {
         public ListRes(Board entity, Integer textLength) {
             this.id = entity.getId();
             this.title = entity.getTitle();
-            this.content = entity.getContent();
-            if (content.length() > textLength)
-                this.content = content.substring(0, textLength);
+            this.preview = entity.getRefinedContent();
+            if (preview.length() > textLength)
+                this.preview = preview.substring(0, textLength);
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
