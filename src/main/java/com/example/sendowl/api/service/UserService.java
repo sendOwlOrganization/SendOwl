@@ -73,6 +73,14 @@ public class UserService {
                 REFRESH_TOKEN, refreshToken));
     }
 
+    public HashMap<String, String> makeInfiniteToken(User user) {
+        String accessToken = jwtProvider.createInfiniteAccessToken(user);
+        String refreshToken = jwtProvider.createRefreshToken(user);
+        return new HashMap<>(Map.of(
+                ACCESS_TOKEN, accessToken,
+                REFRESH_TOKEN, refreshToken));
+    }
+
     public Map<String, String> login(LoginReq req) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
@@ -80,6 +88,15 @@ public class UserService {
             throw new UserNotValidException(INVALID_PASSWORD);
         }
         return makeToken(user);
+    }
+
+    public Map<String, String> infiniteLogin(LoginReq req) {
+        User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
+                () -> new UserNotFoundException(NOT_FOUND));
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+            throw new UserNotValidException(INVALID_PASSWORD);
+        }
+        return makeInfiniteToken(user);
     }
 
     public UserRes getUser(Long id) {
