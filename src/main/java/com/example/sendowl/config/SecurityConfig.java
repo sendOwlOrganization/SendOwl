@@ -31,16 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final List<String> AUTH_WHITELIST = Collections.unmodifiableList(
             Arrays.asList(
 //       -- Swagger UI v3 (OpenAPI)
-            "/v3/**",
-            "/v2/**",
-            "/swagger/**",
-            "/swagger-ui/**",
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/error"));
+                    "/v3/**",
+                    "/v2/**",
+                    "/swagger/**",
+                    "/swagger-ui/**",
+                    "/swagger-resources/**",
+                    "/swagger-ui.html",
+                    "/webjars/**",
+                    "/configuration/ui",
+                    "/configuration/security",
+                    "/error"));
 
     private final JwtProvider jwtProvider;
 
@@ -70,11 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class)// JwtAuthenticationFilter를 JwtAuthenticationFilter 앞에 추가한다.(먼저 실행된다.)
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("http://localhost:3000"); // 허용할 URL
+        configuration.addAllowedOrigin("*"); // 허용할 URL
         configuration.addAllowedHeader("*"); // 허용할 Header
         configuration.addAllowedMethod("*"); // 허용할 Http Method
         configuration.setAllowCredentials(true);
