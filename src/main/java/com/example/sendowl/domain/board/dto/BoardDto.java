@@ -76,15 +76,7 @@ public class BoardDto {
         private final Integer hit;
         private Long boardLikeCount;
 
-
-        public DetailRes(Board entity, Integer redisHit) {
-            this.id = entity.getId();
-            this.title = entity.getTitle();
-            this.user = new UserPublicRes(entity.getUser());
-            this.content = entity.getContent();
-            this.regDate = entity.getRegDate();
-            this.hit = entity.getHit() + redisHit;
-        }
+        private Long boardCommentCount;
 
         public DetailRes(Board entity) {
             this.id = entity.getId();
@@ -94,6 +86,7 @@ public class BoardDto {
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
             this.boardLikeCount = entity.getBoardLikeCount();
+            this.boardCommentCount = entity.getBoardCommentCount();
         }
 
     }
@@ -108,17 +101,7 @@ public class BoardDto {
         private String preview;
         private Long boardLikeCount;
 
-        public ListRes(Board entity) {
-            this.id = entity.getId();
-            this.title = entity.getTitle();
-            this.preview = entity.getRefinedContent();
-            if (preview.length() > 100) {
-                this.preview = preview.substring(0, 100);
-            }
-            this.nickname = entity.getUser().getNickName();
-            this.regDate = entity.getRegDate();
-            this.hit = entity.getHit();
-        }
+        private Long boardCommentCount;
 
         public ListRes(Board entity, Integer textLength) {
             this.id = entity.getId();
@@ -130,6 +113,7 @@ public class BoardDto {
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
             this.boardLikeCount = entity.getBoardLikeCount();
+            this.boardCommentCount = entity.getBoardCommentCount();
         }
     }
 
