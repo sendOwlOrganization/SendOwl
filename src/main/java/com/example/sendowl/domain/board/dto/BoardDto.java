@@ -74,9 +74,9 @@ public class BoardDto {
         private final UserPublicRes user;
         private final LocalDateTime regDate;
         private final Integer hit;
-        private Long boardLikeCount;
+        private Long LikeCount;
 
-        private Long boardCommentCount;
+        private Long CommentCount;
 
         public DetailRes(Board entity) {
             this.id = entity.getId();
@@ -85,8 +85,8 @@ public class BoardDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
-            this.boardLikeCount = entity.getBoardLikeCount();
-            this.boardCommentCount = entity.getBoardCommentCount();
+            this.LikeCount = entity.getLikeCount();
+            this.CommentCount = entity.getCommentCount();
         }
 
     }
@@ -99,9 +99,9 @@ public class BoardDto {
         private final LocalDateTime regDate;
         private final Integer hit;
         private String preview;
-        private Long boardLikeCount;
+        private Long LikeCount;
 
-        private Long boardCommentCount;
+        private Long CommentCount;
 
         public ListRes(Board entity, Integer textLength) {
             this.id = entity.getId();
@@ -112,8 +112,8 @@ public class BoardDto {
             this.nickname = entity.getUser().getNickName();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
-            this.boardLikeCount = entity.getBoardLikeCount();
-            this.boardCommentCount = entity.getBoardCommentCount();
+            this.LikeCount = entity.getLikeCount();
+            this.CommentCount = entity.getCommentCount();
         }
     }
 
@@ -140,7 +140,7 @@ public class BoardDto {
         private final UserPublicRes user;
         private final LocalDateTime regDate;
         private final Integer hit;
-        private final Long boardLikeCount;
+        private final Long LikeCount;
 
         public UpdateBoardRes(Board entity) {
             this.id = entity.getId();
@@ -149,7 +149,7 @@ public class BoardDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.hit = entity.getHit();
-            this.boardLikeCount = entity.getBoardLikeCount();
+            this.LikeCount = entity.getLikeCount();
         }
     }
 
