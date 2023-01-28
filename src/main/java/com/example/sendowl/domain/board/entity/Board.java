@@ -42,7 +42,10 @@ public class Board extends BaseEntity {
     private Integer hit;
 
     @Formula("(select count(*) from board_like bl where bl.board_id = board_id)")
-    private Long boardLikeCount;
+    private Long LikeCount;
+
+    @Formula("(select count(*) from comment c where c.board_id = board_id)")
+    private Long CommentCount;
 
     @Builder
     public Board(User user, String title, String content, String refinedContent, Category category, Integer hit) {

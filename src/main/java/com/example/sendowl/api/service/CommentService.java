@@ -59,12 +59,15 @@ public class CommentService {
         Comment savedComment = commentRepository.save(comment);
         CommentRes commentRes = new CommentRes(savedComment);
 
+
         return commentRes;
     }
 
     public List<CommentRes> selectCommentList(Long boardId){
+        // 게시글 존재여부 확인
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+        // 댓글 select
         List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
