@@ -44,7 +44,7 @@ public class BoardRepositoryTest {
             System.out.println(previewBoard.getTitle());
             System.out.println(previewBoard.getNickName());
             System.out.println(previewBoard.getRegDate());
-            System.out.println(previewBoard.getBoardLikeCount());
+            System.out.println(previewBoard.getLikeCount());
             System.out.println(previewBoard.getCommentCount());
             System.out.println("------");
         });

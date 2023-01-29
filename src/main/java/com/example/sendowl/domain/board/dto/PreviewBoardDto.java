@@ -11,7 +11,7 @@ public interface PreviewBoardDto {
 
     LocalDateTime getRegDate();
 
-    Long getBoardLikeCount();
+    Long getLikeCount();
 
     Long getCommentCount();
 }

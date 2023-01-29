@@ -15,7 +15,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
 
     @Query(value = "SELECT b.board_id as boardId, " +
             "LEFT(b.title,:titleLength) as title, u.nick_name as nickName, b.reg_date as regDate, " +
-            "bl.board_like_count as boardLikeCount, c.comment_count as commentCount " +
+            "bl.board_like_count as likeCount, c.comment_count as commentCount " +
             "FROM board b " +
             "left join user u on b.user_id = u.user_id " +
             "left join (select board_id, COUNT(*) as board_like_count " +

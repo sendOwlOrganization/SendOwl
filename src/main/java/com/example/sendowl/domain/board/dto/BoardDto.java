@@ -27,7 +27,7 @@ public class BoardDto {
         private final String title;
         private final String nickName;
         private final LocalDateTime regDate;
-        private final Long boardLikeCount;
+        private final Long likeCount;
         private final Long commentCount;
 
         public PreviewBoardRes(PreviewBoardDto previewBoardDto) {
@@ -35,7 +35,7 @@ public class BoardDto {
             title = previewBoardDto.getTitle();
             nickName = previewBoardDto.getNickName();
             regDate = previewBoardDto.getRegDate();
-            boardLikeCount = previewBoardDto.getBoardLikeCount();
+            likeCount = previewBoardDto.getLikeCount();
             commentCount = previewBoardDto.getCommentCount();
         }
     }
