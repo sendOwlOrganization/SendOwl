@@ -1,21 +1,19 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.common.converter.EditorJsHelper;
-import com.example.sendowl.domain.board.dto.BoardDto;
+import com.example.sendowl.domain.board.dto.PreviewBoardDto;
+import com.example.sendowl.domain.board.entity.Board;
+import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
+import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.UserException.*;
+import com.example.sendowl.domain.user.exception.UserException.UserUnauthorityException;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
-import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.board.exception.BoardNotFoundException;
-import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.redis.service.RedisBoardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
 
 @Service
@@ -31,31 +33,40 @@ import static com.example.sendowl.domain.board.dto.BoardDto.*;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final RedisBoardService redisBoardService;
 
-    public BoardsRes getBoardList(Long categoryId,Integer textLength, Pageable pageable) {
+    public List<PreviewBoardRes> getPreviewBoardList(Long categoryId, Integer titleLength, Pageable pageable) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+        );
+
+        List<PreviewBoardDto> previewBoard = boardRepository.findPreviewBoard(category.getId(), titleLength, pageable);
+
+        List<PreviewBoardRes> boardRes = previewBoard.stream().map(PreviewBoardRes::new).collect(Collectors.toList());
+
+        return boardRes;
+    }
+
+    public BoardsRes getBoardList(Long categoryId, Integer textLength, Pageable pageable) {
         Page<Board> pages;
-        if(categoryId == 0L){
+        if (categoryId == 0L) {
             pages = boardRepository.findBoardFetchJoin(pageable);
-        }
-        else {
+        } else {
             pages = boardRepository.findBoardByCategoryIdFetchJoin(categoryId, pageable);
         }
         BoardsRes boardsRes = new BoardsRes(pages, textLength);
         return boardsRes;
     }
 
-    public BoardsRes getBoardBySearch(Pageable pageable,Integer textLength, String where, String queryText){
+    public BoardsRes getBoardBySearch(Pageable pageable, Integer textLength, String where, String queryText) {
         Specification<Board> spec = (root, query, builder) -> null;
-        if(where.contains("title")){
+        if (where.contains("title")) {
             spec = spec.or(BoardSpecification.likeTitle(queryText));
         }
-        if(where.contains("content")){
+        if (where.contains("content")) {
             spec = spec.or(BoardSpecification.likeContent(queryText));
         }
-        if(where.contains("nickName")){
+        if (where.contains("nickName")) {
             spec = spec.or(BoardSpecification.likeUserNickName(queryText));
         }
         return new BoardsRes(boardRepository.findAll(spec, pageable), textLength);
@@ -83,7 +94,7 @@ public class BoardService {
 //        redisBoardService.setAddCount(id);
 //        Integer hit = redisBoardService.getHit(id);
         Integer hit = board.getHit();
-        board.setHit(hit+1);
+        board.setHit(hit + 1);
 
         return new DetailRes(board);
     }
@@ -95,7 +106,7 @@ public class BoardService {
 
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
                 () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
-        if(board.getUser().getId() != user.getId()){
+        if (board.getUser().getId() != user.getId()) {
             throw new UserUnauthorityException(UserErrorCode.UNAUTHORIZED);
         }
 
@@ -105,7 +116,7 @@ public class BoardService {
         // editorJS내용을 content로 바꾼다.
         ObjectMapper objectMapper = new ObjectMapper();
         String content = "";
-        try{
+        try {
             content = objectMapper.writeValueAsString(req.getEditorJsContent());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
@@ -123,7 +134,7 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
-        if(board.getUser().getId() != user.getId()){
+        if (board.getUser().getId() != user.getId()) {
             throw new UserUnauthorityException(UserErrorCode.UNAUTHORIZED);
         }
 

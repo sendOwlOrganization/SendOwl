@@ -22,6 +22,26 @@ import static com.example.sendowl.domain.user.dto.UserDto.UserPublicRes;
 public class BoardDto {
 
     @Getter
+    public static class PreviewBoardRes {
+        private final String boardId;
+        private final String title;
+        private final String nickName;
+        private final LocalDateTime regDate;
+        private final Long boardLikeCount;
+        private final Long commentCount;
+
+        public PreviewBoardRes(PreviewBoardDto previewBoardDto) {
+            boardId = previewBoardDto.getBoardId();
+            title = previewBoardDto.getTitle();
+            nickName = previewBoardDto.getNickName();
+            regDate = previewBoardDto.getRegDate();
+            boardLikeCount = previewBoardDto.getBoardLikeCount();
+            commentCount = previewBoardDto.getCommentCount();
+        }
+    }
+
+
+    @Getter
     public static class BoardsRes {
         private final List<ListRes> boards;
         private final Long totalElement;
