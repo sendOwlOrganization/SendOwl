@@ -7,7 +7,11 @@ public interface PreviewBoardDto {
 
     String getTitle();
 
+    String getUserId();
+
     String getNickName();
+
+    String getMbti();
 
     LocalDateTime getRegDate();
 
