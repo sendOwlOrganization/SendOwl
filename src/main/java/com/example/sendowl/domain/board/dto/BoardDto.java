@@ -25,7 +25,9 @@ public class BoardDto {
     public static class PreviewBoardRes {
         private final String boardId;
         private final String title;
+        private final String userId;
         private final String nickName;
+        private final String mbti;
         private final LocalDateTime regDate;
         private final Long likeCount;
         private final Long commentCount;
@@ -33,7 +35,9 @@ public class BoardDto {
         public PreviewBoardRes(PreviewBoardDto previewBoardDto) {
             boardId = previewBoardDto.getBoardId();
             title = previewBoardDto.getTitle();
+            userId = previewBoardDto.getUserId();
             nickName = previewBoardDto.getNickName();
+            mbti = previewBoardDto.getMbti();
             regDate = previewBoardDto.getRegDate();
             likeCount = previewBoardDto.getLikeCount();
             commentCount = previewBoardDto.getCommentCount();
