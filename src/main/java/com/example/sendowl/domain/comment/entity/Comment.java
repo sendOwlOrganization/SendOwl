@@ -6,12 +6,9 @@ import com.example.sendowl.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -19,9 +16,6 @@ import java.util.List;
 @Table(indexes = @Index(name = "idx_comment", columnList = "board_id")) // 이미 foreign key라 index가 있지만 이름 변경
 public class Comment extends BaseEntity {
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", orphanRemoval = true)
-    @BatchSize(size = 100)
-    private final List<Comment> children = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -35,14 +29,13 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
     private Long depth;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
+    @Column(name = "parent_id")
+    private Long parent;
     @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id)")
     private Long commentLikeCount;
 
     @Builder
-    public Comment(Board board, User user, String content, Comment parent, Long depth) {
+    public Comment(Board board, User user, String content, Long parent, Long depth) {
         this.board = board;
         this.user = user;
         this.content = content;

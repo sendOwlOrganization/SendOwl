@@ -9,7 +9,6 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommentDto {
 
@@ -17,7 +16,7 @@ public class CommentDto {
     public static class CommentRes {
         private final Long id;
         private final UserDto.UserPublicRes user;
-        private final List<CommentRes> children;
+        private List<CommentRes> children;
         private final String content;
         private final LocalDateTime regDate;
         private final LocalDateTime modDate;
@@ -26,7 +25,6 @@ public class CommentDto {
         public CommentRes(Comment entity) {
             this.id = entity.getId();
             this.user = new UserDto.UserPublicRes(entity.getUser());
-            this.children = entity.getChildren().stream().map(CommentRes::new).collect(Collectors.toList());
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
@@ -77,4 +75,19 @@ public class CommentDto {
             this.id = entity.getId();
         }
     }
+
+
+    //for nativeQuery
+    public interface CommentDtoForChild {
+        String getCommentId();
+
+        String getContent();
+
+        String getDepth();
+
+        LocalDateTime getParentId();
+
+    }
+
+
 }

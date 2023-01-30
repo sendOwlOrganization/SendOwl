@@ -18,6 +18,7 @@ import static com.example.sendowl.domain.comment.dto.CommentDto.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,14 +37,12 @@ public class CommentService {
         Comment comment;
 
         if(vo.getParentId() != null){
-            Comment parentComment = commentRepository.findById(vo.getParentId())
-                    .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND_PARENT));
 
             comment = Comment.builder()
                     .board(board)
                     .user(user)
                     .content(vo.getContent())
-                    .parent(parentComment)
+                    .parent(vo.getParentId())
                     .depth(1L)
                     .build();
         } else {
@@ -71,12 +70,18 @@ public class CommentService {
         List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
+        // 가져온 Comment들의 Id를 담습니다.
+        List<Long> commentIdList = comments.stream().map(Comment::getId).collect(Collectors.toList());
+
+        List<CommentDtoForChild> childList = commentRepository.findChildComment(commentIdList);
+
         List<CommentRes> commentList = new ArrayList<>();
 
-        for(Comment crs : comments) {
-            CommentRes temp = new CommentRes(crs);
-            commentList.add(temp);
+        //test용
+        for(CommentDtoForChild crs : childList) {
+            System.out.println(crs.getCommentId());
         }
+        //Todo: mapping child<->parent, Join likeCount, userInfo
 
         return commentList;
     }
