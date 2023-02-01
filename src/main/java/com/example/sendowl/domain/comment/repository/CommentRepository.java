@@ -18,6 +18,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "(SELECT *, RANK() OVER (PARTITION BY c.parent_id ORDER BY c.reg_date desc) as a " +
             "FROM comment c where c.depth = 1 AND c.parent_id in :commentList) as rankrow WHERE rankrow.a <= 5",
     nativeQuery = true)
-    List<CommentDto.CommentDtoForChild> findChildComment(List<Long> commentList);
+    List<CommentDto.SimpleCommentDto> findChildComment(List<Long> commentList);
 }
 

@@ -6,16 +6,19 @@ import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 public class CommentDto {
 
+    @Setter
     @Getter
     public static class CommentRes {
         private final Long id;
-        private final UserDto.UserPublicRes user;
+        private UserDto.UserPublicRes user;
         private List<CommentRes> children;
         private final String content;
         private final LocalDateTime regDate;
@@ -29,6 +32,20 @@ public class CommentDto {
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
             this.commentLikeCount = entity.getCommentLikeCount();
+        }
+
+        public CommentRes(SimpleCommentDto dto) {
+            this.id = dto.getCommentId();
+            //this.user = new UserDto.UserPublicRes(entity.getUser());
+            this.content = dto.getContent();
+            //this.regDate = dto.getRegDate();
+            //this.modDate = entity.getModDate();
+            //this.commentLikeCount = entity.getCommentLikeCount();
+
+            //tmpdata
+            this.regDate = LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30, 40);;
+            this.modDate = LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30, 40);;
+            this.commentLikeCount = 2L;
         }
     }
 
@@ -78,14 +95,14 @@ public class CommentDto {
 
 
     //for nativeQuery
-    public interface CommentDtoForChild {
-        String getCommentId();
+    public interface SimpleCommentDto {
+        Long getCommentId();
 
         String getContent();
 
-        String getDepth();
+        Long getDepth();
 
-        LocalDateTime getParentId();
+        Long getParentId();
 
     }
 

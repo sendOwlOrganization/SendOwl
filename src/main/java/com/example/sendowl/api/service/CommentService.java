@@ -11,13 +11,16 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.build.Plugin;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.sendowl.domain.comment.dto.CommentDto.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,15 +76,27 @@ public class CommentService {
         // 가져온 Comment들의 Id를 담습니다.
         List<Long> commentIdList = comments.stream().map(Comment::getId).collect(Collectors.toList());
 
-        List<CommentDtoForChild> childList = commentRepository.findChildComment(commentIdList);
+        List<SimpleCommentDto> childList = commentRepository.findChildComment(commentIdList);
 
+        Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
+        for(SimpleCommentDto crs : childList) {
+            if(!parentChildMap.containsKey(crs.getParentId().toString())){
+                parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
+            }
+            parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
+        }
         List<CommentRes> commentList = new ArrayList<>();
 
-        //test용
-        for(CommentDtoForChild crs : childList) {
-            System.out.println(crs.getCommentId());
+        for(Comment crs : comments) {
+            CommentRes temp = new CommentRes(crs);
+            temp.setChildren(parentChildMap.get(temp.getId().toString()));
+            commentList.add(temp);
         }
+
+
         //Todo: mapping child<->parent, Join likeCount, userInfo
+
+
 
         return commentList;
     }
