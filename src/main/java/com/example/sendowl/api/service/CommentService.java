@@ -76,14 +76,15 @@ public class CommentService {
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
         // 가져온 Comment들의 Id를 담습니다.
-        List<Long> commentIdList = comments.stream().map(Comment::getId).collect(Collectors.toList());
+        List<Long> commentIdList =
+                comments.stream().map(Comment::getId).collect(Collectors.toList());
 
         // comments들의 대댓글들을 가져 옵니다.
-        List<SimpleCommentDto> childList = commentRepository.findAllChildComment(commentIdList);
+        List<dtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
 
         // comments <-> childList mapping by child's parent_id
         Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
-        for(SimpleCommentDto crs : childList) {
+        for(dtoInterface crs : childList) {
             if(!parentChildMap.containsKey(crs.getParentId().toString())){
                 parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
             }
@@ -98,7 +99,9 @@ public class CommentService {
             commentList.add(temp);
         }
         // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
-        return new PageImpl<>(commentList,PageRequest.of((int)comments.getPageable().getOffset(),comments.getPageable().getPageSize()), comments.getTotalElements());
+        return new PageImpl<>(commentList,
+                PageRequest.of((int)comments.getPageable().getOffset(),comments.getPageable().getPageSize()),
+                comments.getTotalElements());
     }
 
     @Transactional

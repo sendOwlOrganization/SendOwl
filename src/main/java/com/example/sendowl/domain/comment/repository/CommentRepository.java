@@ -34,7 +34,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "                   LEFT JOIN (SELECT comment_id, COUNT(*) as clc FROM comment_like group by comment_id) as cl on c.comment_id = cl.comment_id\n" +
             "            WHERE c.depth = 1 AND c.parent_id in :commentList",
             nativeQuery = true)
-    List<CommentDto.SimpleCommentDto> findAllChildComment(List<Long> commentList);
+    List<CommentDto.dtoInterface> findAllChildComment(List<Long> commentList);
 
 
 
@@ -60,6 +60,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "            WHERE c.depth = 1 AND c.parent_id in :commentList ) as rankrow\n" +
             "            WHERE rankrow.a <= 5",
     nativeQuery = true)
-    List<CommentDto.SimpleCommentDto> findChildComment(List<Long> commentList);
+    List<CommentDto.dtoInterface> findChildComment(List<Long> commentList);
 }
 
