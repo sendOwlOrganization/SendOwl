@@ -100,7 +100,7 @@ public class CommentService {
         }
         // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
         return new PageImpl<>(commentList,
-                PageRequest.of((int)comments.getPageable().getOffset(),comments.getPageable().getPageSize()),
+                PageRequest.of(comments.getPageable().getPageNumber(),comments.getPageable().getPageSize()),
                 comments.getTotalElements());
     }
 
