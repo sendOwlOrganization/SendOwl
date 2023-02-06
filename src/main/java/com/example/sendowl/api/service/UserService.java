@@ -154,11 +154,10 @@ public class UserService {
             alreadySetted = false;
         }
         // 로그인 (토큰 반환)
-//        makeToken(
-//                userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
-//        ).forEach(servletResponse::addHeader);
-        HashMap<String, String> hashMap = makeToken(userRepository.findUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get());
-        servletResponse.addHeader("Access-Control-Expose-Headers", hashMap.get(ACCESS_TOKEN) + "," + hashMap.get(REFRESH_TOKEN));
+        makeToken(
+                userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
+        ).forEach(servletResponse::addHeader);
+        servletResponse.addHeader("Access-Control-Expose-Headers", "accessToken");
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
