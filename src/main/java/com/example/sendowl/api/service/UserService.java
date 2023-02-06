@@ -157,6 +157,7 @@ public class UserService {
         makeToken(
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
+        servletResponse.addHeader("Access-Control-Expose-Headers", "Authorization");
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
