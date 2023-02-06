@@ -4,6 +4,7 @@ package com.example.sendowl.domain.comment.repository;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.dto.CommentDto;
 import com.example.sendowl.domain.comment.entity.Comment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,8 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0")
-    Optional<List<Comment>> findAllByBoard(Board board, Pageable pageable);
+    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0",
+    countQuery="SELECT COUNT(*) FROM Comment c where c.board =:board")
+    Optional<Page<Comment>> findAllByBoard(Board board, Pageable pageable);
 
     // 부모댓글에 따른 대댓글 전체 select
     @Query(value = "SELECT c.comment_id AS commentId,\n" +

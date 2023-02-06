@@ -11,7 +11,10 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.build.Plugin;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,25 +62,26 @@ public class CommentService {
         }
 
         Comment savedComment = commentRepository.save(comment);
-        CommentRes commentRes = new CommentRes(savedComment);
 
-
-        return commentRes;
+        return new CommentRes(savedComment);
     }
 
-    public List<CommentRes> selectCommentList(Long boardId){
+    public Page<CommentRes> selectCommentList(Long boardId, Pageable pageable){
         // 게시글 존재여부 확인
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
         // 댓글 select
-        List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
+        Page<Comment> comments = commentRepository.findAllByBoard(board, pageable).orElseThrow(
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
         // 가져온 Comment들의 Id를 담습니다.
         List<Long> commentIdList = comments.stream().map(Comment::getId).collect(Collectors.toList());
 
-        List<SimpleCommentDto> childList = commentRepository.findChildComment(commentIdList);
+        // comments들의 대댓글들을 가져 옵니다.
+        List<SimpleCommentDto> childList = commentRepository.findAllChildComment(commentIdList);
 
+        // comments <-> childList mapping by child's parent_id
         Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
         for(SimpleCommentDto crs : childList) {
             if(!parentChildMap.containsKey(crs.getParentId().toString())){
@@ -85,20 +89,16 @@ public class CommentService {
             }
             parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
         }
-        List<CommentRes> commentList = new ArrayList<>();
 
+        // make List<CommentRes> from comment entity
+        List<CommentRes> commentList = new ArrayList<>();
         for(Comment crs : comments) {
             CommentRes temp = new CommentRes(crs);
             temp.setChildren(parentChildMap.get(temp.getId().toString()));
             commentList.add(temp);
         }
-
-
-        //Todo: mapping child<->parent, Join likeCount, userInfo
-
-
-
-        return commentList;
+        // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
+        return new PageImpl<>(commentList,PageRequest.of((int)comments.getPageable().getOffset(),comments.getPageable().getPageSize()), comments.getTotalElements());
     }
 
     @Transactional
