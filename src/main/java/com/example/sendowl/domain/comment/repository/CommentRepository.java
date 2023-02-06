@@ -29,6 +29,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "            u.mbti,\n" +
             "            u.age,\n" +
             "            u.gender,\n" +
+            "            u.profile_image AS profileImage,\n" +
+            "            c.reg_date AS regDate,\n" +
+            "            c.mod_date AS modDate,\n" +
             "            cl.clc\n" +
             "    FROM comment c LEFT JOIN user u ON c.user_id = u.user_id\n" +
             "                   LEFT JOIN (SELECT comment_id, COUNT(*) as clc FROM comment_like group by comment_id) as cl on c.comment_id = cl.comment_id\n" +
@@ -53,7 +56,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "        u.mbti,\n" +
             "        u.age,\n" +
             "        u.gender,\n" +
-            "        cl.clc,\n" +
+            "        cl.clc AS likeCount,\n" +
             "        RANK() OVER (PARTITION BY c.parent_id ORDER BY c.reg_date desc) AS a\n" +
             "    FROM comment c LEFT JOIN user u ON c.user_id = u.user_id\n" +
             "                   LEFT JOIN (SELECT comment_id, COUNT(*) as clc FROM comment_like group by comment_id) as cl on c.comment_id = cl.comment_id\n" +

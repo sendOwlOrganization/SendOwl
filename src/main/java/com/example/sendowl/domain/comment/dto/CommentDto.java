@@ -2,6 +2,8 @@ package com.example.sendowl.domain.comment.dto;
 
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.user.dto.UserDto;
+import com.example.sendowl.domain.user.entity.Gender;
+import com.example.sendowl.domain.user.entity.User;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -36,16 +38,18 @@ public class CommentDto {
 
         public CommentRes(dtoInterface dto) {
             this.id = dto.getCommentId();
-            //this.user = new UserDto.UserPublicRes(entity.getUser());
+            this.user = new UserDto.UserPublicRes(
+                    User.builder()
+                            .id(dto.getUserId())
+                            .nickName(dto.getNickName())
+                            .mbti(dto.getMbti())
+                            .profileImage(dto.getProfileImage())
+                            .build()
+            );
             this.content = dto.getContent();
-            //this.regDate = dto.getRegDate();
-            //this.modDate = entity.getModDate();
-            //this.commentLikeCount = entity.getCommentLikeCount();
-
-            //tmpdata
-            this.regDate = LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30, 40);;
-            this.modDate = LocalDateTime.of(2022, Month.JANUARY, 1, 12, 30, 40);;
-            this.commentLikeCount = 2L;
+            this.regDate = dto.getRegDate();
+            this.modDate = dto.getModDate();
+            this.commentLikeCount = dto.getLikeCount();
         }
     }
 
@@ -97,12 +101,23 @@ public class CommentDto {
     //for nativeQuery
     public interface dtoInterface {
         Long getCommentId();
-
         String getContent();
-
         Long getDepth();
-
         Long getParentId();
+        Long getUserId();
+        String getName();
+        String getNickName();
+        String getMbti();
+        Integer getAge();
+        String getGender();
+        String getProfileImage();
+        Long getLikeCount();
+
+        LocalDateTime getRegDate();
+
+        LocalDateTime getModDate();
+
+
 
     }
 }
