@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0",
-    countQuery="SELECT COUNT(*) FROM Comment c where c.board =:board")
+    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0 and c.isDeleted = false",
+    countQuery="SELECT COUNT(*) FROM Comment c where c.board =:board and c.depth=0 and c.isDeleted=false")
     Optional<Page<Comment>> findAllByBoard(Board board, Pageable pageable);
 
     // 부모댓글에 따른 대댓글 전체 select
@@ -35,7 +35,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "            cl.clc\n" +
             "    FROM comment c LEFT JOIN user u ON c.user_id = u.user_id\n" +
             "                   LEFT JOIN (SELECT comment_id, COUNT(*) as clc FROM comment_like group by comment_id) as cl on c.comment_id = cl.comment_id\n" +
-            "            WHERE c.depth = 1 AND c.parent_id in :commentList",
+            "            WHERE c.depth = 1 AND c.is_deleted = 'N' AND c.parent_id in :commentList",
             nativeQuery = true)
     List<CommentDto.dtoInterface> findAllChildComment(List<Long> commentList);
 
