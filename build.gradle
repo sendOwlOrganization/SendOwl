@@ -46,6 +46,12 @@ dependencies {
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+
+    // test packaged - H2 database, junit5
+    testImplementation 'com.h2database:h2:1.4.200'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+
+
 }
 
 group = 'com.example'
