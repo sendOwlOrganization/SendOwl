@@ -56,6 +56,13 @@ public class UserController {
         return new ResponseEntity(true, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @Operation(summary = "자신의 정보를 가져옴", description = "사용자 자신의 정보를 가져온다", security = {@SecurityRequirement(name = "bearerAuth")})
+    @GetMapping("/me")
+    public ResponseEntity<UserSelfRes> getUserSelf() {
+        return new ResponseEntity(userService.getUserSelf(), HttpStatus.OK);
+    }
+
 
     @Operation(summary = "id로 유저 검색")
     @GetMapping("/{id}")

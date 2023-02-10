@@ -163,4 +163,27 @@ public class UserDto {
         private Integer age;
         private Gender gender;
     }
+
+    @Getter
+    public static class UserSelfRes {
+        private Long id;
+        private String nickName;
+        private String mbti;
+        private Gender gender;
+        private Integer age;
+        private String email;
+        private String profileImage;
+        private String introduction;
+
+        public UserSelfRes(User user) {
+            this.id = user.getId();
+            this.nickName = user.getNickName();
+            this.mbti = user.getMbti();
+            this.gender = user.getGender();
+            this.age = user.getAge();
+            this.email = user.getEmail();
+            this.profileImage = user.getProfileImage();
+            this.introduction = user.getIntroduction();
+        }
+    }
 }
