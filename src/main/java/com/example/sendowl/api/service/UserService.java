@@ -105,6 +105,11 @@ public class UserService {
         return new UserRes(user);
     }
 
+    public UserSelfRes getUserSelf() {
+        User user = jwtUserParser.getUser();
+        return new UserSelfRes(user);
+    }
+
     public EmailCheckRes emailCheck(EmailCheckReq req) {
         if (userRepository.existsUserByEmail(req.getEmail())) {
             throw new UserAlreadyExistException(EXISTING_EMAIL);
