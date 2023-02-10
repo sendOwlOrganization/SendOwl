@@ -16,16 +16,16 @@ public class UserDto {
         private String nickName;
         private String mbti;
         private Gender gender;
-        private String introduction;
-        private String profileImage;
+        private Integer age;
+        private String email;
 
         public UserRes(User entity) {
             this.id = entity.getId();
             this.nickName = entity.getNickName();
             this.mbti = entity.getMbti();
             this.gender = entity.getGender();
-            this.introduction = entity.getIntroduction();
-            this.profileImage = entity.getProfileImage();
+            this.age = entity.getAge();
+            this.email = entity.getEmail();
         }
     }
 
