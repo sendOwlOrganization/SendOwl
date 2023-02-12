@@ -36,7 +36,7 @@ public class CommentDto {
             this.commentLikeCount = entity.getCommentLikeCount();
         }
 
-        public CommentRes(dtoInterface dto) {
+        public CommentRes(DtoInterface dto) {
             this.id = dto.getCommentId();
             this.user = new UserDto.UserPublicRes(
                     User.builder()
@@ -99,7 +99,7 @@ public class CommentDto {
 
 
     //for nativeQuery
-    public interface dtoInterface {
+    public interface DtoInterface {
         Long getCommentId();
         String getContent();
         Long getDepth();

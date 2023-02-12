@@ -80,11 +80,11 @@ public class CommentService {
                 comments.stream().map(Comment::getId).collect(Collectors.toList());
 
         // comments들의 대댓글들을 가져 옵니다.
-        List<dtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
+        List<DtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
 
         // comments <-> childList mapping by child's parent_id
         Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
-        for(dtoInterface crs : childList) {
+        for(DtoInterface crs : childList) {
             if(!parentChildMap.containsKey(crs.getParentId().toString())){
                 parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
             }
@@ -98,6 +98,7 @@ public class CommentService {
             temp.setChildren(parentChildMap.get(temp.getId().toString()));
             commentList.add(temp);
         }
+
         // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
         return new PageImpl<>(commentList,
                 PageRequest.of(comments.getPageable().getPageNumber(),comments.getPageable().getPageSize()),
