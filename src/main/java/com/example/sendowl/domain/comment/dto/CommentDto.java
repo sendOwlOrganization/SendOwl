@@ -2,22 +2,26 @@ package com.example.sendowl.domain.comment.dto;
 
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.user.dto.UserDto;
+import com.example.sendowl.domain.user.entity.Gender;
+import com.example.sendowl.domain.user.entity.User;
 import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommentDto {
 
+    @Setter
     @Getter
     public static class CommentRes {
         private final Long id;
-        private final UserDto.UserPublicRes user;
-        private final List<CommentRes> children;
+        private UserDto.UserPublicRes user;
+        private List<CommentRes> children;
         private final String content;
         private final LocalDateTime regDate;
         private final LocalDateTime modDate;
@@ -26,11 +30,26 @@ public class CommentDto {
         public CommentRes(Comment entity) {
             this.id = entity.getId();
             this.user = new UserDto.UserPublicRes(entity.getUser());
-            this.children = entity.getChildren().stream().map(CommentRes::new).collect(Collectors.toList());
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
             this.commentLikeCount = entity.getCommentLikeCount();
+        }
+
+        public CommentRes(DtoInterface dto) {
+            this.id = dto.getCommentId();
+            this.user = new UserDto.UserPublicRes(
+                    User.builder()
+                            .id(dto.getUserId())
+                            .nickName(dto.getNickName())
+                            .mbti(dto.getMbti())
+                            .profileImage(dto.getProfileImage())
+                            .build()
+            );
+            this.content = dto.getContent();
+            this.regDate = dto.getRegDate();
+            this.modDate = dto.getModDate();
+            this.commentLikeCount = dto.getLikeCount();
         }
     }
 
@@ -76,5 +95,29 @@ public class CommentDto {
         public DeleteRes(Comment entity) {
             this.id = entity.getId();
         }
+    }
+
+
+    //for nativeQuery
+    public interface DtoInterface {
+        Long getCommentId();
+        String getContent();
+        Long getDepth();
+        Long getParentId();
+        Long getUserId();
+        String getName();
+        String getNickName();
+        String getMbti();
+        Integer getAge();
+        String getGender();
+        String getProfileImage();
+        Long getLikeCount();
+
+        LocalDateTime getRegDate();
+
+        LocalDateTime getModDate();
+
+
+
     }
 }

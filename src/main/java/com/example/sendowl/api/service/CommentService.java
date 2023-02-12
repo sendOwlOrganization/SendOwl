@@ -11,13 +11,20 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.sendowl.domain.comment.dto.CommentDto.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,14 +43,12 @@ public class CommentService {
         Comment comment;
 
         if(vo.getParentId() != null){
-            Comment parentComment = commentRepository.findById(vo.getParentId())
-                    .orElseThrow(()->new CommentNotFoundException(CommentErrorCode.NOT_FOUND_PARENT));
 
             comment = Comment.builder()
                     .board(board)
                     .user(user)
                     .content(vo.getContent())
-                    .parent(parentComment)
+                    .parent(vo.getParentId())
                     .depth(1L)
                     .build();
         } else {
@@ -57,28 +62,47 @@ public class CommentService {
         }
 
         Comment savedComment = commentRepository.save(comment);
-        CommentRes commentRes = new CommentRes(savedComment);
 
-
-        return commentRes;
+        return new CommentRes(savedComment);
     }
 
-    public List<CommentRes> selectCommentList(Long boardId){
+    public Page<CommentRes> selectCommentList(Long boardId, Pageable pageable){
         // 게시글 존재여부 확인
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
         // 댓글 select
-        List<Comment> comments = commentRepository.findAllByBoard(board).orElseThrow(
+        Page<Comment> comments = commentRepository.findAllByBoard(board, pageable).orElseThrow(
                 ()-> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
-        List<CommentRes> commentList = new ArrayList<>();
+        // 가져온 Comment들의 Id를 담습니다.
+        List<Long> commentIdList =
+                comments.stream().map(Comment::getId).collect(Collectors.toList());
 
+        // comments들의 대댓글들을 가져 옵니다.
+        List<DtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
+
+        // comments <-> childList mapping by child's parent_id
+        Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
+        for(DtoInterface crs : childList) {
+            if(!parentChildMap.containsKey(crs.getParentId().toString())){
+                parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
+            }
+            parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
+        }
+
+        // make List<CommentRes> from comment entity
+        List<CommentRes> commentList = new ArrayList<>();
         for(Comment crs : comments) {
             CommentRes temp = new CommentRes(crs);
+            temp.setChildren(parentChildMap.get(temp.getId().toString()));
             commentList.add(temp);
         }
 
-        return commentList;
+        // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
+        return new PageImpl<>(commentList,
+                PageRequest.of(comments.getPageable().getPageNumber(),comments.getPageable().getPageSize()),
+                comments.getTotalElements());
     }
 
     @Transactional
