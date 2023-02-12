@@ -5,6 +5,7 @@ import com.example.sendowl.auth.PrincipalDetails;
 import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,11 +41,11 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 목록 조회", description = "게시글의 id를 통해 댓글 목록을 가져온다.")
+    @Parameters(@Parameter(name = "pageable", required = false, description = "example: {\"page\": 0,\"size\": 1,\n" +
+            "  \"sort\": [\"regDate,desc\"]\n" + "}"))
     @GetMapping(path = "/{boardId}") // 댓글 목록
     public ResponseEntity<?> getCommentList(@RequestParam(name="board-id") Long boardId,
-                                            @PageableDefault(sort="regDate", direction = Sort.Direction.DESC, size = 10, page = 0)
-                                            @Parameter(required = false, description = "example: {\"page\": 0,\"size\": 1,\n" +
-                                                    "  \"sort\": [\"regDate,desc\"]\n" + "}") Pageable pageable){
+                                            @PageableDefault(sort="regDate", direction = Sort.Direction.DESC, size = 10, page = 0) Pageable pageable){
         Page<CommentRes> commentResList = commentService.selectCommentList(boardId, pageable);
 
         return new ResponseEntity(commentResList, HttpStatus.OK);
