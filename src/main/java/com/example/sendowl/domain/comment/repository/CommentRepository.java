@@ -39,9 +39,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             nativeQuery = true)
     List<CommentDto.DtoInterface> findAllChildComment(List<Long> commentList);
 
-
-
-    // TODO: 실제 대댓글 달리는 수에 따라 대댓글 더보기 API 개발 + pagenation 작업
+    // TODO: 런칭 이후진행
+    // 초기 로딩시 로딩될 대댓글 갯수 제한 + 더보기 api (pagenation)
     @Query(value = "SELECT\n" +
             "*\n" +
             "FROM\n" +
