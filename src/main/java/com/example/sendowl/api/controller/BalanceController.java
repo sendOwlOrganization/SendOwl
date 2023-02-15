@@ -29,7 +29,7 @@ public class BalanceController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "[admin] 밸런스게임 삭제", description = "밸런스 게임을 소프트 삭제한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> updateBalance(final @PathVariable Long id) {
+    public ResponseEntity<?> deleteBalance(final @PathVariable Long id) {
         return new ResponseEntity<>(balanceService.deleteBalance(id), HttpStatus.OK);
     }
 
@@ -49,7 +49,7 @@ public class BalanceController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "밸런스 게임 투표", description = "밸런스 게임에 투표한다.",
             security = {@SecurityRequirement(name = "bearerAuth")})
-    @PostMapping("/vote")  // 밸런스 게임 등록
+    @PostMapping("/vote")
     public ResponseEntity<?> voteBalanceGame(final @Valid @RequestBody BalanceDto.VoteBalanceReq rq) {
         return new ResponseEntity<>(balanceService.voteBalanceGame(rq), HttpStatus.OK);
     }
