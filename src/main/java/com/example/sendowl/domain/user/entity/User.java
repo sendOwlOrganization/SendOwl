@@ -56,6 +56,8 @@ public class User extends BaseEntity {
     private LocalDateTime accessDate;
     private Long accessCount;
 
+    private Long exp;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList;
 
