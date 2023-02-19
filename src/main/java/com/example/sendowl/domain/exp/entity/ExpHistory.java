@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class ExpHistory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // null 넣으면 DB가 알아서 autoincrement해준다.
-    @Column(name = "user_id")
+    @Column(name = "exp_history_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
