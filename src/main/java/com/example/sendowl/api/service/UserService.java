@@ -51,6 +51,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final ExpService expService;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -163,7 +164,7 @@ public class UserService {
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
-
+        
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
 
