@@ -55,14 +55,17 @@ public class User extends BaseEntity {
 
     private LocalDateTime accessDate;
     private Long accessCount;
-
-    private Long exp;
+    @Column(columnDefinition = "bigint default 0")
+    private Long exp = 0L;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BoardLike> boardLikeList;
+
+    public void addExp(Long exp) {
+        this.exp += exp;
+    }
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
