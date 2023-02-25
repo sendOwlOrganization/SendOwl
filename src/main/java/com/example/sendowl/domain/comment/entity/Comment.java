@@ -32,7 +32,7 @@ public class Comment extends BaseEntity {
     @Column(name = "parent_id")
     private Long parent;
     @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id)")
-    private Long commentLikeCount;
+    private Long likeCount;
 
     @Builder
     public Comment(Board board, User user, String content, Long parent, Long depth) {

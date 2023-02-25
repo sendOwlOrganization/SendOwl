@@ -25,7 +25,7 @@ public class CommentDto {
         private final String content;
         private final LocalDateTime regDate;
         private final LocalDateTime modDate;
-        private final Long commentLikeCount;
+        private final Long likeCount;
 
         public CommentRes(Comment entity) {
             this.id = entity.getId();
@@ -33,7 +33,7 @@ public class CommentDto {
             this.content = entity.getContent();
             this.regDate = entity.getRegDate();
             this.modDate = entity.getModDate();
-            this.commentLikeCount = entity.getCommentLikeCount();
+            this.likeCount = entity.getLikeCount();
         }
 
         public CommentRes(DtoInterface dto) {
@@ -49,7 +49,7 @@ public class CommentDto {
             this.content = dto.getContent();
             this.regDate = dto.getRegDate();
             this.modDate = dto.getModDate();
-            this.commentLikeCount = dto.getLikeCount();
+            this.likeCount = dto.getLikeCount();
         }
     }
 
