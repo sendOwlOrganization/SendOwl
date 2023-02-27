@@ -25,6 +25,7 @@ public class ExpHistory extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
     private ExpType type;
 
     private Long addExp;

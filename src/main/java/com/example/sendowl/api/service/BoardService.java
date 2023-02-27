@@ -34,6 +34,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
+    private final ExpService expService;
 
     public List<PreviewBoardRes> getPreviewBoardList(Long categoryId, Integer titleLength, Pageable pageable) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(
@@ -81,6 +82,7 @@ public class BoardService {
         String refinedText = new EditorJsHelper().extractText(req.getEditorJsContent());
 
         Board savedBoard = boardRepository.save(req.toEntity(user, category, refinedText));
+        expService.addExpBoard(user);
         return new DetailRes(savedBoard);
     }
 

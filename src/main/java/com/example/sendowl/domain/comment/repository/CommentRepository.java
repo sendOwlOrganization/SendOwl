@@ -4,17 +4,19 @@ package com.example.sendowl.domain.comment.repository;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.comment.dto.CommentDto;
 import com.example.sendowl.domain.comment.entity.Comment;
+import com.example.sendowl.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0 and c.isDeleted = false",
-    countQuery="SELECT COUNT(*) FROM Comment c where c.board =:board and c.depth=0 and c.isDeleted=false")
+            countQuery = "SELECT COUNT(*) FROM Comment c where c.board =:board and c.depth=0 and c.isDeleted=false")
     Optional<Page<Comment>> findAllByBoard(Board board, Pageable pageable);
 
     // 부모댓글에 따른 대댓글 전체 select
@@ -61,7 +63,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "                   LEFT JOIN (SELECT comment_id, COUNT(*) as clc FROM comment_like group by comment_id) as cl on c.comment_id = cl.comment_id\n" +
             "            WHERE c.depth = 1 AND c.parent_id in :commentList ) as rankrow\n" +
             "            WHERE rankrow.a <= 5",
-    nativeQuery = true)
+            nativeQuery = true)
     List<CommentDto.DtoInterface> findChildComment(List<Long> commentList);
+
+    Optional<Long> countByUserAndRegDateBetween(User user, LocalDateTime today, LocalDateTime tomorrow);
 }
 
