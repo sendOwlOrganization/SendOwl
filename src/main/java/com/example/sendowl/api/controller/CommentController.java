@@ -43,8 +43,8 @@ public class CommentController {
     @Operation(summary = "댓글 목록 조회", description = "게시글의 id를 통해 댓글 목록을 가져온다.")
     @Parameters(@Parameter(name = "pageable", required = false, description = "example: {\"page\": 0,\"size\": 1,\n" +
             "  \"sort\": [\"regDate,desc\"]\n" + "}"))
-    @GetMapping(path = "/{boardId}") // 댓글 목록
-    public ResponseEntity<?> getCommentList(@RequestParam(name="board-id") Long boardId,
+    @GetMapping(path = "") // 댓글 목록
+    public ResponseEntity<?> getCommentList(@RequestParam(name="boardId") Long boardId,
                                             @PageableDefault(sort="regDate", direction = Sort.Direction.DESC, size = 10, page = 0) Pageable pageable){
         Page<CommentRes> commentResList = commentService.selectCommentList(boardId, pageable);
 
