@@ -96,9 +96,7 @@ public class CommentService {
         for(Comment crs : comments) {
             CommentRes temp = new CommentRes(crs);
 
-            List<CommentRes> tempChild = new ArrayList<>();
-            if(parentChildMap.get(temp.getId().toString()) != null)
-                tempChild = parentChildMap.get(temp.getId().toString());
+            List<CommentRes> tempChild = parentChildMap.getOrDefault(temp.getId().toString(), new ArrayList<>());
 
             temp.setChildren(tempChild);
             commentList.add(temp);
