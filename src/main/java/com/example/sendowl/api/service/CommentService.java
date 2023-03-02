@@ -89,7 +89,7 @@ public class CommentService {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
-        List<Comment> bestComment = commentRepository.findAllByBoardOrderByCommentLikeCountDesc(board, PageRequest.of(0, size.intValue()))
+        List<Comment> bestComment = commentRepository.findAllByBoardOrderByLikeCountDesc(board, PageRequest.of(0, size.intValue()))
                 .orElseThrow();
 
         return this.getResFromEntityWithChildren(bestComment);
