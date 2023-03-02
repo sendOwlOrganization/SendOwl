@@ -31,7 +31,7 @@ public class Comment extends BaseEntity {
     private Long depth;
     @Column(name = "parent_id")
     private Long parent;
-    @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id)")
+    @Formula("(select count(*) from comment_like cl where cl.comment_id = comment_id and cl.is_deleted = 'N')")
     private Long likeCount;
 
     @Builder
