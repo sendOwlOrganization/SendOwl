@@ -51,6 +51,16 @@ public class CommentController {
         return new ResponseEntity(commentResList, HttpStatus.OK);
     }
 
+    @Operation(summary = "베스트 댓글 목록 조회", description = "게시글의 id를 통해 베스트 댓글 목록을 가져온다.")
+    @Parameters(@Parameter(name = "size", required = true, description = "example: 5"))
+    @GetMapping(path = "/best") // 댓글 목록
+    public ResponseEntity<?> getCommentList(@RequestParam(name="boardId") Long boardId,
+                                            @RequestParam(name="size") Long size){
+        List<CommentRes> commentResList = commentService.selectBestCommentList(boardId, size);
+
+        return new ResponseEntity(commentResList, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "댓글 내용 수정", description = "댓글의 내용을 수정한다.", security = { @SecurityRequirement(name = "bearerAuth") })
     @PutMapping(path = "") // 댓글 내용 수정
@@ -74,6 +84,4 @@ public class CommentController {
 
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
 }

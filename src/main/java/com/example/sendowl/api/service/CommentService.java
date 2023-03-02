@@ -109,6 +109,45 @@ public class CommentService {
                 comments.getTotalElements());
     }
 
+    public List<CommentRes> selectBestCommentList(Long boardId, Long size){
+
+        // 게시글 존재여부 확인
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
+        List<Comment> bestComment = commentRepository.findAllByBoardOrderByCommentLikeCountDesc(board, PageRequest.of(0, size.intValue()))
+                .orElseThrow();
+
+        // 가져온 Comment들의 Id를 담습니다.
+        List<Long> commentIdList =
+                bestComment.stream().map(Comment::getId).collect(Collectors.toList());
+
+        // comments들의 대댓글들을 가져 옵니다.
+        List<DtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
+
+        // comments <-> childList mapping by child's parent_id
+        Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
+        for (DtoInterface crs : childList) {
+            if (!parentChildMap.containsKey(crs.getParentId().toString())) {
+                parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
+            }
+            parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
+        }
+
+        // make List<CommentRes> from comment entity
+        List<CommentRes> commentList = new ArrayList<>();
+        for (Comment crs : bestComment) {
+            CommentRes temp = new CommentRes(crs);
+
+            List<CommentRes> tempChild = parentChildMap.getOrDefault(temp.getId().toString(), new ArrayList<>());
+
+            temp.setChildren(tempChild);
+            commentList.add(temp);
+        }
+
+        return commentList;
+    }
+
     @Transactional
     public CommentRes updateComment(UpdateReq crq, User user) {
 
