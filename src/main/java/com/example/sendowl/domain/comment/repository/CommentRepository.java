@@ -19,6 +19,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             countQuery = "SELECT COUNT(*) FROM Comment c where c.board =:board and c.depth=0 and c.isDeleted=false")
     Optional<Page<Comment>> findAllByBoard(Board board, Pageable pageable);
 
+    @Query(value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.board=:board and c.depth=0 and c.isDeleted = false ORDER BY c.likeCount desc, c.regDate desc")
+    Optional<List<Comment>> findAllByBoardOrderByLikeCountDesc(Board board, Pageable pageable);
+
     // 부모댓글에 따른 대댓글 전체 select
     @Query(value = "SELECT c.comment_id AS commentId,\n" +
             "            c.content,\n" +

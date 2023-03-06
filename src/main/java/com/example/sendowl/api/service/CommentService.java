@@ -76,37 +76,23 @@ public class CommentService {
         Page<Comment> comments = commentRepository.findAllByBoard(board, pageable).orElseThrow(
                 () -> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
-        // 가져온 Comment들의 Id를 담습니다.
-        List<Long> commentIdList =
-                comments.stream().map(Comment::getId).collect(Collectors.toList());
-
-        // comments들의 대댓글들을 가져 옵니다.
-        List<DtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
-
-        // comments <-> childList mapping by child's parent_id
-        Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
-        for (DtoInterface crs : childList) {
-            if (!parentChildMap.containsKey(crs.getParentId().toString())) {
-                parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
-            }
-            parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
-        }
-
-        // make List<CommentRes> from comment entity
-        List<CommentRes> commentList = new ArrayList<>();
-        for (Comment crs : comments) {
-            CommentRes temp = new CommentRes(crs);
-
-            List<CommentRes> tempChild = parentChildMap.getOrDefault(temp.getId().toString(), new ArrayList<>());
-
-            temp.setChildren(tempChild);
-            commentList.add(temp);
-        }
 
         // CommentRes를 content로 가지고, comments의 page 정보를 담는 Page<>를 return 합니다.
-        return new PageImpl<>(commentList,
+        return new PageImpl<>(this.getResFromEntityWithChildren(comments.getContent()),
                 PageRequest.of(comments.getPageable().getPageNumber(), comments.getPageable().getPageSize()),
                 comments.getTotalElements());
+    }
+
+    public List<CommentRes> selectBestCommentList(Long boardId, Long size){
+
+        // 게시글 존재여부 확인
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
+
+        List<Comment> bestComment = commentRepository.findAllByBoardOrderByLikeCountDesc(board, PageRequest.of(0, size.intValue()))
+                .orElseThrow();
+
+        return this.getResFromEntityWithChildren(bestComment);
     }
 
     @Transactional
@@ -137,5 +123,33 @@ public class CommentService {
         } else {
             throw new CommentNoPermission(CommentErrorCode.NO_PERMISSON);
         }
+    }
+
+    public List<CommentRes> getResFromEntityWithChildren(List<Comment> parentList){
+
+        List<Long> commentIdList =
+                parentList.stream().map(Comment::getId).collect(Collectors.toList());
+
+        List<DtoInterface> childList = commentRepository.findAllChildComment(commentIdList);
+
+        Map<String, List<CommentRes>> parentChildMap = new HashMap<>();
+        for (DtoInterface crs : childList) {
+            if (!parentChildMap.containsKey(crs.getParentId().toString())) {
+                parentChildMap.put(crs.getParentId().toString(), new ArrayList<>());
+            }
+            parentChildMap.get(crs.getParentId().toString()).add(new CommentRes(crs));
+        }
+
+        List<CommentRes> commentList = new ArrayList<>();
+        for (Comment crs : parentList) {
+            CommentRes temp = new CommentRes(crs);
+
+            List<CommentRes> tempChild = parentChildMap.getOrDefault(temp.getId().toString(), new ArrayList<>());
+
+            temp.setChildren(tempChild);
+            commentList.add(temp);
+        }
+
+        return commentList;
     }
 }
