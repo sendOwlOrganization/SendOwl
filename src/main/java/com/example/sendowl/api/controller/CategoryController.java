@@ -28,6 +28,7 @@ public class CategoryController {
         List<CategoriesRes> categoriesRes = categoryService.getCategoryList();
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
+
     @Operation(summary = "카테고리의 카운트(인기도)순으로 조회", description = "카테고리의 카운트(인기도)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
     @GetMapping(path = "/popular") // 카테고리 목록
     public ResponseEntity<?> categoriesCount() {
@@ -35,26 +36,26 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.", security = { @SecurityRequirement(name = "bearerAuth") })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "카테고리 삽입", description = "새로운 카테고리를 삽입한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping(path = "") // 카테고리 저장
     public ResponseEntity<?> insertCategory(final @Valid @RequestBody CategoryInsertReq rq) {
         CategoriesRes categoriesRes = categoryService.insertCategory(rq);
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.", security = { @SecurityRequirement(name = "bearerAuth") })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "카테고리 변경", description = "카테고리의 이름을 변경한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @PutMapping(path = "") // 카테고리 변경
     public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryUpdateReq rq) {
         CategoriesRes categoriesRes = categoryService.updateCategory(rq);
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "카테고리 소프트 수정", description = "카테고리를 소프트 삭제한다.", security = { @SecurityRequirement(name = "bearerAuth") })
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "카테고리 삭제", description = "카테고리를 삭제한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping(path = "") // 카테고리 삭제
-    public ResponseEntity<?> updateCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
+    public ResponseEntity<?> deleteCategory(final @Valid @RequestBody CategoryDeleteReq rq) {
         categoryService.deleteCategory(rq);
         return new ResponseEntity(HttpStatus.OK);
     }

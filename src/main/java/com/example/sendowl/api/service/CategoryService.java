@@ -27,6 +27,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream().map(CategoriesRes::new).collect(Collectors.toList());
     }
+
     public List<CategoriesCountRes> getCategoryCountList() {
         List<CategoryCount> categories = categoryRepository.findCategoriesWithCount();
         return categories.stream().map(CategoriesCountRes::new).collect(Collectors.toList());
@@ -34,7 +35,7 @@ public class CategoryService {
 
     @Transactional
     public CategoriesRes insertCategory(CategoryInsertReq rq) {
-        if(categoryRepository.existsByName(rq.getName())){
+        if (categoryRepository.existsByName(rq.getName())) {
             throw new CategoryNameAlreadyExistsException(ALREADY_EXISTS);
         }
         Category category = categoryRepository.save(rq.toEntity());
@@ -43,7 +44,7 @@ public class CategoryService {
 
     @Transactional
     public CategoriesRes updateCategory(CategoryUpdateReq rq) {
-        Category category = categoryRepository.findById(rq.getId()).orElseThrow(()->new CategoryNotFoundException(NOT_FOUND));
+        Category category = categoryRepository.findById(rq.getId()).orElseThrow(() -> new CategoryNotFoundException(NOT_FOUND));
         category.setName(rq.getName());
         Category savedCategory = categoryRepository.save(category);
         return new CategoriesRes(savedCategory);
