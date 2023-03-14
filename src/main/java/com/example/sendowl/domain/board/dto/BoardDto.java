@@ -6,6 +6,7 @@ import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -65,10 +66,12 @@ public class BoardDto {
     @NoArgsConstructor
     public static class BoardReq {
         @NotBlank
+        @Schema(description = "타이틀", nullable = false, example = "제목")
         private String title;
         private EditorJsContent editorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.") // Long형에는 NotNull을 써야한다고 합니다.
+        @Schema(description = "카테고리 id", nullable = false, example = "1")
         private Long categoryId;
 
         public Board toEntity(User user, Category category, String refinedContent) {
@@ -144,8 +147,10 @@ public class BoardDto {
     @Getter
     @NoArgsConstructor
     public static class UpdateBoardReq {
+        @Schema(description = "게시글 id", nullable = false, example = "1")
         private Long boardId;
         @NotBlank
+        @Schema(description = "게시글 제목", nullable = false, example = "수정된 제목")
         private String title;
         @JsonIgnore
         private String content;
@@ -153,6 +158,7 @@ public class BoardDto {
         private EditorJsContent editorJsContent;
 
         @NotNull(message = "카테고리 아이디가 올바르지 않습니다.")
+        @Schema(description = "카테고리 id", nullable = false, example = "1")
         private Long categoryId;
     }
 

@@ -5,6 +5,7 @@ import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.like.entity.CommentLike;
 import com.example.sendowl.domain.user.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ public class LikeDto {
     @Getter
     @NoArgsConstructor
     static public class BoardLikeRequest {
+        @Schema(description = "게시글 id", nullable = false, example = "1")
         private Long boardId;
 
         public BoardLikeRequest(Long boardId) {
@@ -41,12 +43,14 @@ public class LikeDto {
 
     @Getter
     static public class BoardUnLikeRequest {
+        @Schema(description = "게시글 id", nullable = false, example = "1")
         private Long boardId;
     }
 
     @Getter
     @NoArgsConstructor
     static public class CommentLikeRequest {
+        @Schema(description = "댓글 id", nullable = false, example = "1")
         private Long commentId;
 
         public CommentLikeRequest(Long commentId) {
@@ -76,6 +80,7 @@ public class LikeDto {
 
     @Getter
     static public class CommentUnLikeRequest {
+        @Schema(description = "댓글 id", nullable = false, example = "1")
         private Long commentId;
     }
 
