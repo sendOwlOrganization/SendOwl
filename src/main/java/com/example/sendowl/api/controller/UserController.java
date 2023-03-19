@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
@@ -23,9 +24,9 @@ public class UserController {
     final private UserService userService;
 
     @Operation(summary = "사용자 이메일 중복 확인")
-    @PostMapping("/email-check")
-    public ResponseEntity<EmailCheckRes> emailCheck(final @Valid @RequestBody EmailCheckReq req) {
-        return new ResponseEntity(userService.emailCheck(req), HttpStatus.OK);
+    @GetMapping("/{email}/email-exists")
+    public ResponseEntity<EmailCheckRes> emailCheck(final @PathVariable("email") @Email String email) {
+        return new ResponseEntity(userService.emailCheck(email), HttpStatus.OK);
     }
 
     @Operation(summary = "사용자 이메일 인증")
@@ -84,10 +85,9 @@ public class UserController {
         return new ResponseEntity(userService.setUserProfile(req), HttpStatus.OK);
     }
 
-    @Operation(summary = "닉네임 중복 확인")
-    @GetMapping("/nickname-check")
-    public ResponseEntity<Boolean> checkUserNickName(final @Valid @RequestParam("nickname") String nickName) {
+    @Operation(summary = "사용자 닉네임 중복 확인")
+    @GetMapping("/{nick-name}/nickname-exists")
+    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable("nick-name") String nickName) {
         return new ResponseEntity(userService.duplicationCheckNickName(nickName), HttpStatus.OK);
     }
-
 }
