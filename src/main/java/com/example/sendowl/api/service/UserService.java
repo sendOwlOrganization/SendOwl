@@ -12,15 +12,10 @@ import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
-import com.example.sendowl.domain.user.exception.UserException.UserAlreadyExistException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
-import com.example.sendowl.domain.user.exception.UserException.UserVerifyTokenExpiredException;
 import com.example.sendowl.domain.user.repository.UserRepository;
-import com.example.sendowl.kafka.producer.KafkaProducer;
-import com.example.sendowl.redis.service.RedisEmailTokenService;
 import com.example.sendowl.util.mail.JwtUserParser;
-import com.example.sendowl.util.mail.TokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,7 +36,8 @@ import java.util.Optional;
 import static com.example.sendowl.auth.jwt.JwtEnum.ACCESS_TOKEN;
 import static com.example.sendowl.auth.jwt.JwtEnum.REFRESH_TOKEN;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
-import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.*;
+import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.INVALID_PASSWORD;
+import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
 
 
 @Service
@@ -55,8 +51,6 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final KafkaProducer kafkaProducer;
-    private final RedisEmailTokenService redisEmailTokenService;
     private final JwtUserParser jwtUserParser;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
@@ -111,28 +105,6 @@ public class UserService {
         return new UserSelfRes(user);
     }
 
-    public EmailCheckRes emailCheck(EmailCheckReq req) {
-        if (userRepository.existsUserByEmail(req.getEmail())) {
-            throw new UserAlreadyExistException(EXISTING_EMAIL);
-        }
-
-        String token = new TokenGenerator().generateSixRandomNumber();
-        new Thread(() -> {
-            kafkaProducer.sendEmailVerification(req.getEmail(), token); // 인증 코드 전송
-            redisEmailTokenService.save(req.getEmail(), token);
-        }).start();
-
-
-        return new EmailCheckRes().success();
-    }
-
-    public EmailVerifyRes emailVerify(EmailVerifyReq req) {
-        String token = redisEmailTokenService.getToken(req.getEmail())
-                .orElseThrow(() -> new UserVerifyTokenExpiredException(EXPIRED_VERIFICATION_TOKEN));
-
-        return new EmailVerifyRes(token.equals(req.getToken()));
-    }
-
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public Oauth2Res oauthService(Oauth2Req req, HttpServletResponse servletResponse) {
         // 토큰의 유효성 검증
@@ -164,7 +136,7 @@ public class UserService {
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
-        
+
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
 
