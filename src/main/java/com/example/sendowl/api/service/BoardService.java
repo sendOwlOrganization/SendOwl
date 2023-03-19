@@ -92,9 +92,6 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
-        // Redis add hit count
-//        redisBoardService.setAddCount(id);
-//        Integer hit = redisBoardService.getHit(id);
         Integer hit = board.getHit();
         board.setHit(hit + 1);
 
