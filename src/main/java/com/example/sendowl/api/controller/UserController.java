@@ -21,19 +21,7 @@ import static com.example.sendowl.domain.user.dto.UserDto.*;
 public class UserController {
 
     final private UserService userService;
-
-    @Operation(summary = "사용자 이메일 중복 확인")
-    @PostMapping("/email-check")
-    public ResponseEntity<EmailCheckRes> emailCheck(final @Valid @RequestBody EmailCheckReq req) {
-        return new ResponseEntity(userService.emailCheck(req), HttpStatus.OK);
-    }
-
-    @Operation(summary = "사용자 이메일 인증")
-    @PostMapping("/verify")
-    public ResponseEntity<EmailVerifyRes> emailVerify(final EmailVerifyReq req) {
-        return new ResponseEntity(userService.emailVerify(req), HttpStatus.OK);
-    }
-
+    
     @Operation(summary = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<JoinRes> join(final @Valid @RequestBody JoinReq req) {

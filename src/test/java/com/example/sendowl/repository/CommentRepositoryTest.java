@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
 @AutoConfigureMockMvc
 @SpringBootTest
 public class CommentRepositoryTest {
@@ -40,14 +38,6 @@ public class CommentRepositoryTest {
                 .build();
 //        log.error(commentService.insertComment(crq).toString());
 
-    }
-
-    @Test
-    public void 코멘트리스트() {
-        Long bid = 1l;
-        List<CommentDto.CommentRes> Clist = commentService.selectCommentList(bid);
-
-        log.error(String.valueOf(Clist.size()));
     }
 
 
