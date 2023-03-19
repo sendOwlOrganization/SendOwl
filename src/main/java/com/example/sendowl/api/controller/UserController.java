@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
@@ -22,6 +23,7 @@ public class UserController {
 
     final private UserService userService;
     
+
     @Operation(summary = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<JoinRes> join(final @Valid @RequestBody JoinReq req) {
@@ -72,10 +74,9 @@ public class UserController {
         return new ResponseEntity(userService.setUserProfile(req), HttpStatus.OK);
     }
 
-    @Operation(summary = "닉네임 중복 확인")
-    @GetMapping("/nickname-check")
-    public ResponseEntity<Boolean> checkUserNickName(final @Valid @RequestParam("nickname") String nickName) {
+    @Operation(summary = "사용자 닉네임 중복 확인")
+    @GetMapping("/{nick-name}/nickname-exists")
+    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable("nick-name") String nickName) {
         return new ResponseEntity(userService.duplicationCheckNickName(nickName), HttpStatus.OK);
     }
-
 }

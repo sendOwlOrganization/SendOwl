@@ -105,6 +105,7 @@ public class UserService {
         return new UserSelfRes(user);
     }
 
+
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public Oauth2Res oauthService(Oauth2Req req, HttpServletResponse servletResponse) {
         // 토큰의 유효성 검증

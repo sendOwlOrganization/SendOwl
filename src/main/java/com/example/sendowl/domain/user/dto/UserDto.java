@@ -105,12 +105,6 @@ public class UserDto {
     }
 
     @Data
-    public static class EmailCheckReq {
-        @Email
-        private String email;
-    }
-
-    @Data
     public static class EmailCheckRes {
         private String message;
 
