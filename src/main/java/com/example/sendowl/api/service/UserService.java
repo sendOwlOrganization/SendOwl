@@ -111,15 +111,15 @@ public class UserService {
         return new UserSelfRes(user);
     }
 
-    public EmailCheckRes emailCheck(EmailCheckReq req) {
-        if (userRepository.existsUserByEmail(req.getEmail())) {
+    public EmailCheckRes emailCheck(String eamil) {
+        if (userRepository.existsUserByEmail(eamil)) {
             throw new UserAlreadyExistException(EXISTING_EMAIL);
         }
 
         String token = new TokenGenerator().generateSixRandomNumber();
         new Thread(() -> {
-            kafkaProducer.sendEmailVerification(req.getEmail(), token); // 인증 코드 전송
-            redisEmailTokenService.save(req.getEmail(), token);
+            kafkaProducer.sendEmailVerification(eamil, token); // 인증 코드 전송
+            redisEmailTokenService.save(eamil, token);
         }).start();
 
 
@@ -164,7 +164,7 @@ public class UserService {
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
-        
+
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
 
