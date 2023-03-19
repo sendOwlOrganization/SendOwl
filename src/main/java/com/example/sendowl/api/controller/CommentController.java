@@ -18,6 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.example.sendowl.domain.comment.dto.CommentDto.*;
 
 @RestController
@@ -55,8 +57,8 @@ public class CommentController {
     @Operation(summary = "베스트 댓글 목록 조회", description = "게시글의 id를 통해 베스트 댓글 목록을 가져온다.")
     @Parameters(@Parameter(name = "size", required = true, description = "example: 5"))
     @GetMapping(path = "/best") // 댓글 목록
-    public ResponseEntity<?> getCommentList(@RequestParam(name="boardId") Long boardId,
-                                            @RequestParam(name="size") Long size){
+    public ResponseEntity<?> getCommentList(@RequestParam(name = "boardId") Long boardId,
+                                            @RequestParam(name = "size") Long size) {
         List<CommentRes> commentResList = commentService.selectBestCommentList(boardId, size);
 
         return new ResponseEntity(commentResList, HttpStatus.OK);
