@@ -50,15 +50,15 @@ public class User extends BaseEntity {
     @Builder.Default
     private Role role = Role.USER;
     private String introduction;
-    private String refreshToken;
-    private String refreshTokenRegDate;
-    private String profileImage;
 
+    private String refreshToken;
+    private LocalDateTime refreshTokenRegDate;
+
+    private String profileImage;
     private LocalDateTime accessDate;
     private Long accessCount;
     @Column(columnDefinition = "bigint default 0")
     private Long exp = 0L;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Board> boardList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -90,5 +90,13 @@ public class User extends BaseEntity {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void setRefreshTokenRegDate(LocalDateTime refreshTokenRegDate) {
+        this.refreshTokenRegDate = refreshTokenRegDate;
     }
 }
