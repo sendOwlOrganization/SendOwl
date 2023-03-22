@@ -7,7 +7,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ public class MbtiController {
     }
 
     @Operation(summary = "카테고리의 유저 mbti 조회.", description = "카테고리id를 통해 해당 카테고리에 게시글을 쓴 유저들의 mbti 순위(유저수)를 반환한다.")
-    @PostMapping("/category/{categoryId}")
+    @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<UserMbti>> getUserMbtiFromCategory(@PathVariable Long categoryId) {
         return new ResponseEntity(userService.getUserMbtiFromCategoryId(categoryId), HttpStatus.OK);
     }
