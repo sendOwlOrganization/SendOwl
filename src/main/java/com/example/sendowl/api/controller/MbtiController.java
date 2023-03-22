@@ -19,7 +19,7 @@ public class MbtiController {
     final private UserService userService;
 
     @Operation(summary = "유저들의 mbti 조회", description = "모든 유저들의 mbti 수를 반환한다.")
-    @PostMapping("/users")
+    @GetMapping("/users")
     public ResponseEntity<List<UserMbti>> getUserMbti() {
         return new ResponseEntity(userService.getUserMbti(), HttpStatus.OK);
     }
