@@ -50,7 +50,6 @@ public class OauthServiceTest {
         given(userRepository.findByEmail(any())).willReturn(Optional.of(existUser));
 
         given(jwtProvider.createAccessToken(any())).willReturn("accessToken");
-        given(jwtProvider.createRefreshToken(any())).willReturn("refreshToken");
 
         // when
         Map<String, String> tokens = (Map<String, String>) userService.oauthService(UserDto.Oauth2Req.builder().transactionId(transactionId).token(token).build(), any());

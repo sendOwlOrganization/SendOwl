@@ -16,12 +16,13 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @RequiredArgsConstructor // final , notNull 필드에 생성자 자동생성
 @Component
 public class JwtProvider {
-    private final Long accessTokenValidMillisecond = 1000L * 60 * 60; // access 토큰 만료 시간
-    private final Long refreshTokenValidMillisecond = 24 * 60 * 60 * 60 * 1000L; // refresh 토큰 만료 시간
+    public static final Long ACCESS_TOKEN_VALID_MILLISECOND = 1000L * 60 * 60; // access 토큰 만료 시간
+    public static final int REFRESH_TOKEN_VALIDSECOND = 60 * 60 * 24; // refresh 토큰 만료 시간
     private final PrincipalDetailsService principalDetailsService;
     // @Value("${secretKey}") 일단 임시로
     private String secretKey = "secretKey";
@@ -41,7 +42,7 @@ public class JwtProvider {
         return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidMillisecond))
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_VALID_MILLISECOND))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -62,19 +63,8 @@ public class JwtProvider {
     }
 
 
-    public String createRefreshToken(User user) {
-        //user 구분을 위해 Claim에 User Pk값 넣어줌
-        Claims claims = Jwts.claims().setSubject(user.getEmail() + "/" + user.getTransactionId());
-        claims.put("roles", user.getRole());
-        claims.put("type", "refresh");
-        // 생성날짜, 만료 날짜를 위한 Date
-        Date now = new Date();
-        return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+    public String createRefreshToken() {
+        return UUID.randomUUID().toString();
     }
 
     // Jwt로 인증정보를 조회
