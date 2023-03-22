@@ -51,9 +51,9 @@ public class BlameController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "신고 종류 제거", description = "신고 가능한 종류 중 하나를 삭제한다.", security = {@SecurityRequirement(name = "bearerAuth")})
-    @DeleteMapping(path = "/type/{id}") // 게시글 목록
-    public ResponseEntity<?> insertBlameType(final @PathVariable Long id) {
-        return new ResponseEntity(blameService.deleteBlameType(id), HttpStatus.OK);
+    @DeleteMapping(path = "/type/{blameTypeId}") // 게시글 목록
+    public ResponseEntity<?> insertBlameType(final @PathVariable Long blameTypeId) {
+        return new ResponseEntity(blameService.deleteBlameType(blameTypeId), HttpStatus.OK);
     }
 
 }

@@ -86,11 +86,11 @@ public class BoardController {
 
     @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회한다.")
     @Parameters({
-            @Parameter(name = "id", example = "1", description = "게시글의 id"),
+            @Parameter(name = "boardId", example = "1", description = "게시글의 id"),
     })
-    @GetMapping(path = "/{id}") // 게시글 상세
-    public ResponseEntity<?> boardDetail(@PathVariable Long id) {
-        DetailRes detailRes = boardService.boardDetail(id);
+    @GetMapping(path = "/{boardId}") // 게시글 상세
+    public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
+        DetailRes detailRes = boardService.boardDetail(boardId);
 
         return new ResponseEntity(detailRes, HttpStatus.OK);
     }
@@ -110,14 +110,14 @@ public class BoardController {
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "게시글 소프트 삭제", description = "게시글을 소프트 삭제한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @Parameters({
-            @Parameter(name = "id", example = "1", description = "게시글의 id"),
+            @Parameter(name = "boardId", example = "1", description = "게시글의 id"),
     })
-    @DeleteMapping(path = "/{id}") // 게시글 삭제
-    public ResponseEntity<?> boardDelete(@PathVariable Long id) {
+    @DeleteMapping(path = "/{boardId}") // 게시글 삭제
+    public ResponseEntity<?> boardDelete(@PathVariable Long boardId) {
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
 
-        boardService.deleteBoard(id, user);
+        boardService.deleteBoard(boardId, user);
 
         return new ResponseEntity(HttpStatus.OK);
     }

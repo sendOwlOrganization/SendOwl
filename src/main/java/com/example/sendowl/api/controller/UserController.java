@@ -22,6 +22,7 @@ public class UserController {
 
     final private UserService userService;
 
+
     @Operation(summary = "회원가입")
     @PostMapping("/join")
     public ResponseEntity<JoinRes> join(final @Valid @RequestBody JoinReq req) {
@@ -59,9 +60,9 @@ public class UserController {
     }
 
     @Operation(summary = "id로 유저 검색")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserRes> getUserById(@PathVariable("id") Long id) {
-        return new ResponseEntity(userService.getUser(id), HttpStatus.OK);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserRes> getUserById(@PathVariable Long userId) {
+        return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
     }
 
 
@@ -73,8 +74,8 @@ public class UserController {
     }
 
     @Operation(summary = "사용자 닉네임 중복 확인")
-    @GetMapping("/{nick-name}/nickname-exists")
-    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable("nick-name") String nickName) {
+    @GetMapping("/{nickName}/nickname-exists")
+    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable String nickName) {
         return new ResponseEntity(userService.duplicationCheckNickName(nickName), HttpStatus.OK);
     }
 }

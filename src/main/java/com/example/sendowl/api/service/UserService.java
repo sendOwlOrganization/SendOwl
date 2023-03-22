@@ -91,8 +91,8 @@ public class UserService {
         return new UserRes(user);
     }
 
-    public UserRes getUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
+    public UserRes getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
         return new UserRes(user);
     }
