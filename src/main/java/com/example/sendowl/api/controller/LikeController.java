@@ -30,7 +30,7 @@ public class LikeController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "게시글 좋아요 취소", description = "게시글 좋아요 취소", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping("/board/{boardId}")
-    public ResponseEntity<Boolean> boardUnLike(final @PathVariable("boardId") Long boardId) {
+    public ResponseEntity<Boolean> boardUnLike(final @PathVariable Long boardId) {
         return new ResponseEntity(likeService.setBoardUnLike(boardId), HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class LikeController {
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "댓글 좋아요 취소", description = "댓글 좋아요 취소", security = {@SecurityRequirement(name = "bearerAuth")})
     @DeleteMapping("/comment/{commentId}")
-    public ResponseEntity<Boolean> commentUnLike(final @PathVariable("commentId") Long commentId) {
+    public ResponseEntity<Boolean> commentUnLike(final @PathVariable Long commentId) {
         return new ResponseEntity(likeService.setCommentUnlike(commentId), HttpStatus.OK);
     }
 }
