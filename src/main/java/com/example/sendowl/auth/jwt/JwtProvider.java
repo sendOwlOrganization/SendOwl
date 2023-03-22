@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 @RequiredArgsConstructor // final , notNull 필드에 생성자 자동생성
 @Component
@@ -62,19 +63,8 @@ public class JwtProvider {
     }
 
 
-    public String createRefreshToken(User user) {
-        //user 구분을 위해 Claim에 User Pk값 넣어줌
-        Claims claims = Jwts.claims().setSubject(user.getEmail() + "/" + user.getTransactionId());
-        claims.put("roles", user.getRole());
-        claims.put("type", "refresh");
-        // 생성날짜, 만료 날짜를 위한 Date
-        Date now = new Date();
-        return Jwts.builder()// 토큰에 다양한 데이터를 넣고 압축한다.
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+    public String createRefreshToken() {
+        return UUID.randomUUID().toString();
     }
 
     // Jwt로 인증정보를 조회
