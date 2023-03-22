@@ -15,6 +15,7 @@ import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
 import com.example.sendowl.domain.user.repository.UserRepository;
+import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -27,13 +28,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.example.sendowl.auth.jwt.JwtEnum.ACCESS_TOKEN;
+import static com.example.sendowl.auth.jwt.JwtProvider.REFRESH_TOKEN_VALIDSECOND;
+import static com.example.sendowl.auth.jwt.TokenEnum.ACCESS_TOKEN;
+import static com.example.sendowl.auth.jwt.TokenEnum.REFRESH_TOKEN;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.INVALID_PASSWORD;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
@@ -51,6 +55,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final JwtUserParser jwtUserParser;
+    private final DateUtil dateUtil;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
@@ -102,19 +107,19 @@ public class UserService {
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public Oauth2Res oauthService(Oauth2Req req, HttpServletResponse servletResponse) {
         // 토큰의 유효성 검증
-        Oauth2User user = getProfileByToken(req.getTransactionId(), req.getToken());
+        Oauth2User oauthUser = getProfileByToken(req.getTransactionId(), req.getToken());
         Boolean alreadyJoined = true;
         Boolean alreadySetted = true;
         User retUser = null;
 
         // 회원여부 확인
-        Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(user.getEmail(), user.getTransactionId());
+        Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId());
         if (optionalUser.isEmpty()) {
             retUser = userRepository.save(
                     User.builder()
-                            .email(user.getEmail())
-                            .name(user.getName())
-                            .transactionId(user.getTransactionId())
+                            .email(oauthUser.getEmail())
+                            .name(oauthUser.getName())
+                            .transactionId(oauthUser.getTransactionId())
                             .build()
             );
             alreadyJoined = false;
@@ -125,11 +130,24 @@ public class UserService {
         if (retUser.getNickName() == null || retUser.getMbti() == null) {
             alreadySetted = false;
         }
-        // 로그인 (토큰 반환)
-        makeToken(
-                userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
-        ).forEach(servletResponse::addHeader);
+
+        User user = userRepository.findByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId()).get();
+
+        servletResponse.addHeader(ACCESS_TOKEN, jwtProvider.createAccessToken(user));
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
+
+        String refreshToken = jwtProvider.createRefreshToken();
+
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        cookie.setMaxAge(REFRESH_TOKEN_VALIDSECOND);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        // TODO: 리프레쉬 가능 유일 경로 설정
+        cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
+        servletResponse.addCookie(cookie);
+
+        user.setRefreshToken(refreshToken);
+        user.setRefreshTokenRegDate(dateUtil.getNowLocalDateTime());
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
