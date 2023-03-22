@@ -23,7 +23,7 @@ public class FileController {
     private final FileService fileService;
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "파일 싱글 업로드", description = "single file upload api", security = {@SecurityRequirement(name = "bearerAuth")})
+    @Operation(summary = "파일 싱글 업로드", description = "single file upload api", security = {@SecurityRequirement(name = "bearerAuth")}, hidden = true)
     @PostMapping(path = "single", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     // consumes는 들어오는 데이터 타입 정의, produces는 반환타입
     public ResponseEntity<?> fileUpload(@RequestPart MultipartFile file) throws Exception {
@@ -32,14 +32,14 @@ public class FileController {
     }
 
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api", security = {@SecurityRequirement(name = "bearerAuth")})
+    @Operation(summary = "파일 멀티 업로드", description = "multiple files upload api", security = {@SecurityRequirement(name = "bearerAuth")}, hidden = true)
     @PostMapping(path = "multiple", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // 다중 파일 업로드
     public ResponseEntity<?> multipleFilesUpload(@RequestPart List<MultipartFile> files) throws Exception {
 
         return new ResponseEntity(fileService.multipleFilesUpload(files), HttpStatus.OK);
     }
 
-    @Operation(summary = "파일 받기", description = "get file", security = {@SecurityRequirement(name = "bearerAuth")})
+    @Operation(summary = "파일 받기", description = "get file", security = {@SecurityRequirement(name = "bearerAuth")}, hidden = true)
     @GetMapping(path = "/service/data/{path}",
             produces = {"image/bmp", "image/gif", "image/jpeg", "image/png",
                     "image/svg+xml", "image/tiff", "image/webp"})
