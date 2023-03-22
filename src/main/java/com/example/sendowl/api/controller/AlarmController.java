@@ -41,16 +41,16 @@ public class AlarmController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "전체 알림 삭제", description = "관리자 -> 전체 알림 삭제", security = {@SecurityRequirement(name = "bearerAuth")})
-    @PutMapping(path = "/{alarm-id}")
-    public ResponseEntity<?> deleteAlarm(final @PathVariable("alarm-id") Long alarmId) {
+    @PutMapping(path = "/{alarmId}")
+    public ResponseEntity<?> deleteAlarm(final @PathVariable Long alarmId) {
         alarmService.deleteAlarm(alarmId);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "알림 확인", description = "알림 확인 시, 알림체크 테이블에 등록", security = {@SecurityRequirement(name = "bearerAuth")})
-    @GetMapping(path = "/{alarm-id}")
-    public ResponseEntity<?> insertAlarmChk(final @PathVariable("alarm-id") Long alarmId) {
+    @GetMapping(path = "/{alarmId}")
+    public ResponseEntity<?> insertAlarmChk(final @PathVariable Long alarmId) {
         PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
 
