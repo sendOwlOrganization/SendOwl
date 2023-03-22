@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
@@ -22,7 +21,6 @@ import static com.example.sendowl.domain.user.dto.UserDto.*;
 public class UserController {
 
     final private UserService userService;
-    
 
     @Operation(summary = "회원가입")
     @PostMapping("/join")
@@ -32,18 +30,25 @@ public class UserController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
-    public ResponseEntity<Boolean> login(final @Valid @RequestBody LoginReq req,
+    public ResponseEntity<UserRes> login(final @Valid @RequestBody LoginReq req,
                                          HttpServletResponse servletResponse) {
-        userService.login(req).forEach(servletResponse::addHeader);
-        return new ResponseEntity(true, HttpStatus.OK);
+        UserRes userRes = userService.login(req, servletResponse);
+        return new ResponseEntity(userRes, HttpStatus.OK);
     }
 
     @Operation(summary = "무한 로그인")
     @PostMapping("/login/infinite") // 로그인
-    public ResponseEntity<Boolean> infiniteLogin(final @Valid @RequestBody LoginReq req,
+    public ResponseEntity<UserRes> infiniteLogin(final @Valid @RequestBody LoginReq req,
                                                  HttpServletResponse servletResponse) {
-        userService.infiniteLogin(req).forEach(servletResponse::addHeader);
-        return new ResponseEntity(true, HttpStatus.OK);
+        UserRes userRes = userService.infiniteLogin(req, servletResponse);
+        return new ResponseEntity(userRes, HttpStatus.OK);
+    }
+
+    @Operation(summary = "토큰기반 Oauth2인증")
+    @PostMapping("/oauth2")
+    public ResponseEntity<Oauth2Res> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
+        Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
+        return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
@@ -53,19 +58,12 @@ public class UserController {
         return new ResponseEntity(userService.getUserSelf(), HttpStatus.OK);
     }
 
-
     @Operation(summary = "id로 유저 검색")
     @GetMapping("/{id}")
     public ResponseEntity<UserRes> getUserById(@PathVariable("id") Long id) {
         return new ResponseEntity(userService.getUser(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "토큰기반 Oauth2인증")
-    @PostMapping("/oauth2")
-    public ResponseEntity<Oauth2Res> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
-        Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
-        return new ResponseEntity(oauth2Res, HttpStatus.OK);
-    }
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "사용자 프로필 초기화", description = "Oauth 인증 후 사용자 프로필(mbti, 닉네임, 나이, 성별) 설정", security = {@SecurityRequirement(name = "bearerAuth")})

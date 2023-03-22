@@ -30,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,32 +63,32 @@ public class UserService {
         return new JoinRes(entity);
     }
 
-    public HashMap<String, String> makeToken(User user) {
-        String accessToken = jwtProvider.createAccessToken(user);
-        return new HashMap<>(Map.of(ACCESS_TOKEN, accessToken));
-    }
-
-    public HashMap<String, String> makeInfiniteToken(User user) {
-        String accessToken = jwtProvider.createInfiniteAccessToken(user);
-        return new HashMap<>(Map.of(ACCESS_TOKEN, accessToken));
-    }
-
-    public Map<String, String> login(LoginReq req) {
+    @Transactional
+    public UserRes login(LoginReq req, HttpServletResponse servletResponse) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new UserNotValidException(INVALID_PASSWORD);
         }
-        return makeToken(user);
+
+        setAccessToken(servletResponse, jwtProvider.createAccessToken(user));
+        setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
+
+        return new UserRes(user);
     }
 
-    public Map<String, String> infiniteLogin(LoginReq req) {
+    @Transactional
+    public UserRes infiniteLogin(LoginReq req, HttpServletResponse servletResponse) {
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow(
                 () -> new UserNotFoundException(NOT_FOUND));
         if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
             throw new UserNotValidException(INVALID_PASSWORD);
         }
-        return makeInfiniteToken(user);
+
+        setAccessToken(servletResponse, jwtProvider.createInfiniteAccessToken(user));
+        setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
+
+        return new UserRes(user);
     }
 
     public UserRes getUser(Long id) {
@@ -102,7 +101,6 @@ public class UserService {
         User user = jwtUserParser.getUser();
         return new UserSelfRes(user);
     }
-
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public Oauth2Res oauthService(Oauth2Req req, HttpServletResponse servletResponse) {
@@ -133,21 +131,8 @@ public class UserService {
 
         User user = userRepository.findByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId()).get();
 
-        servletResponse.addHeader(ACCESS_TOKEN, jwtProvider.createAccessToken(user));
-        servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
-
-        String refreshToken = jwtProvider.createRefreshToken();
-
-        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
-        cookie.setMaxAge(REFRESH_TOKEN_VALIDSECOND);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        // TODO: 리프레쉬 가능 유일 경로 설정
-        cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
-        servletResponse.addCookie(cookie);
-
-        user.setRefreshToken(refreshToken);
-        user.setRefreshTokenRegDate(dateUtil.getNowLocalDateTime());
+        setAccessToken(servletResponse, jwtProvider.createAccessToken(user));
+        setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
@@ -207,5 +192,23 @@ public class UserService {
         savedUser.setAge(req.getAge());
         savedUser.setGender(req.getGender());
         return new UserRes(savedUser);
+    }
+
+    private void setRefreshToken(HttpServletResponse servletResponse, User user, String refreshToken) {
+        Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
+        cookie.setMaxAge(REFRESH_TOKEN_VALIDSECOND);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        // TODO: 리프레쉬 가능 유일 경로 설정
+        cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
+        servletResponse.addCookie(cookie);
+
+        user.setRefreshToken(refreshToken);
+        user.setRefreshTokenRegDate(dateUtil.getNowLocalDateTime());
+    }
+
+    private void setAccessToken(HttpServletResponse servletResponse, String token) {
+        servletResponse.addHeader(ACCESS_TOKEN, token);
+        servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
     }
 }
