@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.ACCESS_TOKEN;
-import static com.example.sendowl.auth.jwt.JwtEnum.REFRESH_TOKEN;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.INVALID_PASSWORD;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
@@ -62,18 +61,12 @@ public class UserService {
 
     public HashMap<String, String> makeToken(User user) {
         String accessToken = jwtProvider.createAccessToken(user);
-        String refreshToken = jwtProvider.createRefreshToken(user);
-        return new HashMap<>(Map.of(
-                ACCESS_TOKEN, accessToken,
-                REFRESH_TOKEN, refreshToken));
+        return new HashMap<>(Map.of(ACCESS_TOKEN, accessToken));
     }
 
     public HashMap<String, String> makeInfiniteToken(User user) {
         String accessToken = jwtProvider.createInfiniteAccessToken(user);
-        String refreshToken = jwtProvider.createRefreshToken(user);
-        return new HashMap<>(Map.of(
-                ACCESS_TOKEN, accessToken,
-                REFRESH_TOKEN, refreshToken));
+        return new HashMap<>(Map.of(ACCESS_TOKEN, accessToken));
     }
 
     public Map<String, String> login(LoginReq req) {
