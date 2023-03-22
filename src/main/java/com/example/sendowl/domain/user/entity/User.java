@@ -51,6 +51,7 @@ public class User extends BaseEntity {
     private Role role = Role.USER;
     private String introduction;
     private String refreshToken;
+    private String refreshTokenRegDate;
     private String profileImage;
 
     private LocalDateTime accessDate;
