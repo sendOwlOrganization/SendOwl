@@ -3,6 +3,7 @@ package com.example.sendowl.api.controller;
 
 import com.example.sendowl.api.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,9 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import static com.example.sendowl.auth.jwt.TokenEnum.REFRESH_TOKEN;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 @RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
@@ -50,6 +53,17 @@ public class UserController {
     public ResponseEntity<Oauth2Res> getUserByToken(final @Valid @RequestBody Oauth2Req req, HttpServletResponse servletResponse) {
         Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
         return new ResponseEntity(oauth2Res, HttpStatus.OK);
+    }
+
+    @Operation(summary = "AccessToken 재발급", description = "사용자가 refreshToken 을 이용하여 accessToken을 다시 받고 싶을때 사용한다.")
+    @GetMapping("/{userId}/access-token")
+    public ResponseEntity<?> getAccessToken(
+            @Parameter(hidden = true) @CookieValue(value = REFRESH_TOKEN, required = true) Cookie cookie,
+            @PathVariable Long userId,
+            HttpServletResponse servletResponse
+    ) {
+        userService.getAccessToken(cookie.getValue(), userId, servletResponse);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")

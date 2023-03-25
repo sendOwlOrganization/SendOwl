@@ -5,6 +5,9 @@ import com.example.sendowl.api.oauth.Oauth2User;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception;
 import com.example.sendowl.api.oauth.exception.Oauth2Exception.TransactionIdNotValid;
 import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
+import com.example.sendowl.auth.exception.TokenExpiredException;
+import com.example.sendowl.auth.exception.TokenNotEqualsException;
+import com.example.sendowl.auth.exception.enums.TokenErrorCode;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
@@ -18,6 +21,7 @@ import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,7 +46,7 @@ import static com.example.sendowl.domain.user.dto.UserDto.*;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.INVALID_PASSWORD;
 import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_FOUND;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -199,7 +204,7 @@ public class UserService {
         cookie.setMaxAge(REFRESH_TOKEN_VALIDSECOND);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
-        // TODO: 리프레쉬 가능 유일 경로 설정
+        // TODO: 리프레쉬 가능 유일 경로 설정 (프론트의 경로에 따라 접근이 달라져서 프론트 개발시 참조)
         cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
         servletResponse.addCookie(cookie);
 
@@ -210,5 +215,29 @@ public class UserService {
     private void setAccessToken(HttpServletResponse servletResponse, String token) {
         servletResponse.addHeader(ACCESS_TOKEN, token);
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
+    }
+
+    @Transactional
+    public void getAccessToken(String refreshToken, Long userId, HttpServletResponse servletResponse) {
+        User user = userRepository.getById(userId);
+
+        verifyRefreshToken(refreshToken, user);
+
+        setAccessToken(servletResponse, jwtProvider.createAccessToken(user));
+        setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
+    }
+
+    private void verifyRefreshToken(String refreshToken, User user) {
+        if (!user.getRefreshToken().equals(refreshToken)) {
+            throw new TokenNotEqualsException(TokenErrorCode.NOT_EQUALS);
+        }
+
+        LocalDateTime refreshTokenRegDate = user.getRefreshTokenRegDate();
+        LocalDateTime validLocalDateTime = refreshTokenRegDate.plusSeconds(REFRESH_TOKEN_VALIDSECOND);
+        LocalDateTime nowLocalDateTime = dateUtil.getNowLocalDateTime();
+
+        if (validLocalDateTime.isBefore(nowLocalDateTime)) {
+            throw new TokenExpiredException(TokenErrorCode.EXPIRED);
+        }
     }
 }
