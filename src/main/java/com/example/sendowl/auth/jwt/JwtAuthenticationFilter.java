@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.example.sendowl.auth.exception.enums.JwtErrorCode.INVALID;
+import static com.example.sendowl.auth.exception.enums.TokenErrorCode.INVALID;
 import static com.example.sendowl.config.SecurityConfig.AUTH_WHITELIST;
 
 @RequiredArgsConstructor
