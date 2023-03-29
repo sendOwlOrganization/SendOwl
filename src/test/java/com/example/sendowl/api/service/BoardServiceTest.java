@@ -31,8 +31,14 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BoardServiceTest {
 
+    private final String refinedText = "refinedText";
+    private final String boardContent = "content1";
+    private final Long CATEGORY_ID = 1L;
+    private final Integer TITLE_LENGTH = 10;
+    private final Integer TEXT_LENGTH = 10;
+    private final String CATEGORY_NAME = "자유게시판";
     @InjectMocks
-    BoardService boardService;
+    private BoardService boardService;
     @Mock
     private BoardRepository boardRepository;
     @Mock
@@ -43,17 +49,10 @@ class BoardServiceTest {
     private ExpService expService;
     @Mock
     private EditorJsHelper editorJsHelper;
+    private Pageable pageable;
     private User user;
     private Category category;
     private Board board;
-    private String refinedText = "refinedText";
-    private String boardContent = "content1";
-    private Long CATEGORY_ID = 1L;
-    private Long ALL_CATEGORY_ID = 0L;
-    private Integer TITLE_LENGTH = 10;
-    private Integer TEXT_LENGTH = 10;
-    private Pageable pageable;
-    private String CATEGORY_NAME = "자유게시판";
 
     @BeforeEach
     void setUp() {
