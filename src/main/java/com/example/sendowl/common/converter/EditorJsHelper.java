@@ -1,7 +1,9 @@
 package com.example.sendowl.common.converter;
 
 import com.example.sendowl.domain.board.dto.BoardDto;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EditorJsHelper {
 
     private String sanitize(String text) {

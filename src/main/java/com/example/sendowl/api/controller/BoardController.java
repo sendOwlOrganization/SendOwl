@@ -77,9 +77,7 @@ public class BoardController {
     @PostMapping(path = "", produces = "application/json; charset=utf8") // 게시글 등록
     public ResponseEntity<?> board(final @Valid @RequestBody BoardReq boardReq) {
 
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = principal.getUser();
-        DetailRes detailRes = boardService.insertBoard(boardReq, user);
+        DetailRes detailRes = boardService.insertBoard(boardReq);
 
         return new ResponseEntity(detailRes, HttpStatus.OK);
     }
