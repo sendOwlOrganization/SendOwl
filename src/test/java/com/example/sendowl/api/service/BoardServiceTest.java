@@ -75,11 +75,11 @@ class BoardServiceTest {
     @Test
     void when_insertBoardWrongCategoryId_then_categoryNotFoundExcpetion() {
         // given
+        BoardReq req = new BoardReq();
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
         when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        BoardReq req = new BoardReq();
         Assertions.assertThrows(CategoryNotFoundException.class, () -> {
             boardService.insertBoard(req);
         });
@@ -88,13 +88,13 @@ class BoardServiceTest {
     @Test
     void when_insertBoard_then_board() {
         // given
+        BoardReq req = new BoardReq();
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
         when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
         when(editorJsHelper.extractText(any())).thenReturn(refinedText);
         when(boardRepository.save(any())).thenReturn(board);
         // then
-        BoardReq req = new BoardReq();
         DetailRes detailRes = boardService.insertBoard(req);
         assertEquals(detailRes.getContent(), board.getContent());
     }
