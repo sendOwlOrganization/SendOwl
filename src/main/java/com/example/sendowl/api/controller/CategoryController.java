@@ -29,10 +29,10 @@ public class CategoryController {
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리의 카운트(인기도)순으로 조회", description = "카테고리의 카운트(인기도)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
+    @Operation(summary = "카테고리의 카운트(인기도-게시글개수)순으로 조회", description = "카테고리의 카운트(인기도-게시글개수)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
     @GetMapping(path = "/popular") // 카테고리 목록
     public ResponseEntity<?> categoriesCount() {
-        List<CategoriesCountRes> categoriesRes = categoryService.getCategoryCountList();
+        List<CategoriesCountRes> categoriesRes = categoryService.getCategoryWithBoardCountList();
         return new ResponseEntity(categoriesRes, HttpStatus.OK);
     }
 
