@@ -2,6 +2,7 @@ package com.example.sendowl.domain.category.dto;
 
 import com.example.sendowl.domain.category.entity.Category;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -50,6 +51,7 @@ public class CategoryDto {
 
     @Getter
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class CategoryUpdateReq {
         @NotNull
         @Schema(description = "카테고리 id", nullable = false, example = "1")

@@ -28,8 +28,8 @@ public class CategoryService {
         return categories.stream().map(CategoriesRes::new).collect(Collectors.toList());
     }
 
-    public List<CategoriesCountRes> getCategoryCountList() {
-        List<CategoryCount> categories = categoryRepository.findCategoriesWithCount();
+    public List<CategoriesCountRes> getCategoryWithBoardCountList() {
+        List<CategoryCount> categories = categoryRepository.findCategoriesWithBoardCount();
         return categories.stream().map(CategoriesCountRes::new).collect(Collectors.toList());
     }
 
@@ -44,12 +44,15 @@ public class CategoryService {
 
     @Transactional
     public CategoriesRes updateCategory(CategoryUpdateReq rq) {
-        Category category = categoryRepository.findById(rq.getId()).orElseThrow(() -> new CategoryNotFoundException(NOT_FOUND));
+        Category category = categoryRepository.findById(rq.getId()).orElseThrow(
+                () -> new CategoryNotFoundException(NOT_FOUND)
+        );
         category.setName(rq.getName());
         Category savedCategory = categoryRepository.save(category);
         return new CategoriesRes(savedCategory);
     }
 
+    /* TODO: 삭제하는 경우 삭제가 되었다는 응답을 주어야 할거 같다.*/
     @Transactional
     public void deleteCategory(CategoryDeleteReq rq) {
         categoryRepository.deleteById(rq.getId());

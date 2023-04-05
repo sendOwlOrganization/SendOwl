@@ -23,6 +23,6 @@ public class CategoryRepositoryTest {
 
     @Test
     public void 카테고리조회시게시글순으로() {
-        List<CategoryCount> categories = categoryRepository.findCategoriesWithCount();
+        List<CategoryCount> categories = categoryRepository.findCategoriesWithBoardCount();
     }
 }

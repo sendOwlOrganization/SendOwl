@@ -14,7 +14,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query(value = "select new com.example.sendowl.domain.category.dto.CategoryCount(C.id, C.name, count(B))" +
             "from Category C left outer join Board B on C = B.category group by C order by count(B) desc "
     )
-    List<CategoryCount> findCategoriesWithCount();
+    List<CategoryCount> findCategoriesWithBoardCount();
+
     boolean existsByName(String name);
 }
 
