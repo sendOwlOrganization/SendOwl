@@ -2,20 +2,21 @@ package com.example.sendowl.domain.board.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
 import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.like.entity.BoardLike;
 import com.example.sendowl.domain.user.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(indexes = @Index(name="idx_board", columnList = "title"))
+@Table(indexes = @Index(name = "idx_board", columnList = "title"))
 public class Board extends BaseEntity {
 
     @Id
@@ -47,16 +48,6 @@ public class Board extends BaseEntity {
     @Formula("(select count(*) from comment c where c.board_id = board_id)")
     private Long CommentCount;
 
-    @Builder
-    public Board(User user, String title, String content, String refinedContent, Category category, Integer hit) {
-        this.user = user;
-        this.title = title;
-        this.content = content;
-        this.refinedContent = refinedContent;
-        this.category = category;
-        this.hit = hit;
-    }
-
     public void setHit(Integer hit) {
         this.hit = hit;
     }
@@ -66,16 +57,5 @@ public class Board extends BaseEntity {
         this.content = content;
         this.category = category;
         this.refinedContent = refinedContent;
-    }
-
-    @Override
-    public String toString() {
-        return "Board{" +
-                "user=" + user +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", category=" + category +
-                ", hit=" + hit +
-                '}';
     }
 }

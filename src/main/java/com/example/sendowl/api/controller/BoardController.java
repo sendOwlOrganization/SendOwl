@@ -2,8 +2,6 @@ package com.example.sendowl.api.controller;
 
 
 import com.example.sendowl.api.service.BoardService;
-import com.example.sendowl.auth.PrincipalDetails;
-import com.example.sendowl.domain.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -15,7 +13,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -88,7 +85,7 @@ public class BoardController {
     })
     @GetMapping(path = "/{boardId}") // 게시글 상세
     public ResponseEntity<?> boardDetail(@PathVariable Long boardId) {
-        DetailRes detailRes = boardService.boardDetail(boardId);
+        DetailRes detailRes = boardService.getBoardDetail(boardId);
 
         return new ResponseEntity(detailRes, HttpStatus.OK);
     }
@@ -97,10 +94,7 @@ public class BoardController {
     @Operation(summary = "게시글 수정한다", description = "게시글을 수정한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @PutMapping(path = "") // 게시글 수정
     public ResponseEntity<?> boardUpdate(final @Valid @RequestBody UpdateBoardReq req) {
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = principal.getUser();
-
-        UpdateBoardRes updatedRes = boardService.updateBoard(req, user);
+        UpdateBoardRes updatedRes = boardService.updateBoard(req);
 
         return new ResponseEntity(updatedRes, HttpStatus.OK);
     }
@@ -112,10 +106,8 @@ public class BoardController {
     })
     @DeleteMapping(path = "/{boardId}") // 게시글 삭제
     public ResponseEntity<?> boardDelete(@PathVariable Long boardId) {
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = principal.getUser();
 
-        boardService.deleteBoard(boardId, user);
+        boardService.deleteBoard(boardId);
 
         return new ResponseEntity(HttpStatus.OK);
     }
