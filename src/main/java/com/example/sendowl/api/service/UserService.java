@@ -60,6 +60,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtUserParser jwtUserParser;
     private final DateUtil dateUtil;
+    private final RestTemplate restTemplate;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
@@ -158,7 +159,6 @@ public class UserService {
 
         ResponseEntity<Map> response = null;
         try {
-            RestTemplate restTemplate = new RestTemplate();
             response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         } catch (HttpStatusCodeException e) {
             throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
@@ -176,11 +176,13 @@ public class UserService {
     }
 
     public List<UserMbti> getUserMbti() {
-        return userRepository.findAllWithJPQL();
+        return userRepository.findAllUserMbtiWithCount();
     }
 
     public List<UserMbti> getUserMbtiFromCategoryId(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+        );
         return userRepository.findUserMbtiFromCategory(category);
     }
 

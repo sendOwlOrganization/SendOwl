@@ -27,7 +27,7 @@ public class GraphTest {
     @Test
     void userMbtiGraph() {
         // given
-        List<UserMbti> all = userRepository.findAllWithJPQL();
+        List<UserMbti> all = userRepository.findAllUserMbtiWithCount();
 
         // when
 

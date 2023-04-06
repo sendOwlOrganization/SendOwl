@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "select new com.example.sendowl.domain.user.dto.UserMbti(u.mbti, count(u)) " +
             "from User u group by u.mbti")
-    List<UserMbti> findAllWithJPQL();
+    List<UserMbti> findAllUserMbtiWithCount();
 
     @Query(value = "select new com.example.sendowl.domain.user.dto.UserMbti(U.mbti, count(U))" +
             "from User U where U in (select U1 from Board B join User U1 on B.user = U1 where B.category=:category) group by U.mbti order by count(U) desc")
