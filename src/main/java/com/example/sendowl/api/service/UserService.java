@@ -16,22 +16,26 @@ import com.example.sendowl.domain.user.exception.UserException.UserNotFoundExcep
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.util.mail.JwtUserParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 import static com.example.sendowl.auth.jwt.JwtEnum.ACCESS_TOKEN;
 import static com.example.sendowl.auth.jwt.JwtEnum.REFRESH_TOKEN;
@@ -58,6 +62,14 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(req.getPassword());
         User entity = userRepository.save(req.toEntity(encodedPassword));
         return new JoinRes(entity);
+    }
+
+    @Transactional
+    public int getUserInfoByKakaoAuthCode(String AuthorizationCode) {
+        System.out.println(AuthorizationCode);
+
+
+        return 1;
     }
 
     public HashMap<String, String> makeToken(User user) {
@@ -143,31 +155,37 @@ public class UserService {
 
     public Oauth2User getProfileByToken(String transactionId, String token) {
         String url = "";
+        ResponseEntity<Map> response = null;
+        Oauth2User oauth2User = null;
+
         if (transactionId.equals("google")) {
             url = "https://www.googleapis.com/oauth2/v3/userinfo";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity entity = new HttpEntity("", headers);
+
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            } catch (HttpStatusCodeException e) {
+                throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
+            }
         } else if (transactionId.equals("kakao")) {
-            url = "";
+            final String kakaoAccessToken = this.getKakaoAccessToken(token);
+            oauth2User = this.getKakaoUser(kakaoAccessToken);
         } else {
             throw new TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
         }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity entity = new HttpEntity("", headers);
-
-        ResponseEntity<Map> response = null;
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-        } catch (HttpStatusCodeException e) {
-            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
-        }
-
-        Oauth2User oauth2User = null;
         if (transactionId.equals("google")) {
             oauth2User = new GoogleUser(response.getBody());
         } else if (transactionId.equals("kakao")) {
+            if (isAlreadyMember(oauth2User)){
 
+            }
+            else{
+
+            }
         } else {
 
         }
@@ -196,5 +214,70 @@ public class UserService {
         savedUser.setAge(req.getAge());
         savedUser.setGender(req.getGender());
         return new UserRes(savedUser);
+    }
+
+    private String getKakaoAccessToken(String token) {
+        final String URL = "https://kauth.kakao.com/oauth/token";
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8);
+        headers.setContentType(mediaType);
+
+        //Todo: clientId, client_sctet  설정으로 뺄것
+        MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
+        parameter.add("grant_type", "authorization_code");
+        parameter.add("client_id", "4c4cafe72f1e389d5fb17eeb51da55d5");
+        parameter.add("redirect_uri", "http://localhost:8080/api/users/join/kakao");
+        parameter.add("code", token);
+        parameter.add("client_secret", "jPE1LxCGZMckAFSEni0m3cIXm6d7PpFw");
+
+        ResponseEntity<Map> response = null;
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(parameter, headers);
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.exchange(URL, HttpMethod.POST, entity, Map.class);
+        } catch (HttpStatusCodeException e) {
+            // 카카오 인증 실패 에러
+            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> map = null;
+
+        return Objects.requireNonNull(response.getBody()).get("access_token").toString();
+    };
+
+    private Oauth2User getKakaoUser(String accessToken){
+        final String URL = "https://kapi.kakao.com/v2/user/me";
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType mediaType = new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8);
+        headers.setContentType(mediaType);
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
+
+        ResponseEntity<Map> response = null;
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(parameter, headers);
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            response = restTemplate.exchange(URL, HttpMethod.POST, entity, Map.class);
+        }catch (HttpStatusCodeException e) {
+            // 카카오 인증 실패 에러
+            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LinkedHashMap kakaoAccount = objectMapper.convertValue(Objects.requireNonNull(response.getBody()).get("kakao_account"), LinkedHashMap.class);
+
+
+        return Oauth2User.builder()
+                .email(kakaoAccount.get("email").toString()).transactionId("kakao").build();
+    };
+
+    private boolean isAlreadyMember(Oauth2User user){
+       return userRepository.findByEmail(user.getEmail()).isPresent();
     }
 }

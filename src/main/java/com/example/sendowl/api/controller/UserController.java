@@ -30,6 +30,22 @@ public class UserController {
         return new ResponseEntity(userService.save(req), HttpStatus.OK);
     }
 
+    @Operation(summary = "카카오 로그인")
+    @GetMapping("/join/kakao")
+    public ResponseEntity<Integer> loginByKakao(@RequestParam String code) {
+        /* Todo
+            FrontEnd: 인증 성공시 이 컨트롤러 호출
+            BackEnd: 인가 코드로 카카오 엑세스 토큰 발급 + 사용자 정보 조회 + 우리서버 토큰 제작
+            FrontEnd : 위 처리에대한 응답 -> 메인 페이지 진입
+           */
+        //System.out.println(error);
+        //System.out.println(errorDescription);
+        //System.out.println(AuthorizationCode);
+        userService.getProfileByToken("kakao", code);
+        //System.out.println(AuthorizationCode);
+        return new ResponseEntity("1", HttpStatus.OK);
+    }
+
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
     public ResponseEntity<Boolean> login(final @Valid @RequestBody LoginReq req,
