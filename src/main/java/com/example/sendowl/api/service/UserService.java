@@ -16,14 +16,9 @@ import com.example.sendowl.domain.user.exception.UserException.UserNotFoundExcep
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.util.mail.JwtUserParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +26,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
@@ -62,14 +56,6 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(req.getPassword());
         User entity = userRepository.save(req.toEntity(encodedPassword));
         return new JoinRes(entity);
-    }
-
-    @Transactional
-    public int getUserInfoByKakaoAuthCode(String AuthorizationCode) {
-        System.out.println(AuthorizationCode);
-
-
-        return 1;
     }
 
     public HashMap<String, String> makeToken(User user) {
@@ -139,17 +125,17 @@ public class UserService {
             alreadyJoined = false;
         }
         else{
-        retUser = optionalUser.get();
+            retUser = optionalUser.get();
 
-        // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
-        if (retUser.getNickName() == null || retUser.getMbti() == null) {
-            alreadySetted = false;
-        }
-        // 로그인 (토큰 반환)
-        makeToken(
-                userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
-        ).forEach(servletResponse::addHeader);
-        servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
+           // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
+            if (retUser.getNickName() == null || retUser.getMbti() == null) {
+               alreadySetted = false;
+           }
+          // 로그인 (토큰 반환)
+         makeToken(
+                  userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
+          ).forEach(servletResponse::addHeader);
+          servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
         }
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
@@ -270,8 +256,4 @@ public class UserService {
         return Oauth2User.builder()
                 .email(kakaoAccount.get("email").toString()).transactionId("kakao").build();
     };
-
-    private boolean isAlreadyMember(Oauth2User user){
-       return userRepository.findByEmail(user.getEmail()).isPresent();
-    }
 }
