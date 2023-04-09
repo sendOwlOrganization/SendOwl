@@ -36,6 +36,7 @@ public class JwtProvider {
         //user 구분을 위해 Claim에 User Pk값 넣어줌
         Claims claims = Jwts.claims().setSubject(user.getEmail() + "/" + user.getTransactionId());
         claims.put("roles", user.getRole());
+        claims.put("userId", user.getId());
         claims.put("type", "access");
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
@@ -51,6 +52,7 @@ public class JwtProvider {
         //user 구분을 위해 Claim에 User Pk값 넣어줌
         Claims claims = Jwts.claims().setSubject(user.getEmail() + "/" + user.getTransactionId());
         claims.put("roles", user.getRole());
+        claims.put("userId", user.getId());
         claims.put("type", "access");
         // 생성날짜, 만료 날짜를 위한 Date
         Date now = new Date();
@@ -76,6 +78,10 @@ public class JwtProvider {
     // Jwt에서 회원 구분 Pk 추출
     public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public Long getUserId(String token) {
+        return Long.parseLong(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userId").toString());
     }
 
     // HTTP Request의 Header에서 Token Parsing->"X-AUTH-TOKEN: jwt" // 인증 토큰 빼내기

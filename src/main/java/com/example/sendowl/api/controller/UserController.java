@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -55,14 +56,14 @@ public class UserController {
         return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
-    @Operation(summary = "AccessToken 재발급", description = "사용자가 refreshToken 을 이용하여 accessToken을 다시 받고 싶을때 사용한다.")
-    @GetMapping("/{userId}/access-token")
+    @Operation(summary = "AccessToken 재발급", description = "사용자가 refreshToken 을 이용하여 accessToken을 다시 받고 싶을때 사용한다.", security = {@SecurityRequirement(name = "bearerAuth")})
+    @GetMapping("/access-token")
     public ResponseEntity<?> getAccessToken(
             @Parameter(hidden = true) @CookieValue(value = REFRESH_TOKEN, required = true) Cookie cookie,
-            @PathVariable Long userId,
+            HttpServletRequest servletRequest,
             HttpServletResponse servletResponse
     ) {
-        userService.getAccessToken(cookie.getValue(), userId, servletResponse);
+        userService.getAccessToken(cookie.getValue(), servletRequest, servletResponse);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
