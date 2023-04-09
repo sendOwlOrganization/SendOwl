@@ -138,6 +138,7 @@ public class UserService {
             );
             alreadyJoined = false;
         }
+        else{
         retUser = optionalUser.get();
 
         // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
@@ -149,6 +150,7 @@ public class UserService {
                 userRepository.findByEmailAndTransactionId(user.getEmail(), user.getTransactionId()).get()
         ).forEach(servletResponse::addHeader);
         servletResponse.addHeader("Access-Control-Expose-Headers", "access-token");
+        }
 
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
@@ -179,16 +181,8 @@ public class UserService {
 
         if (transactionId.equals("google")) {
             oauth2User = new GoogleUser(response.getBody());
-        } else if (transactionId.equals("kakao")) {
-            if (isAlreadyMember(oauth2User)){
-
-            }
-            else{
-
-            }
-        } else {
-
         }
+
         return oauth2User;
     }
 
