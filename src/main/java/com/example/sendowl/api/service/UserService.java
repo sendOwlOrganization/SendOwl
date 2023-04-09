@@ -33,6 +33,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -218,7 +219,9 @@ public class UserService {
     }
 
     @Transactional
-    public void getAccessToken(String refreshToken, Long userId, HttpServletResponse servletResponse) {
+    public void getAccessToken(String refreshToken, HttpServletRequest request, HttpServletResponse servletResponse) {
+        String token = jwtProvider.resolveToken(request, "Bearer");
+        Long userId = jwtProvider.getUserId(token);
         User user = userRepository.getById(userId);
 
         verifyRefreshToken(refreshToken, user);
