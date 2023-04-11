@@ -203,10 +203,10 @@ public class UserService {
     private void setRefreshToken(HttpServletResponse servletResponse, User user, String refreshToken) {
         Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
         cookie.setMaxAge(REFRESH_TOKEN_VALIDSECOND);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
+//        cookie.setSecure(true);
+//        cookie.setHttpOnly(true);
         // TODO: 리프레쉬 가능 유일 경로 설정 (프론트의 경로에 따라 접근이 달라져서 프론트 개발시 참조)
-        cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
+//        cookie.setPath("/"); //모든 경로에서 접근 가능하도록 설정
         servletResponse.addCookie(cookie);
 
         user.setRefreshToken(refreshToken);
