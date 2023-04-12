@@ -58,7 +58,7 @@ public class BoardLikeServiceTest {
         when(boardLikeRepository.findByUserAndBoard(any(), any())).thenReturn(Optional.ofNullable(boardLike));
 
         // when
-        LikeDto.BoardLikeResponse boardLikeResponse = likeService.setBoardLike(boardLikeRequest, user);
+        LikeDto.BoardLikeResponse boardLikeResponse = likeService.setBoardLike(boardLikeRequest);
 
         // then
         assertThat(boardLikeResponse.getId()).isEqualTo(boardLike.getId());
@@ -74,7 +74,7 @@ public class BoardLikeServiceTest {
         when(boardLikeRepository.save(any())).thenReturn(boardLike);
 
         // when
-        LikeDto.BoardLikeResponse boardLikeResponse = likeService.setBoardLike(boardLikeRequest, user);
+        LikeDto.BoardLikeResponse boardLikeResponse = likeService.setBoardLike(boardLikeRequest);
 
         // then
         assertThat(boardLikeResponse.getId()).isEqualTo(boardLike.getId());

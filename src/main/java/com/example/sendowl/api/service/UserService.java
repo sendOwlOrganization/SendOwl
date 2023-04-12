@@ -248,7 +248,6 @@ public class UserService {
             throw new TokenExpiredException(TokenErrorCode.EXPIRED);
         }
     }
-
     private String getKakaoAccessToken(String token) {
         final String URL = "https://kauth.kakao.com/oauth/token";
 

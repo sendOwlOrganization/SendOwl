@@ -4,6 +4,7 @@ package com.example.sendowl.api.controller;
 import com.example.sendowl.api.service.UserService;
 import com.example.sendowl.domain.user.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
+import static com.example.sendowl.auth.jwt.TokenEnum.REFRESH_TOKEN;
 import static com.example.sendowl.domain.user.dto.UserDto.*;
 
 @RestController // 내부적으로 오브젝트랩퍼 잭슨을 사용한다. 시리얼라이즈를 해서 반환한다. toString이 걸려있으면 객체들을 계속 조회하는 경우가 발생한다.
@@ -23,7 +26,7 @@ import static com.example.sendowl.domain.user.dto.UserDto.*;
 public class UserController {
 
     final private UserService userService;
-    
+
 
     @Operation(summary = "회원가입")
     @PostMapping("/join")
@@ -43,32 +46,18 @@ public class UserController {
 
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
-    public ResponseEntity<Boolean> login(final @Valid @RequestBody LoginReq req,
+    public ResponseEntity<UserRes> login(final @Valid @RequestBody LoginReq req,
                                          HttpServletResponse servletResponse) {
-        userService.login(req).forEach(servletResponse::addHeader);
-        return new ResponseEntity(true, HttpStatus.OK);
+        UserRes userRes = userService.login(req, servletResponse);
+        return new ResponseEntity(userRes, HttpStatus.OK);
     }
 
     @Operation(summary = "무한 로그인")
     @PostMapping("/login/infinite") // 로그인
-    public ResponseEntity<Boolean> infiniteLogin(final @Valid @RequestBody LoginReq req,
+    public ResponseEntity<UserRes> infiniteLogin(final @Valid @RequestBody LoginReq req,
                                                  HttpServletResponse servletResponse) {
-        userService.infiniteLogin(req).forEach(servletResponse::addHeader);
-        return new ResponseEntity(true, HttpStatus.OK);
-    }
-
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    @Operation(summary = "자신의 정보를 가져옴", description = "사용자 자신의 정보를 가져온다", security = {@SecurityRequirement(name = "bearerAuth")})
-    @GetMapping("/me")
-    public ResponseEntity<UserSelfRes> getUserSelf() {
-        return new ResponseEntity(userService.getUserSelf(), HttpStatus.OK);
-    }
-
-
-    @Operation(summary = "id로 유저 검색")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserRes> getUserById(@PathVariable("id") Long id) {
-        return new ResponseEntity(userService.getUser(id), HttpStatus.OK);
+        UserRes userRes = userService.infiniteLogin(req, servletResponse);
+        return new ResponseEntity(userRes, HttpStatus.OK);
     }
 
     @Operation(summary = "토큰기반 Oauth2인증")
@@ -78,6 +67,31 @@ public class UserController {
         return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
+    @Operation(summary = "AccessToken 재발급", description = "사용자가 refreshToken 을 이용하여 accessToken을 다시 받고 싶을때 사용한다.", security = {@SecurityRequirement(name = "bearerAuth")})
+    @GetMapping("/access-token")
+    public ResponseEntity<?> getAccessToken(
+            @Parameter(hidden = true) @CookieValue(value = REFRESH_TOKEN, required = true) Cookie cookie,
+            HttpServletRequest servletRequest,
+            HttpServletResponse servletResponse
+    ) {
+        userService.getAccessToken(cookie.getValue(), servletRequest, servletResponse);
+        return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    @Operation(summary = "자신의 정보를 가져옴", description = "사용자 자신의 정보를 가져온다", security = {@SecurityRequirement(name = "bearerAuth")})
+    @GetMapping("/me")
+    public ResponseEntity<UserSelfRes> getUserSelf() {
+        return new ResponseEntity(userService.getUserSelf(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "id로 유저 검색")
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserRes> getUserById(@PathVariable Long userId) {
+        return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
+    }
+
+
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "사용자 프로필 초기화", description = "Oauth 인증 후 사용자 프로필(mbti, 닉네임, 나이, 성별) 설정", security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping("/set-profile")
@@ -86,8 +100,8 @@ public class UserController {
     }
 
     @Operation(summary = "사용자 닉네임 중복 확인")
-    @GetMapping("/{nick-name}/nickname-exists")
-    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable("nick-name") String nickName) {
+    @GetMapping("/{nickName}/nickname-exists")
+    public ResponseEntity<Boolean> checkUserNickName(final @PathVariable String nickName) {
         return new ResponseEntity(userService.duplicationCheckNickName(nickName), HttpStatus.OK);
     }
 }

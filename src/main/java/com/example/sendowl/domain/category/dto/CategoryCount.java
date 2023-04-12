@@ -13,13 +13,4 @@ public class CategoryCount {
         this.name = name;
         this.count = count;
     }
-
-    @Override
-    public String toString() {
-        return "CategoryCount{" +
-                "categoryId=" + categoryId +
-                ", name='" + name + '\'' +
-                ", count=" + count +
-                '}';
-    }
 }

@@ -68,9 +68,9 @@ public class BlameService {
     }
 
     @Transactional
-    public Long deleteBlameType(Long id) {
-        if (blameTypeRepository.existsById(id)) { // 존재하는 경우 삭제
-            BlameType blameType = blameTypeRepository.findById(id).get();
+    public Long deleteBlameType(Long blameTypeId) {
+        if (blameTypeRepository.existsById(blameTypeId)) { // 존재하는 경우 삭제
+            BlameType blameType = blameTypeRepository.findById(blameTypeId).get();
             blameType.setDeleted(true);
             return blameType.getId();
         } else {
