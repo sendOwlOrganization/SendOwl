@@ -257,11 +257,7 @@ public class UserService {
 
         //Todo: clientId, client_sctet  설정으로 뺄것
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("grant_type", "authorization_code");
-        parameter.add("client_id", "4c4cafe72f1e389d5fb17eeb51da55d5");
-        parameter.add("redirect_uri", "http://localhost:8080/api/users/join/kakao");
-        parameter.add("code", token);
-        parameter.add("client_secret", "jPE1LxCGZMckAFSEni0m3cIXm6d7PpFw");
+
 
         ResponseEntity<Map> response = null;
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(parameter, headers);
