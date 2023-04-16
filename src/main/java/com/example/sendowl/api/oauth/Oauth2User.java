@@ -1,8 +1,10 @@
 package com.example.sendowl.api.oauth;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class Oauth2User {
     protected String name;
     protected String email;

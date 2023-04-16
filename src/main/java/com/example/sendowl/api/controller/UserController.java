@@ -2,6 +2,7 @@ package com.example.sendowl.api.controller;
 
 
 import com.example.sendowl.api.service.UserService;
+import com.example.sendowl.domain.user.dto.UserDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -31,6 +32,16 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<JoinRes> join(final @Valid @RequestBody JoinReq req) {
         return new ResponseEntity(userService.save(req), HttpStatus.OK);
+    }
+
+    @Operation(summary = "카카오 로그인")
+    @GetMapping("/join/kakao")
+    public ResponseEntity<Oauth2Res> loginByKakao(@RequestParam String code, HttpServletResponse servletResponse) {
+        UserDto.Oauth2Req req = Oauth2Req.builder()
+                .transactionId("kakao").token(code).build();
+
+        Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
+        return new ResponseEntity(oauth2Res, HttpStatus.OK);
     }
 
     @Operation(summary = "로그인")
