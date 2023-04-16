@@ -68,6 +68,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtUserParser jwtUserParser;
     private final DateUtil dateUtil;
+    private final RestTemplate restTemplate;
 
     @Value("${spring.kakao-oauth.client-id}")
     private String kakaoClientId;
@@ -189,7 +190,7 @@ public class UserService {
         } else {
             throw new TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
         }
-
+        
         if (transactionId.equals("google")) {
             oauth2User = new GoogleUser(response.getBody());
         }
@@ -198,11 +199,13 @@ public class UserService {
     }
 
     public List<UserMbti> getUserMbti() {
-        return userRepository.findAllWithJPQL();
+        return userRepository.findAllUserMbtiWithCount();
     }
 
     public List<UserMbti> getUserMbtiFromCategoryId(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+        );
         return userRepository.findUserMbtiFromCategory(category);
     }
 
