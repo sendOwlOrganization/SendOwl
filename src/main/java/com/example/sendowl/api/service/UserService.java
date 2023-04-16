@@ -68,7 +68,6 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtUserParser jwtUserParser;
     private final DateUtil dateUtil;
-    private final RestTemplate restTemplate;
 
     @Value("${spring.kakao-oauth.client-id}")
     private String kakaoClientId;
