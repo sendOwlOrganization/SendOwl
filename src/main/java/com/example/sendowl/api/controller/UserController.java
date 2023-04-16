@@ -34,16 +34,6 @@ public class UserController {
         return new ResponseEntity(userService.save(req), HttpStatus.OK);
     }
 
-    @Operation(summary = "카카오 로그인")
-    @GetMapping("/join/kakao")
-    public ResponseEntity<Oauth2Res> loginByKakao(@RequestParam String code, HttpServletResponse servletResponse) {
-        UserDto.Oauth2Req req = Oauth2Req.builder()
-                .transactionId("kakao").token(code).build();
-
-        Oauth2Res oauth2Res = userService.oauthService(req, servletResponse);
-        return new ResponseEntity(oauth2Res, HttpStatus.OK);
-    }
-
     @Operation(summary = "로그인")
     @PostMapping("/login") // 로그인
     public ResponseEntity<UserRes> login(final @Valid @RequestBody LoginReq req,
