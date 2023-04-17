@@ -69,15 +69,11 @@ public class UserService {
     private final JwtUserParser jwtUserParser;
     private final DateUtil dateUtil;
 
-    @Value("${spring.kakao-oauth.client-id}")
     private String kakaoClientId;
 
-    @Value("${spring.kakao-oauth.client-secret}")
     private String kakaoClientSecret;
 
-    @Value("${spring.kakao-oauth.authorization-grant-type}")
     private String kakaoAuthorizationGrantType;
-    @Value("${spring.kakao-oauth.redirect-uri}")
     private String kakaoRedirectUri;
 
 
