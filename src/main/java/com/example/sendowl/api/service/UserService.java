@@ -9,6 +9,7 @@ import com.example.sendowl.auth.exception.TokenExpiredException;
 import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
 import com.example.sendowl.auth.jwt.JwtProvider;
+import com.example.sendowl.config.KakaoApiConfig;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
@@ -68,17 +69,7 @@ public class UserService {
     private final JwtProvider jwtProvider;
     private final JwtUserParser jwtUserParser;
     private final DateUtil dateUtil;
-
-    private String kakaoClientId;
-
-    private String kakaoClientSecret;
-
-    private String kakaoAuthorizationGrantType;
-    private String kakaoRedirectUri;
-
-
-
-
+    private final KakaoApiConfig kakaoApiConfig;
 
     @Transactional // write 작업이 있는 메소드에만 달아준다
     public JoinRes save(JoinReq req) {
@@ -263,19 +254,18 @@ public class UserService {
         }
     }
     private String getKakaoAccessToken(String token) {
-        final String URL = "https://kauth.kakao.com/oauth/token";
+        final String URL = this.kakaoApiConfig.getTokenUri();
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8);
         headers.setContentType(mediaType);
 
-        //Todo: clientId, client_sctet  설정으로 뺄것
         MultiValueMap<String, String> parameter = new LinkedMultiValueMap<>();
-        parameter.add("grant_type", this.kakaoAuthorizationGrantType);
-        parameter.add("client_id", this.kakaoClientId);
-        parameter.add("redirect_uri", this.kakaoRedirectUri);
+        parameter.add("grant_type", this.kakaoApiConfig.getAuthorizationGrantType());
+        parameter.add("client_id", this.kakaoApiConfig.getClientId());
+        parameter.add("redirect_uri", this.kakaoApiConfig.getRedirectUri());
         parameter.add("code", token);
-        parameter.add("client_secret", this.kakaoClientSecret);
+        parameter.add("client_secret", this.kakaoApiConfig.getClientSecret());
 
         ResponseEntity<Map> response = null;
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(parameter, headers);
@@ -295,7 +285,7 @@ public class UserService {
     };
 
     private Oauth2User getKakaoUser(String accessToken){
-        final String URL = "https://kapi.kakao.com/v2/user/me";
+        final String URL = this.kakaoApiConfig.getUserInfoUri();
 
         HttpHeaders headers = new HttpHeaders();
         MediaType mediaType = new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8);
