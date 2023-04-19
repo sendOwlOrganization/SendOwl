@@ -128,7 +128,7 @@ class LikeServiceTest {
     @Test
     void when_setBoardLike_then_boardLikeResponse() {
         // given
-        LikeDto.BoardLikeRequest req = new LikeDto.BoardLikeRequest(-1L);
+        LikeDto.BoardLikeRequest req = new LikeDto.BoardLikeRequest(BOARD_ID);
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
         when(jwtUserParser.getUser()).thenReturn(user);
         when(boardLikeRepository.findByUserAndBoard(any(), any())).thenReturn(Optional.of(boardLike));
@@ -141,7 +141,7 @@ class LikeServiceTest {
     @Test
     void when_setBoardLikeWithDeletedBoardLike_then_boardLikeResponse() {
         // given
-        LikeDto.BoardLikeRequest req = new LikeDto.BoardLikeRequest(-1L);
+        LikeDto.BoardLikeRequest req = new LikeDto.BoardLikeRequest(BOARD_ID);
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
         when(jwtUserParser.getUser()).thenReturn(user);
         when(boardLikeRepository.findByUserAndBoard(any(), any())).thenReturn(Optional.of(boardLike));
