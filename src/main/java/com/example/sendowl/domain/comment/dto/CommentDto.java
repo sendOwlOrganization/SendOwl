@@ -5,10 +5,7 @@ import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.entity.User;
 import com.sun.istack.NotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -85,9 +82,9 @@ public class CommentDto {
         }
     }
 
-    @Data
     @Getter
-    @Builder
+    @Setter
+    @NoArgsConstructor
     public static class CommentReq {
         @NotNull
         @Schema(description = "게시글 id", nullable = false, example = "1")
