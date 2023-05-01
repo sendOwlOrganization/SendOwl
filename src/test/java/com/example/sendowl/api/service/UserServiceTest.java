@@ -1,6 +1,6 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.api.oauth.exception.Oauth2Exception;
+import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
