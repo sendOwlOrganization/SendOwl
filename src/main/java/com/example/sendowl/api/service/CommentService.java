@@ -10,6 +10,7 @@ import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
 import com.example.sendowl.domain.comment.exception.enums.CommentErrorCode;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
 import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,11 +35,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final ExpService expService;
-
+    private final JwtUserParser jwtUserParser;
 
     @Transactional
-    public CommentRes insertComment(CommentReq vo, User user) {
-
+    public CommentRes insertComment(CommentReq vo) {
+        User user = jwtUserParser.getUser();
+        
         Board board = boardRepository.findById(vo.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
@@ -83,7 +85,7 @@ public class CommentService {
                 comments.getTotalElements());
     }
 
-    public List<CommentRes> selectBestCommentList(Long boardId, Long size){
+    public List<CommentRes> selectBestCommentList(Long boardId, Long size) {
 
         // 게시글 존재여부 확인
         Board board = boardRepository.findById(boardId).orElseThrow(
@@ -125,7 +127,7 @@ public class CommentService {
         }
     }
 
-    public List<CommentRes> getResFromEntityWithChildren(List<Comment> parentList){
+    public List<CommentRes> getResFromEntityWithChildren(List<Comment> parentList) {
 
         List<Long> commentIdList =
                 parentList.stream().map(Comment::getId).collect(Collectors.toList());
