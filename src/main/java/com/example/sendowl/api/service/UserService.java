@@ -1,15 +1,10 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.user.dto.GoogleUser;
 import com.example.sendowl.domain.user.dto.Oauth2User;
-import com.example.sendowl.domain.user.exception.Oauth2Exception;
-import com.example.sendowl.domain.user.exception.Oauth2Exception.TransactionIdNotValid;
-import com.example.sendowl.domain.user.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.auth.exception.TokenExpiredException;
 import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
 import com.example.sendowl.auth.jwt.JwtProvider;
-import com.example.sendowl.config.KakaoApiConfig;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
@@ -23,30 +18,17 @@ import com.example.sendowl.domain.user.util.oauth.GoogleOauth;
 import com.example.sendowl.domain.user.util.oauth.KakaoOauth;
 import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.example.sendowl.auth.jwt.JwtProvider.REFRESH_TOKEN_VALIDSECOND;
