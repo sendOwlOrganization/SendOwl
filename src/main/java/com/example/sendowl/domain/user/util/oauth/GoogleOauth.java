@@ -1,6 +1,5 @@
 package com.example.sendowl.domain.user.util.oauth;
 
-import com.example.sendowl.domain.user.dto.GoogleUser;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.domain.user.exception.enums.Oauth2ErrorCode;
@@ -13,6 +12,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class GoogleOauth implements Oauth{
@@ -34,7 +34,13 @@ public class GoogleOauth implements Oauth{
         }catch(HttpStatusCodeException e){
             throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
         }
-        oauth2User = new GoogleUser(response.getBody());
+
+        oauth2User = Oauth2User.builder()
+                .name(Objects.requireNonNull(response.getBody()).get("name").toString())
+                .email(Objects.requireNonNull(response.getBody()).get("email").toString())
+                .transactionId("google")
+                .build();
+
         return oauth2User;
     }
 
