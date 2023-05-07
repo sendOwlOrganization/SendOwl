@@ -33,9 +33,7 @@ public class CommentController {
     @Operation(summary = "댓글 삽입", description = "댓글을 삽입한다.", security = {@SecurityRequirement(name = "bearerAuth")})
     @PostMapping(path = "") // 댓글 등록
     public ResponseEntity<?> insertComment(@RequestBody CommentReq vo) {
-        PrincipalDetails principal = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = principal.getUser();
-        CommentRes commentRes = this.commentService.insertComment(vo, user);
+        CommentRes commentRes = this.commentService.insertComment(vo);
 
         return new ResponseEntity(commentRes, HttpStatus.OK);
     }
