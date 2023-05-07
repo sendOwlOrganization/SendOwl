@@ -1,6 +1,5 @@
 package com.example.sendowl.domain.user.util.oauth;
 
-import com.example.sendowl.common.exception.BaseException;
 import com.example.sendowl.config.KakaoApiConfig;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.exception.Oauth2Exception;
@@ -14,7 +13,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.ws.Response;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -43,24 +41,13 @@ public class KakaoOauth {
         ResponseEntity<Map> response = this.requestApi(HttpMethod.POST, URL, null, token);
         return true;
     }
-    private ResponseEntity<Map> requestApi(HttpMethod httpMethod, String URL, MultiValueMap<String, String> parameter, String code){
-        final String accessToken = this.getAccessToken(code);
-
-        HttpHeaders headers = new HttpHeaders();
+    // set headers for kakao API
+    public ResponseEntity<Map> requestApi(HttpMethod httpMethod, String URL, MultiValueMap<String, String> parameter, String code){
+        String accessToken = this.getAccessToken(code);
+        MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
         MediaType mediaType = new MediaType(MediaType.APPLICATION_FORM_URLENCODED, StandardCharsets.UTF_8);
-        headers.setContentType(mediaType);
-        headers.add("Authorization", "Bearer " + accessToken);
-
-        HttpEntity<MultiValueMap<String,String>> httpEntity = new HttpEntity<>(parameter, headers);
-        ResponseEntity<Map> response = null;
-
-        try{
-            RestTemplate restTemplate = new RestTemplate();
-            response = restTemplate.exchange(URL, httpMethod, httpEntity, Map.class);
-        }catch(HttpStatusCodeException e){
-            throw new BaseException(e.getStatusCode(), e.getMessage(), e);
-        }
-        return response;
+        header.add("Content-type", mediaType.toString());
+        return Oauth.requestApi(httpMethod, URL, parameter, header, accessToken);
     }
     private String getAccessToken(String code){
         final String URL = "https://kauth.kakao.com/oauth/token";
