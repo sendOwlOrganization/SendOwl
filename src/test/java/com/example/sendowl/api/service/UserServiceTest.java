@@ -1,6 +1,8 @@
 package com.example.sendowl.api.service;
 
 import com.example.sendowl.api.oauth.exception.Oauth2Exception;
+import com.example.sendowl.auth.jwt.JwtProvider;
+import com.example.sendowl.auth.jwt.TokenEnum;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
@@ -8,7 +10,9 @@ import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.UserException;
 import com.example.sendowl.domain.user.repository.UserRepository;
+import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,13 +24,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -47,7 +55,15 @@ class UserServiceTest {
     @Mock
     JwtUserParser jwtUserParser;
     @Mock
+    JwtProvider jwtProvider;
+    @Mock
+    DateUtil dateUtil;
+    @Mock
     RestTemplate restTemplate;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
+
     private User user;
     private Category category;
 
@@ -57,6 +73,8 @@ class UserServiceTest {
                 .id(1L)
                 .name("user1")
                 .nickName(USER_NICKNAME)
+                .email("emailUser1")
+                .password("passwordUser1")
                 .mbti("estj")
                 .age(20)
                 .gender(Gender.MALE)
@@ -66,6 +84,64 @@ class UserServiceTest {
                 .name("자유게시판").build();
     }
 
+    @Test
+    void when_save_then_JoinRes(){
+        //given
+        when(passwordEncoder.encode(any())).thenReturn("Encoded Password");
+        when(userRepository.save(any())).thenReturn(user);
+        //when
+        UserDto.JoinRes joinRes = userService.save(new UserDto.JoinReq());
+        //then
+        assertEquals(joinRes.getId(), user.getId());
+    }
+
+    @Test
+    void when_notMmember_login_then_UserNotFountException(){
+        //given
+        HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+        UserDto.LoginReq loginReq = new UserDto.LoginReq("", "");
+        //when
+        //then
+        Assertions.assertThrows(UserException.UserNotFoundException.class, () -> {
+            userService.login(loginReq,httpServletResponse);
+        });
+    }
+
+    @Test
+    void when_passwordNotMatch_login_then_UserNotValidException(){
+        //given
+        HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+        UserDto.LoginReq loginReq = new UserDto.LoginReq("emailUser1", "");
+        when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(user));
+        //when
+        //then
+        Assertions.assertThrows(UserException.UserNotValidException.class, () -> {
+            userService.login(loginReq,httpServletResponse);
+        });
+    }
+
+    @Test
+    void when_login_then_setCookies(){
+        //given
+        HttpServletResponse httpServletResponse = new MockHttpServletResponse();
+        when(passwordEncoder.matches(any(),any())).thenReturn(true);
+        when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(user));
+        when(jwtProvider.createAccessToken(any())).thenReturn("access_token");
+        when(jwtProvider.createRefreshToken()).thenReturn("refresh_token");
+        when(dateUtil.getNowLocalDateTime()).thenReturn(LocalDateTime.now());
+        //when
+        UserDto.LoginReq loginReq = new UserDto.LoginReq("emailUser1", "passwordUser1");
+        userService.login(loginReq,httpServletResponse);
+        //then
+        Assertions.assertTrue(httpServletResponse.containsHeader(TokenEnum.ACCESS_TOKEN));
+        Assertions.assertTrue(Objects.requireNonNull(httpServletResponse.getHeader("Set-Cookie")).startsWith(TokenEnum.REFRESH_TOKEN));
+    }
+
+    void when_login_then_userRes(){
+        //given
+        //when
+        //then
+    }
     @Test
     void when_getUserSelf_then_userSelfRes() {
         // given
@@ -172,7 +248,7 @@ class UserServiceTest {
         // when
         boolean res = userService.duplicationCheckNickName(USER_NICKNAME);
         // then
-        assertEquals(res, true);
+        assertTrue(res);
     }
 
     @Test

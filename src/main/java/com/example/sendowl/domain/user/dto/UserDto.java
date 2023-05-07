@@ -102,6 +102,12 @@ public class UserDto {
         private String email;
         @NotBlank
         private String password;
+
+        public LoginReq(String email, String password){
+            this.email = email;
+            this.password = password;
+        }
+
     }
 
     @Data
