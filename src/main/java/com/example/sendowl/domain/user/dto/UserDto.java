@@ -27,6 +27,9 @@ public class UserDto {
             this.age = entity.getAge();
             this.email = entity.getEmail();
         }
+
+        public UserRes(){
+        }
     }
 
     @Data

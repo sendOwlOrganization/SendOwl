@@ -1,4 +1,4 @@
-package com.example.sendowl.api.oauth;
+package com.example.sendowl.domain.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;

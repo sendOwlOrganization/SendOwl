@@ -1,6 +1,6 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.api.oauth.exception.Oauth2Exception;
+import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.auth.jwt.TokenEnum;
 import com.example.sendowl.domain.category.entity.Category;

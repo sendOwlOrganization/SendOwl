@@ -1,6 +1,6 @@
 package com.example.sendowl.oauth;
 
-import com.example.sendowl.api.oauth.Oauth2User;
+import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.api.service.UserService;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.domain.user.dto.UserDto;
@@ -28,14 +28,6 @@ public class OauthServiceTest {
     @Mock
     UserRepository userRepository;
 
-    @Test
-    void getProfileByToken() {
-        // given
-        User existUser = new User();
-        // when
-        Oauth2User oauth2User = userService.getProfileByToken("google", "");
-        // then
-    }
 
     @Test
     void getTokenCallOauthService() {

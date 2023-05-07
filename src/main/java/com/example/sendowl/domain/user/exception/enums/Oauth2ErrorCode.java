@@ -1,4 +1,4 @@
-package com.example.sendowl.api.oauth.exception.enums;
+package com.example.sendowl.domain.user.exception.enums;
 
 import com.example.sendowl.common.exception.enums.BaseErrorCodeIF;
 import lombok.Getter;

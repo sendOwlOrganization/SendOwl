@@ -1,9 +1,8 @@
-package com.example.sendowl.api.oauth.exception.handler;
+package com.example.sendowl.domain.user.exception.handler;
 
-import com.example.sendowl.api.oauth.exception.Oauth2Exception.TransactionIdNotValid;
-import com.example.sendowl.api.oauth.exception.enums.Oauth2ErrorCode;
+import com.example.sendowl.domain.user.exception.Oauth2Exception.TransactionIdNotValid;
+import com.example.sendowl.domain.user.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.common.dto.BaseErrorResponseDto;
-import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

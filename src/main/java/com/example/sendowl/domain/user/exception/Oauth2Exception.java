@@ -1,4 +1,4 @@
-package com.example.sendowl.api.oauth.exception;
+package com.example.sendowl.domain.user.exception;
 
 import com.example.sendowl.common.exception.BaseException;
 import com.example.sendowl.common.exception.enums.BaseErrorCodeIF;
