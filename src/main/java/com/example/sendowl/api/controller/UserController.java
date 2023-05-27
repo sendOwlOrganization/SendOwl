@@ -81,6 +81,11 @@ public class UserController {
         return new ResponseEntity(userService.getUser(userId), HttpStatus.OK);
     }
 
+    @Operation(summary = "사용자 정보 수정", description = "사용자의 토큰을 활용하여 사용자의 세부정보를 수정", security = {@SecurityRequirement(name = "bearerAuth")})
+    @PutMapping("/")
+    public ResponseEntity<UserPublicRes> changeUserMbti(final @RequestBody UserDto.UpdateUserReq updateUserReq) {
+        return new ResponseEntity(userService.updateUser(updateUserReq), HttpStatus.OK);
+    }
 
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @Operation(summary = "사용자 프로필 초기화", description = "Oauth 인증 후 사용자 프로필(mbti, 닉네임, 나이, 성별) 설정", security = {@SecurityRequirement(name = "bearerAuth")})

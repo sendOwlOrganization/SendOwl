@@ -1,6 +1,5 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.auth.exception.TokenExpiredException;
 import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
@@ -9,7 +8,9 @@ import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
+import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
@@ -20,6 +21,7 @@ import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,12 +112,11 @@ public class UserService {
         Oauth2User oauthUser = null;
 
         // 토큰의 유효성 검증
-        if(req.getTransactionId().equals("google")){
+        if (req.getTransactionId().equals("google")) {
             oauthUser = googleOauth.getOauth2User(req.getToken());
-        }
-        else if (req.getTransactionId().equals("kakao")){
+        } else if (req.getTransactionId().equals("kakao")) {
             oauthUser = kakaoOauth.getOauth2User(req.getToken());
-        };
+        }
 
         // 회원여부 확인
         Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId());
@@ -128,8 +129,7 @@ public class UserService {
                             .build()
             );
             alreadyJoined = false;
-        }
-        else {
+        } else {
             retUser = optionalUser.get();
 
             // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
@@ -144,6 +144,7 @@ public class UserService {
         }
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
+
     public List<UserMbti> getUserMbti() {
         return userRepository.findAllUserMbtiWithCount();
     }
@@ -212,5 +213,41 @@ public class UserService {
         if (validLocalDateTime.isBefore(nowLocalDateTime)) {
             throw new TokenExpiredException(TokenErrorCode.EXPIRED);
         }
+    }
+
+    public void changeUserMbti(User user, String mbti) {
+        user.setMbti(mbti);
+    }
+
+    public void changeUserGender(User user, Gender gender) {
+        user.setGender(gender);
+    }
+
+    public void changeUserNickName(User user, String nickName) {
+        user.setNickName(nickName);
+    }
+
+    public void changeUserAge(User user, Integer age) {
+        user.setAge(age);
+    }
+
+    @Transactional
+    public UserSelfRes updateUser(UpdateUserReq updateUserReq) {
+        User user = jwtUserParser.getUser();
+
+        if (!StringUtils.isEmpty(updateUserReq.getNickname())) {
+            changeUserNickName(user, updateUserReq.getNickname());
+        }
+        if (!StringUtils.isEmpty(updateUserReq.getMbti())) {
+            changeUserMbti(user, updateUserReq.getMbti());
+        }
+        if (!(updateUserReq.getGender() == null)) {
+            changeUserGender(user, updateUserReq.getGender());
+        }
+        if (!(updateUserReq.getAge() == null)) {
+            changeUserAge(user, updateUserReq.getAge());
+        }
+        User save = userRepository.save(user);
+        return new UserSelfRes(save);
     }
 }
