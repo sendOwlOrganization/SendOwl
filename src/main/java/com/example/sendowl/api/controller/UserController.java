@@ -83,7 +83,7 @@ public class UserController {
 
     @Operation(summary = "사용자 정보 수정", description = "사용자의 토큰을 활용하여 사용자의 세부정보를 수정", security = {@SecurityRequirement(name = "bearerAuth")})
     @PutMapping("/")
-    public ResponseEntity<UserPublicRes> changeUserMbti(final @RequestBody UserDto.UpdateUserReq updateUserReq) {
+    public ResponseEntity<UserPublicRes> changeUserMbti(final @Valid @RequestBody UserDto.UpdateUserReq updateUserReq) {
         return new ResponseEntity(userService.updateUser(updateUserReq), HttpStatus.OK);
     }
 

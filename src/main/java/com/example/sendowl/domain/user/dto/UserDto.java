@@ -8,7 +8,6 @@ import org.hibernate.validator.constraints.Range;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 public class UserDto {
 
@@ -198,10 +197,11 @@ public class UserDto {
     @AllArgsConstructor
     @Getter
     public static class UpdateUserReq {
+        @Pattern(regexp = "[a-zA-Zㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,60}")
         private String nickname;
         @Pattern(regexp = "[EI][SN][FT][JP]")
         private String mbti;
-        @Size(min = 0, max = 100)
+        @Range(min = 5, max = 100)
         private Integer age;
         private Gender gender;
     }
