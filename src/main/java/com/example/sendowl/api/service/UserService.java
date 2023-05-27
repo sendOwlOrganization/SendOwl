@@ -10,7 +10,6 @@ import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
-import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
@@ -215,37 +214,21 @@ public class UserService {
         }
     }
 
-    public void changeUserMbti(User user, String mbti) {
-        user.setMbti(mbti);
-    }
-
-    public void changeUserGender(User user, Gender gender) {
-        user.setGender(gender);
-    }
-
-    public void changeUserNickName(User user, String nickName) {
-        user.setNickName(nickName);
-    }
-
-    public void changeUserAge(User user, Integer age) {
-        user.setAge(age);
-    }
-
     @Transactional
     public UserSelfRes updateUser(UpdateUserReq updateUserReq) {
         User user = jwtUserParser.getUser();
 
         if (!StringUtils.isEmpty(updateUserReq.getNickname())) {
-            changeUserNickName(user, updateUserReq.getNickname());
+            user.setNickName(updateUserReq.getNickname());
         }
         if (!StringUtils.isEmpty(updateUserReq.getMbti())) {
-            changeUserMbti(user, updateUserReq.getMbti());
+            user.setMbti(updateUserReq.getMbti());
         }
         if (!(updateUserReq.getGender() == null)) {
-            changeUserGender(user, updateUserReq.getGender());
+            user.setGender(updateUserReq.getGender());
         }
         if (!(updateUserReq.getAge() == null)) {
-            changeUserAge(user, updateUserReq.getAge());
+            user.setAge(updateUserReq.getAge());
         }
         User save = userRepository.save(user);
         return new UserSelfRes(save);
