@@ -3,6 +3,7 @@ package com.example.sendowl.domain.user.dto;
 import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ public class UserDto {
             this.email = entity.getEmail();
         }
 
-        public UserRes(){
+        public UserRes() {
         }
     }
 
@@ -106,7 +107,7 @@ public class UserDto {
         @NotBlank
         private String password;
 
-        public LoginReq(String email, String password){
+        public LoginReq(String email, String password) {
             this.email = email;
             this.password = password;
         }
@@ -161,8 +162,11 @@ public class UserDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ProfileReq {
+        @Pattern(regexp = "[EI][SN][TF][JP]")
         private String mbti;
+        @Pattern(regexp = "[a-zA-Zㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,60}")
         private String nickName;
+        @Range(min = 5, max = 100)
         private Integer age;
         private Gender gender;
     }
@@ -188,5 +192,17 @@ public class UserDto {
             this.profileImage = user.getProfileImage();
             this.introduction = user.getIntroduction();
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class UpdateUserReq {
+        @Pattern(regexp = "[a-zA-Zㄱ-ㅎ|ㅏ-ㅣ|가-힣]{1,60}")
+        private String nickname;
+        @Pattern(regexp = "[EI][SN][FT][JP]")
+        private String mbti;
+        @Range(min = 5, max = 100)
+        private Integer age;
+        private Gender gender;
     }
 }
