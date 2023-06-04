@@ -99,4 +99,11 @@ public class UserController {
     public ResponseEntity<Boolean> checkUserNickName(final @PathVariable String nickName) {
         return new ResponseEntity(userService.duplicationCheckNickName(nickName), HttpStatus.OK);
     }
+
+    @Operation(summary = "회원탈퇴", security = {@SecurityRequirement(name = "bearerAuth")})
+    @PreAuthorize("hasAuthority('USER')")
+    @DeleteMapping("/unregister")
+    public ResponseEntity<Boolean> unregister() {
+        return new ResponseEntity(userService.unregister(), HttpStatus.OK);
+    }
 }

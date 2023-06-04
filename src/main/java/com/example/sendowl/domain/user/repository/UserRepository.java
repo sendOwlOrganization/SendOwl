@@ -34,5 +34,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndTransactionId(String email, String trancationId);
 
     Optional<User> findUserByIdAndModDateBetween(Long userId, LocalDateTime today, LocalDateTime tomorrow);
+
+    void deleteById(Long id);
 }
 
