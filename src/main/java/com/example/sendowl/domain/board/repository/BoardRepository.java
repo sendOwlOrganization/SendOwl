@@ -6,6 +6,7 @@ import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -27,31 +28,23 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
             "left join (select board_id, COUNT(*) as comment_count " +
             "from comment " +
             "group by board_id) c on b.board_id = c.board_id " +
-            "where b.category_id=:categoryId",
+            "where b.category_id=:categoryId and b.del_date is NULL",
             countQuery = "SELECT count(*) FROM board b where b.category_id=:categoryId",
             nativeQuery = true)
     List<PreviewBoardDto> findPreviewBoard(Long categoryId, Integer titleLength, Pageable pageable);
 
-    @Query(value = "SELECT b FROM Board b join fetch b.user",
-            countQuery = "SELECT COUNT(b) FROM Board b")
-    Page<Board> findAllFetchJoin(Pageable pageable);
+    Page<Board> findAllByDelDateIsNotNull(Specification<Board> spec, Pageable pageable);
 
-    @Query(value = "SELECT b FROM Board b join fetch b.user where b.isDeleted=false ",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.isDeleted=false"
+    Optional<Board> findByIdAndDelDateIsNotNull(Long boardId);
+
+    @Query(value = "SELECT b FROM Board b join fetch b.user where b.delDate is not null",
+            countQuery = "SELECT COUNT(b) FROM Board b where b.delDate is not null"
     )
     Page<Board> findBoardFetchJoin(Pageable pageable);
 
-    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId")
-    Page<Board> findAllByCategoryIdFetchJoin(Long categoryId, Pageable pageable);
-
-    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId and b.isDeleted=false",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId and b.isDeleted=false")
+    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId and b.delDate is not null",
+            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId and b.delDate is not null")
     Page<Board> findBoardByCategoryIdFetchJoin(Long categoryId, Pageable pageable);
-
-    Page<Board> findByTitleContaining(Pageable pageable, String text);
-
-    Page<Board> findByContentContaining(Pageable pageable, String text);
 
     Optional<Long> countByUserAndRegDateBetween(User user, LocalDateTime today, LocalDateTime tomorrow);
 }
