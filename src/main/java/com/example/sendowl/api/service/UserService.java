@@ -21,7 +21,6 @@ import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -233,16 +232,5 @@ public class UserService {
         }
         User save = userRepository.save(user);
         return new UserSelfRes(save);
-    }
-
-    @Transactional
-    public Boolean unregister() {
-        User user = jwtUserParser.getUser();
-        try {
-            userRepository.deleteById(user.getId());
-        } catch (EmptyResultDataAccessException e){
-            throw new UserNotFoundException(NOT_FOUND);
-        }
-        return true;
     }
 }

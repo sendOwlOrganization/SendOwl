@@ -59,6 +59,10 @@ public class User extends BaseEntity {
     private Long accessCount;
     @Column(columnDefinition = "bigint default 0")
     private Long exp = 0L;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Board> boardList;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<BoardLike> boardLikeList;
 
     public void addExp(Long exp) {
         this.exp += exp;
