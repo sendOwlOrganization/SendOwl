@@ -233,4 +233,14 @@ public class UserService {
         User save = userRepository.save(user);
         return new UserSelfRes(save);
     }
+
+    @Transactional
+    public Boolean unregister() {
+        User user = userRepository.findById(jwtUserParser.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException(NOT_FOUND));
+
+        user.delete();
+
+        return true;
+    }
 }
