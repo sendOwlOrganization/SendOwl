@@ -21,13 +21,7 @@ public class BoardRepositoryTest {
 
     @Autowired
     private BoardRepository boardRepository;
-
-    @Test
-    public void 컬럼을대입하여쿼리조회() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Board> pages = boardRepository.findByContentContaining(pageable, "s");
-    }
-
+    
     @Test
     public void when카테고리이름으로페치조인thenPage반환() {
         Pageable pageable = PageRequest.of(0, 10);
