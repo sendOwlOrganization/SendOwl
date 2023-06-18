@@ -33,17 +33,17 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
             nativeQuery = true)
     List<PreviewBoardDto> findPreviewBoard(Long categoryId, Integer titleLength, Pageable pageable);
 
-    Page<Board> findAllByDelDateIsNotNull(Specification<Board> spec, Pageable pageable);
+    Page<Board> findAllByDelDateIsNull(Specification<Board> spec, Pageable pageable);
 
-    Optional<Board> findByIdAndDelDateIsNotNull(Long boardId);
+    Optional<Board> findByIdAndDelDateIsNull(Long boardId);
 
-    @Query(value = "SELECT b FROM Board b join fetch b.user where b.delDate is not null",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.delDate is not null"
+    @Query(value = "SELECT b FROM Board b join fetch b.user where b.delDate is null",
+            countQuery = "SELECT COUNT(b) FROM Board b where b.delDate is null"
     )
     Page<Board> findBoardFetchJoin(Pageable pageable);
 
-    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId and b.delDate is not null",
-            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId and b.delDate is not null")
+    @Query(value = "SELECT b FROM Board b join fetch b.user where b.category.id = :categoryId and b.delDate is null",
+            countQuery = "SELECT COUNT(b) FROM Board b where b.category.id = :categoryId and b.delDate is null")
     Page<Board> findBoardByCategoryIdFetchJoin(Long categoryId, Pageable pageable);
 
     Optional<Long> countByUserAndRegDateBetween(User user, LocalDateTime today, LocalDateTime tomorrow);

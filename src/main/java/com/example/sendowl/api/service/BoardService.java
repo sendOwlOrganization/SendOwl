@@ -77,7 +77,7 @@ public class BoardService {
         if (where.contains("nickName")) {
             spec = spec.or(BoardSpecification.likeUserNickName(queryText));
         }
-        return new BoardsRes(boardRepository.findAllByDelDateIsNotNull(spec, pageable), textLength);
+        return new BoardsRes(boardRepository.findAllByDelDateIsNull(spec, pageable), textLength);
     }
 
     @Transactional
@@ -97,7 +97,7 @@ public class BoardService {
     @Transactional
     public DetailRes getBoardDetail(Long boardId) {
 
-        Board board = boardRepository.findByIdAndDelDateIsNotNull(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndDelDateIsNull(boardId).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         Integer hit = board.getHit();
@@ -110,7 +110,7 @@ public class BoardService {
     public UpdateBoardRes updateBoard(UpdateBoardReq req) {
         User user = jwtUserParser.getUser();
 
-        Board board = boardRepository.findByIdAndDelDateIsNotNull(req.getBoardId()).orElseThrow(
+        Board board = boardRepository.findByIdAndDelDateIsNull(req.getBoardId()).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
@@ -146,7 +146,7 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
         User user = jwtUserParser.getUser();
 
-        Board board = boardRepository.findByIdAndDelDateIsNotNull(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndDelDateIsNull(boardId).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         if (isUserHasBoardAuthority(user, board)) {
