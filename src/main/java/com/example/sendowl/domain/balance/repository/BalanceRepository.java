@@ -15,12 +15,12 @@ public interface BalanceRepository extends JpaRepository<Balance, Long>, JpaSpec
 
     @Query(value = "select b " +
             "from Balance b join fetch b.balanceOptionList " +
-            "where b.isDeleted=false " +
+            "where b.delDate is null " +
             "order by b.regDate desc"
             ,
             countQuery = "select count(b) " +
                     "from Balance b join fetch b.balanceOptionList " +
-                    "where b.isDeleted=false " +
+                    "where b.delDate is null " +
                     "order by b.regDate desc"
     )
     List<Balance> findAllByWithFetchJoin(Pageable pageable);

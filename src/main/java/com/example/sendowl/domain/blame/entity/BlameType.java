@@ -1,5 +1,6 @@
 package com.example.sendowl.domain.blame.entity;
 
+import com.example.sendowl.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,18 +13,12 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BlameType {
+public class BlameType extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     private String name;
-    @Builder.Default
-    private Boolean isDeleted = false;
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
 
     public void setName(String name) {
         this.name = name;
