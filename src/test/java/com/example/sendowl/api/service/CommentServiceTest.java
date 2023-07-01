@@ -117,7 +117,7 @@ class CommentServiceTest {
     void when_selectCommentListWithNoBoard_then_boardNotFoundException() {
         // given
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(commentRepository.findAllByBoard(any(), any())).thenReturn(Optional.ofNullable(null));
+        when(commentRepository.findAllByBoardAndDelDateIsNull(any(), any())).thenReturn(Optional.ofNullable(null));
         Pageable pageable = PageRequest.of(0, 10);
         // when
         // then
@@ -137,7 +137,7 @@ class CommentServiceTest {
 
         int pageNumber = pageComment.getPageable().getPageNumber();
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(commentRepository.findAllByBoard(any(), any())).thenReturn(Optional.ofNullable(pageComment));
+        when(commentRepository.findAllByBoardAndDelDateIsNull(any(), any())).thenReturn(Optional.ofNullable(pageComment));
         // when
         Page<CommentDto.CommentRes> commentRes = commentService.selectCommentList(BOARD_ID, pageable);
         // then
