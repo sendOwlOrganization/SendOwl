@@ -1,5 +1,6 @@
 package com.example.sendowl.api.service;
 
+import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.auth.jwt.TokenEnum;
@@ -12,6 +13,8 @@ import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException;
 import com.example.sendowl.domain.user.repository.UserRepository;
+import com.example.sendowl.domain.user.util.oauth.GoogleOauth;
+import com.example.sendowl.domain.user.util.oauth.KakaoOauth;
 import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import org.junit.jupiter.api.Assertions;
@@ -63,6 +66,12 @@ class UserServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    GoogleOauth googleOauth;
+
+    @Mock
+    KakaoOauth kakaoOauth;
 
     private User user;
     private Category category;
@@ -137,11 +146,6 @@ class UserServiceTest {
         Assertions.assertTrue(Objects.requireNonNull(httpServletResponse.getHeader("Set-Cookie")).startsWith(TokenEnum.REFRESH_TOKEN));
     }
 
-    void when_login_then_userRes(){
-        //given
-        //when
-        //then
-    }
     @Test
     void when_getUserSelf_then_userSelfRes() {
         // given
@@ -167,6 +171,54 @@ class UserServiceTest {
     }
 
     @Test
+    void when_oauthServiceWithNewUser_then_alreadyJoinedFalse (){
+        // given
+        UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
+        HttpServletResponse res = mock(HttpServletResponse.class);
+
+        when(googleOauth.getOauth2User(any())).thenReturn(Oauth2User.builder().build());
+        when(userRepository.findUserByEmailAndTransactionId(any(), any())).thenReturn(Optional.ofNullable(null));
+        when(userRepository.save(any())).thenReturn(user);
+
+        //when
+        UserDto.Oauth2Res oauth2Res = userService.oauthService(req, res);
+        //then
+        Assertions.assertEquals(oauth2Res.getAlreadyJoined(), false);
+    }
+
+    @Test
+    void when_oauthServiceWithNotSettingUser_then_alreadySettedFalse (){
+        // given
+        User unsettedUser = User.builder().build();
+        UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
+        HttpServletResponse res = mock(HttpServletResponse.class);
+
+        when(googleOauth.getOauth2User(any())).thenReturn(Oauth2User.builder().build());
+        when(userRepository.findUserByEmailAndTransactionId(any(), any())).thenReturn(Optional.ofNullable(unsettedUser));
+        //when
+        UserDto.Oauth2Res oauth2Res = userService.oauthService(req, res);
+        //then
+        Assertions.assertEquals(oauth2Res.getAlreadySetted(), false);
+    }
+
+    @Test
+    void when_oauthServiceWithNotSettingUser_then_setCookie (){
+        UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
+        HttpServletResponse res = new MockHttpServletResponse();
+
+        when(googleOauth.getOauth2User(any())).thenReturn(Oauth2User.builder().build());
+        when(userRepository.findUserByEmailAndTransactionId(any(), any())).thenReturn(Optional.ofNullable(user));
+        when(jwtProvider.createAccessToken(any())).thenReturn("access_token");
+        when(jwtProvider.createRefreshToken()).thenReturn("refresh_token");
+        when(dateUtil.getNowLocalDateTime()).thenReturn(LocalDateTime.now());
+        //when
+        UserDto.Oauth2Res oauth2Res = userService.oauthService(req, res);
+        //then
+        Assertions.assertTrue(res.containsHeader(TokenEnum.ACCESS_TOKEN));
+        Assertions.assertTrue(Objects.requireNonNull(res.getHeader("Set-Cookie")).startsWith(TokenEnum.REFRESH_TOKEN));
+    }
+
+    @Test
     void when_oauthServiceWithValidationApiFailed_then_tokenNotValidException() {
         // given
         UserDto.Oauth2Req req = UserDto.Oauth2Req.builder()
@@ -174,7 +226,7 @@ class UserServiceTest {
                 .build();
         HttpServletResponse res = mock(HttpServletResponse.class);
         HttpStatusCodeException error = mock(HttpStatusCodeException.class);
-        when(restTemplate.exchange(anyString(), any(), any(), (Class<Object>) any())).thenThrow(error);
+        when(googleOauth.getOauth2User(any())).thenThrow(error);
         // when
         // then
         Assertions.assertThrows(Oauth2Exception.TokenNotValid.class, () -> {
