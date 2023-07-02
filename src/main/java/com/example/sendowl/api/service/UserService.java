@@ -145,11 +145,8 @@ public class UserService {
             if (retUser.getNickName() == null || retUser.getMbti() == null) {
                 alreadySetted = false;
             }
-
-            User user = userRepository.findByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId()).get();
-
-            setAccessToken(servletResponse, jwtProvider.createAccessToken(user));
-            setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
+            setAccessToken(servletResponse, jwtProvider.createAccessToken(retUser));
+            setRefreshToken(servletResponse, retUser, jwtProvider.createRefreshToken());
         }
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
