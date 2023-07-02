@@ -11,8 +11,10 @@ import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
+import com.example.sendowl.domain.user.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.user.util.oauth.GoogleOauth;
 import com.example.sendowl.domain.user.util.oauth.KakaoOauth;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -110,12 +113,18 @@ public class UserService {
         Oauth2User oauthUser = null;
 
         // 토큰의 유효성 검증
-        if(req.getTransactionId().equals("google")){
-            oauthUser = googleOauth.getOauth2User(req.getToken());
+        try{
+            if(req.getTransactionId().equals("google"))
+                oauthUser = googleOauth.getOauth2User(req.getToken());
+            else if (req.getTransactionId().equals("kakao"))
+                oauthUser = kakaoOauth.getOauth2User(req.getToken());
+            else
+                throw new Oauth2Exception.TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
+        }catch (HttpStatusCodeException httpStatusCodeException){
+            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
         }
-        else if (req.getTransactionId().equals("kakao")){
-            oauthUser = kakaoOauth.getOauth2User(req.getToken());
-        };
+
+
 
         // 회원여부 확인
         Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId());
