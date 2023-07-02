@@ -1,6 +1,5 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.auth.exception.TokenExpiredException;
 import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
@@ -9,6 +8,7 @@ import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.Oauth2Exception;
@@ -22,6 +22,7 @@ import com.example.sendowl.util.DateUtil;
 import com.example.sendowl.util.mail.JwtUserParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,8 +125,6 @@ public class UserService {
             throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
         }
 
-
-
         // 회원여부 확인
         Optional<User> optionalUser = userRepository.findUserByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId());
         if (optionalUser.isEmpty()) {
@@ -137,8 +136,7 @@ public class UserService {
                             .build()
             );
             alreadyJoined = false;
-        }
-        else {
+        } else {
             retUser = optionalUser.get();
 
             // 사용자 초기화 되었는지 확인 - 사용자가 초기화 되지 않은 경우 초기화가 필요함을 알려줌.
@@ -150,6 +148,7 @@ public class UserService {
         }
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
+
     public List<UserMbti> getUserMbti() {
         return userRepository.findAllUserMbtiWithCount();
     }
@@ -218,5 +217,35 @@ public class UserService {
         if (validLocalDateTime.isBefore(nowLocalDateTime)) {
             throw new TokenExpiredException(TokenErrorCode.EXPIRED);
         }
+    }
+
+    @Transactional
+    public UserSelfRes updateUser(UpdateUserReq updateUserReq) {
+        User user = jwtUserParser.getUser();
+
+        if (!StringUtils.isEmpty(updateUserReq.getNickname())) {
+            user.setNickName(updateUserReq.getNickname());
+        }
+        if (!StringUtils.isEmpty(updateUserReq.getMbti())) {
+            user.setMbti(updateUserReq.getMbti());
+        }
+        if (!(updateUserReq.getGender() == null)) {
+            user.setGender(updateUserReq.getGender());
+        }
+        if (!(updateUserReq.getAge() == null)) {
+            user.setAge(updateUserReq.getAge());
+        }
+        User save = userRepository.save(user);
+        return new UserSelfRes(save);
+    }
+
+    @Transactional
+    public Boolean unregister() {
+        User user = userRepository.findById(jwtUserParser.getUser().getId()).orElseThrow(
+                () -> new UserNotFoundException(NOT_FOUND));
+
+        user.delete();
+
+        return true;
     }
 }
