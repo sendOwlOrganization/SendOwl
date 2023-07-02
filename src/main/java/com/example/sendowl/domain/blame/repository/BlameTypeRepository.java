@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BlameTypeRepository extends JpaRepository<BlameType, Long>, JpaSpecificationExecutor {
     Boolean existsAllByName(String name);
 
-    List<BlameType> findAllByIsDeletedFalse();
+    List<BlameType> findAllByDelDateIsNull();
 
     Optional<BlameType> findById(Long id);
 }

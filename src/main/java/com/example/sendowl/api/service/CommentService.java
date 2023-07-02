@@ -40,8 +40,8 @@ public class CommentService {
     @Transactional
     public CommentRes insertComment(CommentReq vo) {
         User user = jwtUserParser.getUser();
-        
-        Board board = boardRepository.findById(vo.getBoardId())
+
+        Board board = boardRepository.findByIdAndDelDateIsNull(vo.getBoardId())
                 .orElseThrow(() -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         Comment comment;
@@ -71,11 +71,11 @@ public class CommentService {
 
     public Page<CommentRes> selectCommentList(Long boardId, Pageable pageable) {
         // 게시글 존재여부 확인
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndDelDateIsNull(boardId).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         // 댓글 select
-        Page<Comment> comments = commentRepository.findAllByBoard(board, pageable).orElseThrow(
+        Page<Comment> comments = commentRepository.findAllByBoardAndDelDateIsNull(board, pageable).orElseThrow(
                 () -> new BoardNotFoundException(CommentErrorCode.NOT_FOUND));
 
 
@@ -88,7 +88,7 @@ public class CommentService {
     public List<CommentRes> selectBestCommentList(Long boardId, Long size) {
 
         // 게시글 존재여부 확인
-        Board board = boardRepository.findById(boardId).orElseThrow(
+        Board board = boardRepository.findByIdAndDelDateIsNull(boardId).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
         List<Comment> bestComment = commentRepository.findAllByBoardOrderByLikeCountDesc(board, PageRequest.of(0, size.intValue()))
@@ -100,7 +100,7 @@ public class CommentService {
     @Transactional
     public CommentRes updateComment(UpdateReq crq, User user) {
 
-        Comment updComment = commentRepository.findById(crq.getCommentId()).orElseThrow(
+        Comment updComment = commentRepository.findByIdAndDelDateIsNull(crq.getCommentId()).orElseThrow(
                 () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
 
         // 글쓴 유저가 맞는지 확인하기
@@ -116,7 +116,7 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(Long commentId, User user) {
-        Comment delComment = commentRepository.findById(commentId).orElseThrow(
+        Comment delComment = commentRepository.findByIdAndDelDateIsNull(commentId).orElseThrow(
                 () -> new CommentNotFoundException(CommentErrorCode.NOT_FOUND));
 
         if (delComment.getUser().getId() == user.getId()) {

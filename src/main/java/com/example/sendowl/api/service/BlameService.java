@@ -54,7 +54,7 @@ public class BlameService {
     }
 
     public List<BlameDto.BlameTypeRes> getBlameTypeList() {
-        List<BlameType> blameTypeList = blameTypeRepository.findAllByIsDeletedFalse();
+        List<BlameType> blameTypeList = blameTypeRepository.findAllByDelDateIsNull();
         return blameTypeList.stream().map(BlameDto.BlameTypeRes::new).collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class BlameService {
     public Long deleteBlameType(Long blameTypeId) {
         if (blameTypeRepository.existsById(blameTypeId)) { // 존재하는 경우 삭제
             BlameType blameType = blameTypeRepository.findById(blameTypeId).get();
-            blameType.setDeleted(true);
+            blameType.delete();
             return blameType.getId();
         } else {
             throw new BlameTypeNotFoundException(BlameErrorCode.NOTFOUND);
