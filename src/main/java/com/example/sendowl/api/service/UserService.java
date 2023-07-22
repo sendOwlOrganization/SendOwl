@@ -11,8 +11,10 @@ import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.domain.user.exception.UserException.UserNotFoundException;
 import com.example.sendowl.domain.user.exception.UserException.UserNotValidException;
+import com.example.sendowl.domain.user.exception.enums.Oauth2ErrorCode;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.user.util.oauth.GoogleOauth;
 import com.example.sendowl.domain.user.util.oauth.KakaoOauth;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -111,10 +114,15 @@ public class UserService {
         Oauth2User oauthUser = null;
 
         // 토큰의 유효성 검증
-        if (req.getTransactionId().equals("google")) {
-            oauthUser = googleOauth.getOauth2User(req.getToken());
-        } else if (req.getTransactionId().equals("kakao")) {
-            oauthUser = kakaoOauth.getOauth2User(req.getToken());
+        try{
+            if(req.getTransactionId().equals("google"))
+                oauthUser = googleOauth.getOauth2User(req.getToken());
+            else if (req.getTransactionId().equals("kakao"))
+                oauthUser = kakaoOauth.getOauth2User(req.getToken());
+            else
+                throw new Oauth2Exception.TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
+        }catch (HttpStatusCodeException httpStatusCodeException){
+            throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
         }
 
         // 회원여부 확인
@@ -135,11 +143,8 @@ public class UserService {
             if (retUser.getNickName() == null || retUser.getMbti() == null) {
                 alreadySetted = false;
             }
-
-            User user = userRepository.findByEmailAndTransactionId(oauthUser.getEmail(), oauthUser.getTransactionId()).get();
-
-            setAccessToken(servletResponse, jwtProvider.createAccessToken(user));
-            setRefreshToken(servletResponse, user, jwtProvider.createRefreshToken());
+            setAccessToken(servletResponse, jwtProvider.createAccessToken(retUser));
+            setRefreshToken(servletResponse, retUser, jwtProvider.createRefreshToken());
         }
         return new Oauth2Res(alreadyJoined, alreadySetted, retUser);
     }
