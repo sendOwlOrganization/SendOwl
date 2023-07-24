@@ -4,10 +4,12 @@ import com.example.sendowl.auth.exception.TokenExpiredException;
 import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
 import com.example.sendowl.auth.jwt.JwtProvider;
+import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.category.enums.CategoryErrorCode;
 import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
 import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.comment.repository.CommentRepository;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
@@ -46,6 +48,8 @@ import static com.example.sendowl.domain.user.exception.enums.UserErrorCode.NOT_
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final ExpService expService;
 
@@ -99,7 +103,11 @@ public class UserService {
 
     public UserSelfRes getUserSelf() {
         User user = jwtUserParser.getUser();
-        return new UserSelfRes(user);
+        // 게시한 글
+        Long boardCount = boardRepository.countByUserAndDelDateIsNull(user);
+        Long commentCount = commentRepository.countByUserAndDelDateIsNull(user);
+
+        return new UserSelfRes(user, boardCount, commentCount);
     }
 
     @Transactional // write 작업이 있는 메소드에만 달아준다

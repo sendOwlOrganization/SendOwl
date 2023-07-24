@@ -72,5 +72,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Optional<Long> countByUserAndRegDateBetween(User user, LocalDateTime today, LocalDateTime tomorrow);
 
     Optional<Comment> findByIdAndDelDateIsNull(Long id);
+
+    Long countByUserAndDelDateIsNull(User user);
 }
 

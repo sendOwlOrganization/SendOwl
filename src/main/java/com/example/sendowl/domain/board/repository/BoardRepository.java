@@ -47,5 +47,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, JpaSpecific
     Page<Board> findBoardByCategoryIdFetchJoin(Long categoryId, Pageable pageable);
 
     Optional<Long> countByUserAndRegDateBetween(User user, LocalDateTime today, LocalDateTime tomorrow);
+
+    Long countByUserAndDelDateIsNull(User user);
 }
 

@@ -181,6 +181,8 @@ public class UserDto {
         private String email;
         private String profileImage;
         private String introduction;
+        private Long boardCount;
+        private Long commentCount;
 
         public UserSelfRes(User user) {
             this.id = user.getId();
@@ -191,6 +193,19 @@ public class UserDto {
             this.email = user.getEmail();
             this.profileImage = user.getProfileImage();
             this.introduction = user.getIntroduction();
+        }
+
+        public UserSelfRes(User user, Long boardCount, Long commentCount) {
+            this.id = user.getId();
+            this.nickName = user.getNickName();
+            this.mbti = user.getMbti();
+            this.gender = user.getGender();
+            this.age = user.getAge();
+            this.email = user.getEmail();
+            this.profileImage = user.getProfileImage();
+            this.introduction = user.getIntroduction();
+            this.boardCount = boardCount;
+            this.commentCount = commentCount;
         }
     }
 
