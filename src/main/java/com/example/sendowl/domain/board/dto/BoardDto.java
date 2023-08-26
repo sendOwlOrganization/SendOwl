@@ -1,7 +1,7 @@
 package com.example.sendowl.domain.board.dto;
 
 import com.example.sendowl.domain.board.entity.Board;
-import com.example.sendowl.domain.category.entity.Category;
+import com.example.sendowl.domain.tag.entity.Tag;
 import com.example.sendowl.domain.user.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -74,7 +74,7 @@ public class BoardDto {
         @Schema(description = "카테고리 id", nullable = false, example = "1")
         private Long categoryId;
 
-        public Board toEntity(User user, Category category, String refinedContent) {
+        public Board toEntity(User user, Tag tag, String refinedContent) {
             ObjectMapper objectMapper = new ObjectMapper();
             String value = "";
             try {
@@ -88,7 +88,6 @@ public class BoardDto {
                     .content(value)
                     .refinedContent(refinedContent)
                     .user(user)
-                    .category(category)
                     .build();
         }
     }

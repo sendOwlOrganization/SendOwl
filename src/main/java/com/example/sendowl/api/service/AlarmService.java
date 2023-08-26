@@ -11,7 +11,7 @@ import com.example.sendowl.domain.alarm.repository.AlarmChkRepository;
 import com.example.sendowl.domain.alarm.repository.AlarmRepository;
 import com.example.sendowl.domain.alarm.repository.AlarmTypeRepository;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
-import com.example.sendowl.domain.category.enums.CategoryErrorCode;
+import com.example.sendowl.domain.tag.enums.TagErrorCode;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class AlarmService {
     // 알림 등록
     public void insertAlarm(AlarmReq rq) {
         AlarmType alarmType = alarmTypeRepository.findById(rq.getTypeId()).orElseThrow(
-                () -> new AlarmTypeNotFoundException(CategoryErrorCode.NOT_FOUND));
+                () -> new AlarmTypeNotFoundException(TagErrorCode.NOT_FOUND));
         Alarm alarm = new Alarm();
         alarm.insertAlarm(rq.getContent(), alarmType);
         alarmRepository.save(alarm);
@@ -40,7 +40,7 @@ public class AlarmService {
                 () -> new AlarmNotFoundException(BoardErrorCode.NOT_FOUND));
 
         AlarmType alarmType = alarmTypeRepository.findById(rq.getTypeId()).orElseThrow(
-                () -> new AlarmTypeNotFoundException(CategoryErrorCode.NOT_FOUND));
+                () -> new AlarmTypeNotFoundException(TagErrorCode.NOT_FOUND));
 
         alarm.updateAlarm(rq.getContent(), alarmType);
         alarmRepository.save(alarm);

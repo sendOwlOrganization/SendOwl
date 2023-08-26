@@ -1,7 +1,6 @@
 package com.example.sendowl.domain.board.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
-import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,10 +34,6 @@ public class Board extends BaseEntity {
 
     private String refinedContent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
     @Column(columnDefinition = "integer default 0")
     private Integer hit;
 
@@ -52,10 +47,9 @@ public class Board extends BaseEntity {
         this.hit = hit;
     }
 
-    public void updateBoard(String title, String content, Category category, String refinedContent) {
+    public void updateBoard(String title, String content, String refinedContent) {
         this.title = title;
         this.content = content;
-        this.category = category;
         this.refinedContent = refinedContent;
     }
 }

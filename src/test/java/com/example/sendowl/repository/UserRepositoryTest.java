@@ -1,7 +1,7 @@
 package com.example.sendowl.repository;
 
-import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.repository.TagRepository;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -19,12 +19,12 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    CategoryRepository categoryRepository;
+    TagRepository tagRepository;
 
     @Test
     public void 카테고리를기반으로기여한유저의mbti를반환() {
 
-        Optional<Category> category = categoryRepository.findById(2L);
+        Optional<Tag> category = tagRepository.findById(2L);
 
         List<UserMbti> categoryMbti = userRepository.findUserMbtiFromCategory(category.get());
     }

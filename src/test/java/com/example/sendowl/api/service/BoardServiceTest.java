@@ -5,9 +5,9 @@ import com.example.sendowl.domain.board.dto.PreviewBoardDto;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
-import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.exception.TagNotFoundException;
+import com.example.sendowl.domain.tag.repository.TagRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException;
 import com.example.sendowl.util.mail.JwtUserParser;
@@ -53,7 +53,7 @@ class BoardServiceTest {
     @Mock
     private BoardRepository boardRepository;
     @Mock
-    private CategoryRepository categoryRepository;
+    private TagRepository tagRepository;
     @Mock
     private JwtUserParser jwtUserParser;
     @Mock
@@ -63,8 +63,8 @@ class BoardServiceTest {
     private Pageable pageable;
     private User user;
     private User user2;
-    private Category category;
-    private Category categoryAll;
+    private Tag tag;
+    private Tag tagAll;
     private Board board;
     private Board boardWithAnotherUser;
     private Board boardWithAllCategory;
@@ -86,18 +86,18 @@ class BoardServiceTest {
                 .mbti("infp")
                 .build();
 
-        category = Category.builder()
+        tag = Tag.builder()
                 .id(CATEGORY_ID)
                 .name(CATEGORY_NAME1).build();
-        categoryAll = Category.builder()
+        tagAll = Tag.builder()
                 .id(ALL_CATEGORY_ID)
                 .name(CATEGORY_NAME2).build();
 
-        board = Board.builder().id(BOARD_ID1).user(user).category(category).content(boardContent).refinedContent(refinedText).hit(0).build();
+        board = Board.builder().id(BOARD_ID1).user(user).content(boardContent).refinedContent(refinedText).hit(0).build();
 
-        boardWithAnotherUser = Board.builder().id(BOARD_ID2).user(user2).category(category).content(boardContent).refinedContent(refinedText).hit(0).build();
+        boardWithAnotherUser = Board.builder().id(BOARD_ID2).user(user2).content(boardContent).refinedContent(refinedText).hit(0).build();
 
-        boardWithAllCategory = Board.builder().id(BOARD_ID3).user(user).category(categoryAll).content(boardContent).refinedContent(refinedText).build();
+        boardWithAllCategory = Board.builder().id(BOARD_ID3).user(user).content(boardContent).refinedContent(refinedText).build();
 
         pageable = PageRequest.of(0, 10);
     }
@@ -108,9 +108,9 @@ class BoardServiceTest {
         BoardReq req = new BoardReq();
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             boardService.insertBoard(req);
         });
     }
@@ -121,7 +121,7 @@ class BoardServiceTest {
         BoardReq req = new BoardReq();
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(editorJsHelper.extractText(any())).thenReturn(refinedText);
         when(boardRepository.save(any())).thenReturn(board);
         // then
@@ -133,9 +133,9 @@ class BoardServiceTest {
     void when_getPreviewBoardList_then_categoryNotFoundException() {
         // given
         // when
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             boardService.getPreviewBoardList(CATEGORY_ID, TITLE_LENGTH, pageable);
         });
     }
@@ -145,7 +145,7 @@ class BoardServiceTest {
         // given
         List<PreviewBoardDto> previewBoard = new ArrayList<>();
         // when
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(boardRepository.findPreviewBoard(any(), any(), any())).thenReturn(previewBoard);
         // then
         List<PreviewBoardRes> previewBoardList = boardService.getPreviewBoardList(CATEGORY_ID, TITLE_LENGTH, pageable);
@@ -156,9 +156,9 @@ class BoardServiceTest {
     void when_getBoardList_then_categoryNotFoundException() {
         // given
         // when
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             boardService.getBoardList(CATEGORY_ID, TEXT_LENGTH, pageable);
         });
     }
@@ -170,7 +170,7 @@ class BoardServiceTest {
         boards.add(board);
         Page<Board> pages = new PageImpl<>(boards);
         // when
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(boardRepository.findBoardByCategoryIdFetchJoin(any(), any())).thenReturn(pages);
         // then
         BoardsRes boardsRes = boardService.getBoardList(CATEGORY_ID, TEXT_LENGTH, pageable);
@@ -182,9 +182,9 @@ class BoardServiceTest {
         // given
         BoardReq req = new BoardReq();
         // when
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             boardService.insertBoard(req);
         });
     }
@@ -195,7 +195,7 @@ class BoardServiceTest {
         BoardReq req = new BoardReq();
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(editorJsHelper.extractText(any())).thenReturn(refinedText);
         when(boardRepository.save(any())).thenReturn(board);
         // then
@@ -244,9 +244,9 @@ class BoardServiceTest {
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             boardService.updateBoard(req);
         });
     }
@@ -258,7 +258,7 @@ class BoardServiceTest {
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(boardWithAnotherUser));
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         // then
         Assertions.assertThrows(UserException.UserUnauthorityException.class, () -> {
             boardService.updateBoard(req);
@@ -272,7 +272,7 @@ class BoardServiceTest {
         // when
         when(jwtUserParser.getUser()).thenReturn(user);
         when(boardRepository.findById(any())).thenReturn(Optional.ofNullable(board));
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(editorJsHelper.extractText(any())).thenReturn(refinedText);
         // then
         UpdateBoardRes updateBoardRes = boardService.updateBoard(req);

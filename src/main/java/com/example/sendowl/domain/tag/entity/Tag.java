@@ -1,34 +1,29 @@
-package com.example.sendowl.domain.category.entity;
+package com.example.sendowl.domain.tag.entity;
 
-import com.example.sendowl.domain.board.entity.Board;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class Category {
+public class Tag {
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private final List<Board> boardList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Column(name = "tag_id")
     private Long id;
     @Column(nullable = false)
     private String name;
 
-    public Category(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 
     @Builder
-    public Category(Long id, String name) {
+    public Tag(Long id, String name) {
         this.id = id;
         this.name = name;
     }
