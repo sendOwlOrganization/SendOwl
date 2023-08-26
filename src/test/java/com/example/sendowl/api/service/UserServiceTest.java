@@ -1,16 +1,16 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.user.dto.Oauth2User;
-import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.auth.jwt.TokenEnum;
-import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
-import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.exception.TagNotFoundException;
+import com.example.sendowl.domain.tag.repository.TagRepository;
+import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserDto;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.Gender;
 import com.example.sendowl.domain.user.entity.User;
+import com.example.sendowl.domain.user.exception.Oauth2Exception;
 import com.example.sendowl.domain.user.exception.UserException;
 import com.example.sendowl.domain.user.repository.UserRepository;
 import com.example.sendowl.domain.user.util.oauth.GoogleOauth;
@@ -54,7 +54,7 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
-    CategoryRepository categoryRepository;
+    TagRepository tagRepository;
     @Mock
     JwtUserParser jwtUserParser;
     @Mock
@@ -74,7 +74,7 @@ class UserServiceTest {
     KakaoOauth kakaoOauth;
 
     private User user;
-    private Category category;
+    private Tag tag;
 
     @BeforeEach
     void setUp() {
@@ -88,13 +88,13 @@ class UserServiceTest {
                 .age(20)
                 .gender(Gender.MALE)
                 .build();
-        category = Category.builder()
+        tag = Tag.builder()
                 .id(CATEGORY_ID)
                 .name("자유게시판").build();
     }
 
     @Test
-    void when_save_then_JoinRes(){
+    void when_save_then_JoinRes() {
         //given
         when(passwordEncoder.encode(any())).thenReturn("Encoded Password");
         when(userRepository.save(any())).thenReturn(user);
@@ -105,19 +105,19 @@ class UserServiceTest {
     }
 
     @Test
-    void when_notMmember_login_then_UserNotFountException(){
+    void when_notMmember_login_then_UserNotFountException() {
         //given
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         UserDto.LoginReq loginReq = new UserDto.LoginReq("", "");
         //when
         //then
         Assertions.assertThrows(UserException.UserNotFoundException.class, () -> {
-            userService.login(loginReq,httpServletResponse);
+            userService.login(loginReq, httpServletResponse);
         });
     }
 
     @Test
-    void when_passwordNotMatch_login_then_UserNotValidException(){
+    void when_passwordNotMatch_login_then_UserNotValidException() {
         //given
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         UserDto.LoginReq loginReq = new UserDto.LoginReq("emailUser1", "");
@@ -125,22 +125,22 @@ class UserServiceTest {
         //when
         //then
         Assertions.assertThrows(UserException.UserNotValidException.class, () -> {
-            userService.login(loginReq,httpServletResponse);
+            userService.login(loginReq, httpServletResponse);
         });
     }
 
     @Test
-    void when_login_then_setCookies(){
+    void when_login_then_setCookies() {
         //given
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
-        when(passwordEncoder.matches(any(),any())).thenReturn(true);
+        when(passwordEncoder.matches(any(), any())).thenReturn(true);
         when(userRepository.findByEmail(any())).thenReturn(Optional.ofNullable(user));
         when(jwtProvider.createAccessToken(any())).thenReturn("access_token");
         when(jwtProvider.createRefreshToken()).thenReturn("refresh_token");
         when(dateUtil.getNowLocalDateTime()).thenReturn(LocalDateTime.now());
         //when
         UserDto.LoginReq loginReq = new UserDto.LoginReq("emailUser1", "passwordUser1");
-        userService.login(loginReq,httpServletResponse);
+        userService.login(loginReq, httpServletResponse);
         //then
         Assertions.assertTrue(httpServletResponse.containsHeader(TokenEnum.ACCESS_TOKEN));
         Assertions.assertTrue(Objects.requireNonNull(httpServletResponse.getHeader("Set-Cookie")).startsWith(TokenEnum.REFRESH_TOKEN));
@@ -171,7 +171,7 @@ class UserServiceTest {
     }
 
     @Test
-    void when_oauthServiceWithNewUser_then_alreadyJoinedFalse (){
+    void when_oauthServiceWithNewUser_then_alreadyJoinedFalse() {
         // given
         UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
         HttpServletResponse res = mock(HttpServletResponse.class);
@@ -187,7 +187,7 @@ class UserServiceTest {
     }
 
     @Test
-    void when_oauthServiceWithNotSettingUser_then_alreadySettedFalse (){
+    void when_oauthServiceWithNotSettingUser_then_alreadySettedFalse() {
         // given
         User unsettedUser = User.builder().build();
         UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
@@ -202,7 +202,7 @@ class UserServiceTest {
     }
 
     @Test
-    void when_oauthServiceWithNotSettingUser_then_setCookie (){
+    void when_oauthServiceWithNotSettingUser_then_setCookie() {
         UserDto.Oauth2Req req = UserDto.Oauth2Req.builder().transactionId("google").build();
         HttpServletResponse res = new MockHttpServletResponse();
 
@@ -270,10 +270,10 @@ class UserServiceTest {
     @Test
     void when_getUserMbtiFromCategoryIdWithWrongCategoryId_then_categoryNotFoundException() {
         // given
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(null));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(null));
         // when
         // then
-        Assertions.assertThrows(CategoryNotFoundException.class, () -> {
+        Assertions.assertThrows(TagNotFoundException.class, () -> {
             userService.getUserMbtiFromCategoryId(WRONG_CATEGORY_ID);
         });
     }
@@ -285,7 +285,7 @@ class UserServiceTest {
         res.add(new UserMbti("enfp", 3L));
         res.add(new UserMbti("istp", 2L));
 
-        when(categoryRepository.findById(any())).thenReturn(Optional.ofNullable(category));
+        when(tagRepository.findById(any())).thenReturn(Optional.ofNullable(tag));
         when(userRepository.findUserMbtiFromCategory(any())).thenReturn(res);
         // when
         List<UserMbti> userMbtiList = userService.getUserMbtiFromCategoryId(CATEGORY_ID);

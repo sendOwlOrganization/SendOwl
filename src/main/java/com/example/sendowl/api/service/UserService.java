@@ -5,11 +5,11 @@ import com.example.sendowl.auth.exception.TokenNotEqualsException;
 import com.example.sendowl.auth.exception.enums.TokenErrorCode;
 import com.example.sendowl.auth.jwt.JwtProvider;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.enums.CategoryErrorCode;
-import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
-import com.example.sendowl.domain.category.repository.CategoryRepository;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.enums.TagErrorCode;
+import com.example.sendowl.domain.tag.exception.TagNotFoundException;
+import com.example.sendowl.domain.tag.repository.TagRepository;
 import com.example.sendowl.domain.user.dto.Oauth2User;
 import com.example.sendowl.domain.user.dto.UserMbti;
 import com.example.sendowl.domain.user.entity.User;
@@ -53,7 +53,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final ExpService expService;
 
     private final PasswordEncoder passwordEncoder;
@@ -122,14 +122,14 @@ public class UserService {
         Oauth2User oauthUser = null;
 
         // 토큰의 유효성 검증
-        try{
-            if(req.getTransactionId().equals("google"))
+        try {
+            if (req.getTransactionId().equals("google"))
                 oauthUser = googleOauth.getOauth2User(req.getToken());
             else if (req.getTransactionId().equals("kakao"))
                 oauthUser = kakaoOauth.getOauth2User(req.getToken());
             else
                 throw new Oauth2Exception.TransactionIdNotValid(Oauth2ErrorCode.BAD_TRANSACTIONID);
-        }catch (HttpStatusCodeException httpStatusCodeException){
+        } catch (HttpStatusCodeException httpStatusCodeException) {
             throw new Oauth2Exception.TokenNotValid(Oauth2ErrorCode.UNAUTHORIZED);
         }
 
@@ -161,11 +161,11 @@ public class UserService {
         return userRepository.findAllUserMbtiWithCount();
     }
 
-    public List<UserMbti> getUserMbtiFromCategoryId(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+    public List<UserMbti> getUserMbtiFromCategoryId(Long tagId) {
+        Tag tag = tagRepository.findById(tagId).orElseThrow(
+                () -> new TagNotFoundException(TagErrorCode.NOT_FOUND)
         );
-        return userRepository.findUserMbtiFromCategory(category);
+        return userRepository.findUserMbtiFromCategory(tag);
     }
 
     public boolean duplicationCheckNickName(String nickName) {

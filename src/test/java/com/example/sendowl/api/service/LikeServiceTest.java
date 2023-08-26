@@ -3,7 +3,6 @@ package com.example.sendowl.api.service;
 import com.example.sendowl.domain.board.entity.Board;
 import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.repository.BoardRepository;
-import com.example.sendowl.domain.category.entity.Category;
 import com.example.sendowl.domain.comment.entity.Comment;
 import com.example.sendowl.domain.comment.exception.CommentNotFoundException;
 import com.example.sendowl.domain.comment.repository.CommentRepository;
@@ -14,6 +13,7 @@ import com.example.sendowl.domain.like.exception.LikeNoAuthException;
 import com.example.sendowl.domain.like.exception.LikeNotFoundException;
 import com.example.sendowl.domain.like.repository.BoardLikeRepository;
 import com.example.sendowl.domain.like.repository.CommentLikeRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.util.mail.JwtUserParser;
 import org.junit.jupiter.api.Assertions;
@@ -59,7 +59,7 @@ class LikeServiceTest {
     private Board board2;
     private User user;
     private User user2;
-    private Category category;
+    private Tag tag;
     private BoardLike boardLike;
     private BoardLike boardLike2;
     private CommentLike commentLike;
@@ -83,20 +83,18 @@ class LikeServiceTest {
                 .email("a2@naver.com")
                 .mbti("estj")
                 .build();
-        category = Category.builder()
+        tag = Tag.builder()
                 .id(CATEGORY_ID)
                 .name(CATEGORY_NAME).build();
         board = Board.builder()
                 .id(BOARD_ID)
                 .user(user)
-                .category(category)
                 .content(boardContent)
                 .refinedContent(refinedText)
                 .hit(0).build();
         board2 = Board.builder()
                 .id(BOARD_ID2)
                 .user(user2)
-                .category(category)
                 .content(boardContent)
                 .refinedContent(refinedText)
                 .hit(0).build();

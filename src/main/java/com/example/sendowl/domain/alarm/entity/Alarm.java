@@ -1,8 +1,6 @@
 package com.example.sendowl.domain.alarm.entity;
 
 import com.example.sendowl.common.entity.BaseEntity;
-import com.example.sendowl.domain.category.entity.Category;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

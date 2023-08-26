@@ -7,10 +7,10 @@ import com.example.sendowl.domain.board.exception.BoardNotFoundException;
 import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
-import com.example.sendowl.domain.category.entity.Category;
-import com.example.sendowl.domain.category.enums.CategoryErrorCode;
-import com.example.sendowl.domain.category.exception.CategoryNotFoundException;
-import com.example.sendowl.domain.category.repository.CategoryRepository;
+import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.enums.TagErrorCode;
+import com.example.sendowl.domain.tag.exception.TagNotFoundException;
+import com.example.sendowl.domain.tag.repository.TagRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.UserUnauthorityException;
 import com.example.sendowl.domain.user.exception.enums.UserErrorCode;
@@ -34,17 +34,17 @@ import static com.example.sendowl.domain.board.dto.BoardDto.*;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final ExpService expService;
     private final EditorJsHelper editorJsHelper;
     private final JwtUserParser jwtUserParser;
 
     public List<PreviewBoardRes> getPreviewBoardList(Long categoryId, Integer titleLength, Pageable pageable) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+        Tag tag = tagRepository.findById(categoryId).orElseThrow(
+                () -> new TagNotFoundException(TagErrorCode.NOT_FOUND)
         );
 
-        List<PreviewBoardDto> previewBoard = boardRepository.findPreviewBoard(category.getId(), titleLength, pageable);
+        List<PreviewBoardDto> previewBoard = boardRepository.findPreviewBoard(tag.getId(), titleLength, pageable);
 
         List<PreviewBoardRes> boardRes = previewBoard.stream().map(PreviewBoardRes::new).collect(Collectors.toList());
 
@@ -52,12 +52,12 @@ public class BoardService {
     }
 
     public BoardsRes getBoardList(Long categoryId, Integer textLength, Pageable pageable) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND)
+        Tag tag = tagRepository.findById(categoryId).orElseThrow(
+                () -> new TagNotFoundException(TagErrorCode.NOT_FOUND)
         );
 
         Page<Board> pages;
-        if (category.getId() == 0L) {
+        if (tag.getId() == 0L) {
             pages = boardRepository.findBoardFetchJoin(pageable);
         } else {
             pages = boardRepository.findBoardByCategoryIdFetchJoin(categoryId, pageable);
@@ -84,12 +84,12 @@ public class BoardService {
     public DetailRes insertBoard(BoardReq req) {
         User user = jwtUserParser.getUser();
 
-        Category category = categoryRepository.findById(req.getCategoryId())
-                .orElseThrow(() -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        Tag tag = tagRepository.findById(req.getCategoryId())
+                .orElseThrow(() -> new TagNotFoundException(TagErrorCode.NOT_FOUND));
 
         String refinedText = editorJsHelper.extractText(req.getEditorJsContent());
 
-        Board savedBoard = boardRepository.save(req.toEntity(user, category, refinedText));
+        Board savedBoard = boardRepository.save(req.toEntity(user, tag, refinedText));
         expService.addExpBoard(user);
         return new DetailRes(savedBoard);
     }
@@ -113,8 +113,8 @@ public class BoardService {
         Board board = boardRepository.findByIdAndDelDateIsNull(req.getBoardId()).orElseThrow(
                 () -> new BoardNotFoundException(BoardErrorCode.NOT_FOUND));
 
-        Category category = categoryRepository.findById(req.getCategoryId()).orElseThrow(
-                () -> new CategoryNotFoundException(CategoryErrorCode.NOT_FOUND));
+        Tag tag = tagRepository.findById(req.getCategoryId()).orElseThrow(
+                () -> new TagNotFoundException(TagErrorCode.NOT_FOUND));
 
         if (isUserHasBoardAuthority(user, board)) {
             throw new UserUnauthorityException(UserErrorCode.UNAUTHORIZED);
@@ -131,7 +131,9 @@ public class BoardService {
             throw new RuntimeException(e);
         }
 
-        board.updateBoard(req.getTitle(), content, category, refinedText);
+        // TODO : 태그의 연관관계 설정해야함
+
+        board.updateBoard(req.getTitle(), content, refinedText);
 
         boardRepository.save(board);
         UpdateBoardRes updatedBoard = new UpdateBoardRes(board);
