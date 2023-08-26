@@ -31,7 +31,7 @@ public class TagController {
         return new ResponseEntity(tagsRes, HttpStatus.OK);
     }
 
-    @Operation(summary = "태그의 카운트(인기도-게시글개수)순으로 조회", description = "태그의 카운트(인기도-게시글개수)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
+    @Operation(summary = "태그의 카운트(인기도-게시글개수)순으로 조회 - 수정중", description = "태그의 카운트(인기도-게시글개수)순으로 반환한다. 조인을 하기 때문에 일반 리스트 반환보다 조금 느림")
     @GetMapping(path = "/popular") // 태그 목록
     public ResponseEntity<?> tagsCount() {
         List<TagsCountRes> tagsCountRes = tagService.getTagWithBoardCountList();

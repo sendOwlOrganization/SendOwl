@@ -70,11 +70,9 @@ public class BoardDto {
         private String title;
         private EditorJsContent editorJsContent;
 
-        @NotNull(message = "카테고리 아이디가 올바르지 않습니다.") // Long형에는 NotNull을 써야한다고 합니다.
-        @Schema(description = "카테고리 id", nullable = false, example = "1")
-        private Long categoryId;
+        private List<Tag> tags;
 
-        public Board toEntity(User user, Tag tag, String refinedContent) {
+        public Board toEntity(User user, String refinedContent) {
             ObjectMapper objectMapper = new ObjectMapper();
             String value = "";
             try {

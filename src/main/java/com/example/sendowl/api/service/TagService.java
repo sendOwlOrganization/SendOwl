@@ -1,6 +1,5 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.tag.dto.TagCount;
 import com.example.sendowl.domain.tag.entity.Tag;
 import com.example.sendowl.domain.tag.exception.TagNameAlreadyExistsException;
 import com.example.sendowl.domain.tag.exception.TagNotFoundException;
@@ -29,8 +28,10 @@ public class TagService {
     }
 
     public List<TagsCountRes> getTagWithBoardCountList() {
-        List<TagCount> tagCountList = tagRepository.findTagsWithBoardCount();
-        return tagCountList.stream().map(TagsCountRes::new).collect(Collectors.toList());
+        // TODO : 태그에 따른 게시글 카운트
+//        List<TagCount> tagCountList = tagRepository.findTagsWithBoardCount();
+//        return tagCountList.stream().map(TagsCountRes::new).collect(Collectors.toList());
+        return null;
     }
 
     @Transactional

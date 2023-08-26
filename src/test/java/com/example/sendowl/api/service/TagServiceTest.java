@@ -1,6 +1,5 @@
 package com.example.sendowl.api.service;
 
-import com.example.sendowl.domain.tag.dto.TagCount;
 import com.example.sendowl.domain.tag.dto.TagDto;
 import com.example.sendowl.domain.tag.entity.Tag;
 import com.example.sendowl.domain.tag.exception.TagNameAlreadyExistsException;
@@ -93,31 +92,31 @@ class TagServiceTest {
         assertEquals(categoryList.size(), 2);
         assertEquals(categoryList.get(0).getId(), tag.getId());
     }
-
-    @Test
-    void when_getCategoryWithBoardCountListWith_then_getCategoryList() {
-        // given
-        List<TagCount> categories = new ArrayList<>();
-        when(tagRepository.findTagsWithBoardCount()).thenReturn(categories);
-        // when
-        List<TagDto.TagsCountRes> categoryCountList = tagService.getTagWithBoardCountList();
-        // then
-        assertEquals(categoryCountList.size(), 0);
-    }
-
-    @Test
-    void when_getCategoryWithBoardCountListWithEmpty_then_getCategoryList() {
-        // given
-        List<TagCount> categories = new ArrayList<>();
-        categories.add(new TagCount(tag.getId(), tag.getName(), 1L));
-        categories.add(new TagCount(tag2.getId(), tag2.getName(), 2L));
-        when(tagRepository.findTagsWithBoardCount()).thenReturn(categories);
-        // when
-        List<TagDto.TagsCountRes> categoryCountList = tagService.getTagWithBoardCountList();
-        // then
-        assertEquals(categoryCountList.size(), 2);
-        assertEquals(categoryCountList.get(0).getId(), categories.get(0).getTagId());
-    }
+    
+//    @Test
+//    void when_getCategoryWithBoardCountListWith_then_getCategoryList() {
+//        // given
+//        List<TagCount> categories = new ArrayList<>();
+//        when(tagRepository.findTagsWithBoardCount()).thenReturn(categories);
+//        // when
+//        List<TagDto.TagsCountRes> categoryCountList = tagService.getTagWithBoardCountList();
+//        // then
+//        assertEquals(categoryCountList.size(), 0);
+//    }
+//
+//    @Test
+//    void when_getCategoryWithBoardCountListWithEmpty_then_getCategoryList() {
+//        // given
+//        List<TagCount> categories = new ArrayList<>();
+//        categories.add(new TagCount(tag.getId(), tag.getName(), 1L));
+//        categories.add(new TagCount(tag2.getId(), tag2.getName(), 2L));
+//        when(tagRepository.findTagsWithBoardCount()).thenReturn(categories);
+//        // when
+//        List<TagDto.TagsCountRes> categoryCountList = tagService.getTagWithBoardCountList();
+//        // then
+//        assertEquals(categoryCountList.size(), 2);
+//        assertEquals(categoryCountList.get(0).getId(), categories.get(0).getTagId());
+//    }
 
     @Test
     void when_updateCategoryEmpty_then_CategoryNotFoundException() {

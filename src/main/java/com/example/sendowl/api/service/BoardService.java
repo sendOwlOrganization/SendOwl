@@ -8,8 +8,10 @@ import com.example.sendowl.domain.board.exception.enums.BoardErrorCode;
 import com.example.sendowl.domain.board.repository.BoardRepository;
 import com.example.sendowl.domain.board.specification.BoardSpecification;
 import com.example.sendowl.domain.tag.entity.Tag;
+import com.example.sendowl.domain.tag.entity.TagBoard;
 import com.example.sendowl.domain.tag.enums.TagErrorCode;
 import com.example.sendowl.domain.tag.exception.TagNotFoundException;
+import com.example.sendowl.domain.tag.repository.TagBoardRepository;
 import com.example.sendowl.domain.tag.repository.TagRepository;
 import com.example.sendowl.domain.user.entity.User;
 import com.example.sendowl.domain.user.exception.UserException.UserUnauthorityException;
@@ -24,7 +26,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.sendowl.domain.board.dto.BoardDto.*;
@@ -35,6 +39,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final TagRepository tagRepository;
+    private final TagBoardRepository tagBoardRepository;
     private final ExpService expService;
     private final EditorJsHelper editorJsHelper;
     private final JwtUserParser jwtUserParser;
@@ -84,12 +89,30 @@ public class BoardService {
     public DetailRes insertBoard(BoardReq req) {
         User user = jwtUserParser.getUser();
 
-        Tag tag = tagRepository.findById(req.getCategoryId())
-                .orElseThrow(() -> new TagNotFoundException(TagErrorCode.NOT_FOUND));
+        // 태그 확인 및 생성(없는 경우)
+        List<Tag> tags = req.getTags();
+        List<Tag> savedTagList = new ArrayList<>(); // 연관관계를 맺기 위한 태그 리스트
+        for (Tag tag : tags) {
+            Optional<Tag> optionalTag = tagRepository.findByName(tag.getName());
+            if (optionalTag.isEmpty()) {
+                Tag newTag = Tag.builder().name(tag.getName()).build();
+                Tag save = tagRepository.save(newTag);
+                savedTagList.add(save);
+            } else {
+                savedTagList.add(optionalTag.get());
+            }
+        }
+
 
         String refinedText = editorJsHelper.extractText(req.getEditorJsContent());
+        Board savedBoard = boardRepository.save(req.toEntity(user, refinedText));
 
-        Board savedBoard = boardRepository.save(req.toEntity(user, tag, refinedText));
+        // 태그 와 게시글의 연관관계(TagBoard)를 삽입
+        for (Tag savedTag : savedTagList) {
+            TagBoard savedTagBoard = TagBoard.builder().board(savedBoard).tag(savedTag).build();
+            tagBoardRepository.save(savedTagBoard);
+        }
+
         expService.addExpBoard(user);
         return new DetailRes(savedBoard);
     }
